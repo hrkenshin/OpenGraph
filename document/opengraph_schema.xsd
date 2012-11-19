@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2011 sp1 (http://www.altova.com) by End User (free.org) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="opengraph">
+		<xs:annotation>
+			<xs:documentation>오픈그래프 루트</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence minOccurs="0" maxOccurs="unbounded">
+				<xs:element name="cell">
+					<xs:annotation>
+						<xs:documentation>Shape 노드</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:attribute name="id" type="xs:string" use="required">
+							<xs:annotation>
+								<xs:documentation>노드ID</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="shapeType" use="required">
+							<xs:annotation>
+								<xs:documentation>Shape 타입
+(GEOM, TEXT, HTML, IMAGE, EDGE, GROUP)</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:enumeration value="GEOM"/>
+									<xs:enumeration value="TEXT"/>
+									<xs:enumeration value="HTML"/>
+									<xs:enumeration value="IMAGE"/>
+									<xs:enumeration value="EDGE"/>
+									<xs:enumeration value="GROUP"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="shapeId" type="xs:string" use="required">
+							<xs:annotation>
+								<xs:documentation>Shape 클래스 ID</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="x" type="xs:int" use="required">
+							<xs:annotation>
+								<xs:documentation>Shape 중앙 X 좌표</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="y" type="xs:int" use="required">
+							<xs:annotation>
+								<xs:documentation>Shape 중앙 Y 좌표</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="width" type="xs:int" use="required">
+							<xs:annotation>
+								<xs:documentation>Shape Width</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="height" type="xs:int" use="required">
+							<xs:annotation>
+								<xs:documentation>Shape Height</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="geom" use="required">
+							<xs:annotation>
+								<xs:documentation>Geometry 정보
+(Escaped String)</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="parent" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>부모노드ID</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="fromEdge" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>이전 Edge iD 목록
+(콤마로 구분) - Shape Type 이 EDGE 가 아닌 경우 사용됨</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="toEdge" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>다음 Edge iD 목록
+(콤마로 구분) - Shape Type 이 EDGE 가 아닌 경우 사용됨</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="from" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>이전 노드 iD 목록
+(콤마로 구분) - Shape Type 이 EDGE 인 경우 사용됨</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="to" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>다음 노드 iD 목록
+(콤마로 구분) - Shape Type 이 EDGE 인 경우 사용됨</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="label" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>라벨</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="fromLabel" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>라인 시작점 라벨</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="toLabel" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>라인 끝점 라벨</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="value" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>Shape Value</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="style" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>CSS 스타일
+(Escaped String)</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="angle" type="xs:int">
+							<xs:annotation>
+								<xs:documentation>회전 각도</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="data" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>사용자정의 Data
+(Escaped String)</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="width" type="xs:int" use="required">
+				<xs:annotation>
+					<xs:documentation>캔버스 Width</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="height" type="xs:int" use="required">
+				<xs:annotation>
+					<xs:documentation>캔버스 Height</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="data" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>사용자정의 Data
+(Escaped String)</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

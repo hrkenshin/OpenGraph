@@ -1,0 +1,18 @@
+server: http://localhost:9876
+
+load:
+#  - src/main/javascript/lib/ext-core-4.0.7/ext-core.js
+#  - src/main/javascript/lib/gl-matrix-1.2.4/gl-matrix-min.js
+  - src/main/javascript/lib/raphael-2.1.0/raphael-min.js
+  - src/main/javascript/lib/jquery-1.7.2/jquery-1.7.2.min.js
+  - src/main/javascript/lib/jquery-1.7.2/jquery-ui-1.8.19.custom.min.js
+  - src/main/javascript/OpenGraph-0.1-SNAPSHOT-min.js
+
+test:
+  - src/test/javascript/OG/common/*.js
+  - src/test/javascript/OG/geometry/*.js
+#  - src/test/javascript/OG/shape/*.js
+#  - src/test/javascript/opengraph/handler/*.js
+#  - src/test/javascript/opengraph/layout/*.js
+#  - src/test/javascript/opengraph/renderer/*.js
+#  - src/test/javascript/opengraph/shape/*.js

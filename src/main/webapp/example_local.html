@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko" lang="ko">
+<head>
+    <title>OpenGraph Example</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8">
+    <link rel="stylesheet" type="text/css"
+          href="../javascript/lib/jquery-1.7.2/ui-lightness/jquery-ui-1.8.19.custom.css"/>
+    <link rel="stylesheet" type="text/css" href="../javascript/lib/jquery-1.7.2/contextmenu/jquery.contextMenu.css"/>
+    <style type="text/css">
+        .contents {
+            position: relative;
+            left: 0;
+            top: 0;
+        }
+    </style>
+    <script type="text/javascript" src="../javascript/lib/jquery-1.7.2/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="../javascript/lib/jquery-1.7.2/jquery-ui-1.8.19.custom.min.js"></script>
+    <script type="text/javascript" src="../javascript/lib/jquery-1.7.2/jquery.contextMenu.js"></script>
+    <script type="text/javascript" src="../javascript/lib/raphael-2.1.0/raphael-custom.js"></script>
+    <script type="text/javascript" src="../javascript/OpenGraph-0.1-SNAPSHOT.js"></script>
+    <script type="text/javascript" src="../javascript/src/graph/Canvas.js"></script>
+    <script type="text/javascript" src="../javascript/src/handler/EventHandler.js"></script>
+    <script type="text/javascript" src="../javascript/src/renderer/RaphaelRenderer.js"></script>
+    <script type="text/javascript">
+        var canvas = null;
+        window.onload = function () {
+            OG.Constants.DEFAULT_STYLE.EDGE["edge-type"] = "plain";
+
+            canvas = new OG.Canvas('canvas', [1000, 600]);
+
+            var circleShape = new OG.CircleShape();
+            var ellipseShape = new OG.EllipseShape('label');
+            var rectangleShape1 = new OG.RectangleShape('label');
+            var rectangleShape2 = new OG.RectangleShape('label');
+            var rectangleShape3 = new OG.RectangleShape('label');
+            var rectangleShape4 = new OG.RectangleShape();
+            var imageShape = new OG.ImageShape('http://static.naver.net/www/u/2010/0611/nmms_215646753.gif', 'label');
+            var textShape1 = new OG.TextShape("Text Here, Hello World!");
+            var textShape2 = new OG.TextShape("Text Here, Hello World!");
+            var textShape3 = new OG.TextShape("Text Here, Hello World!");
+            var textShape4 = new OG.TextShape("Text Here, Hello World!");
+            var textShape5 = new OG.TextShape("Text Here, Hello World!");
+            var edgeShape1 = new OG.EdgeShape([450, 50], [600, 50], '', 'from', 'to');
+            var edgeShape2 = new OG.EdgeShape([450, 100], [600, 100], 'label');
+            var edgeShape3 = new OG.EdgeShape([450, 150], [600, 150], 'label');
+            var edgeShape4 = new OG.EdgeShape([450, 200], [600, 200], 'label', '1', '1..n');
+            var edgeShape5 = new OG.EdgeShape([450, 250], [600, 300], 'label');
+            var edgeShape6 = new OG.EdgeShape([500, 350], [550, 500], 'label');
+            var edgeShape7 = new OG.EdgeShape([450, 500], [600, 550], 'label');
+            var group1 = new OG.GroupShape('group');
+            var foreignShape1 = new OG.HtmlShape('<table width="100%" height="100px" border="1" cellspacing="0"><tr><td>name1</td><td>value1</td></tr><tr><td>name2</td><td>value2</td></tr></table>');
+
+            canvas.drawShape([100, 100], circleShape, [100, 100], {stroke: 'red', 'text-anchor': 'end', 'vertical-align': 'middle'});
+            canvas.drawShape([100, 200], ellipseShape, [100, 50], {fill: '#0000ff', 'fill-opacity': 0.5});
+            canvas.drawShape([100, 300], rectangleShape1, [100, 50], {'font-color': 'red', 'font-size': 12, 'label-position': 'right', 'text-anchor': 'start', 'vertical-align': 'middle'});
+            canvas.drawShape([100, 400], rectangleShape2, [100, 50], {stroke: 'blue', 'stroke-dasharray': '-', 'label-position': 'top', 'text-anchor': 'middle', 'vertical-align': 'bottom'});
+            canvas.drawShape([800, 100], rectangleShape3, [150, 100], {'font-size': 15, 'text-anchor': 'end', 'vertical-align': 'top'});
+            canvas.drawShape([800, 200], rectangleShape4, [100, 50]);
+            canvas.drawShape([100, 500], imageShape, [150, 50, 45], {'text-anchor': 'middle', 'vertical-align': 'top'});
+            canvas.drawShape([300, 100], textShape1, [200, 100, 45], {'font-size': 10, 'text-anchor': 'start', 'vertical-align': 'middle'});
+            canvas.drawShape([300, 200], textShape2, [200, 100], {'font-size': 15, 'text-anchor': 'middle', 'vertical-align': 'top'});
+            canvas.drawShape([300, 300], textShape3, [200, 100], {'font-size': 20, 'text-anchor': 'end', 'vertical-align': 'top'});
+            canvas.drawShape([300, 400], textShape4, [200, 100], {'font-size': 25, 'text-anchor': 'middle', 'vertical-align': 'bottom'});
+            canvas.drawShape([300, 500], textShape5, [200, 100], {'font-size': 30, 'text-anchor': 'end', 'vertical-align': 'bottom'});
+            canvas.drawShape(null, edgeShape1, null, {'edge-type': 'plain', "arrow-start": "none", "arrow-end": "open-wide-long"});
+            canvas.drawShape(null, edgeShape2, null, {'edge-type': 'straight', "arrow-start": "classic-wide-long", "arrow-end": "block-wide-long", 'stroke-dasharray': '-', 'stroke-width': 4});
+            canvas.drawShape(null, edgeShape3, null, {'edge-type': 'straight', "arrow-start": "none", "arrow-end": "diamond-wide-long", 'stroke-dasharray': '.', 'stroke-width': 6});
+            canvas.drawShape(null, edgeShape4, null, {'edge-type': 'straight', "arrow-start": "none", "arrow-end": "oval-wide-long", 'stroke-dasharray': '-.'});
+            canvas.drawShape(null, edgeShape5, null, {'edge-type': 'plain', "arrow-start": "none", "arrow-end": "block-wide-long", 'stroke-dasharray': '-..', 'font-size': 15, 'font-color': 'red', 'text-anchor': 'middle', 'vertical-align': 'top'});
+            canvas.drawShape(null, edgeShape6, null, {'edge-type': 'plain', "arrow-start": "none", "arrow-end": "block-wide-long", 'stroke-dasharray': '--'});
+            canvas.drawShape(null, edgeShape7, null, {'edge-type': 'straight', "arrow-start": "none", "arrow-end": "block-wide-long", 'stroke-dasharray': '--..'});
+
+            var ele = canvas.drawShape([800, 350], group1, [200, 100], {stroke: 'black'});
+
+            canvas.drawShape([800, 500], foreignShape1, [200, 100]);
+        };
+    </script>
+</head>
+<body oncontextmenu="return false">
+<br/>
+<br/>
+<div>
+    <div style="position: relative; left: 0; top:0; float: left; width: 100px; height: 600px; background-color: #c3d5ed;">
+        <input type="button" value="printXML" onclick="console.log($.parseXML(canvas.toXML()));"/>
+        <input type="button" value="printJSON" onclick="console.log(canvas.toJSON());"/>
+        <input type="button" value="reload" onclick="canvas.loadJSON(canvas.toJSON());"/>
+    </div>
+    <div style="position: relative; float: left; ">
+        <div>
+            <div>
+                <div id="canvas" class="contents" style="overflow:auto; width: 950px; height: 600px;">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
