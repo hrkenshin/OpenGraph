@@ -704,6 +704,66 @@ OG.renderer.IRenderer = function () {
 	this.isVML = function () {
 		throw new OG.NotImplementedException();
 	};
+
+	/**
+	 * 연결된 이전 Edge Element 들을 반환한다.
+	 *
+	 * @param {Element,String} element Element 또는 ID
+	 * @return {Element[]} Previous Element's Array
+	 */
+	this.getPrevEdges = function (element) {
+		throw new OG.NotImplementedException();
+	};
+
+	/**
+	 * 연결된 이후 Edge Element 들을 반환한다.
+	 *
+	 * @param {Element,String} element Element 또는 ID
+	 * @return {Element[]} Previous Element's Array
+	 */
+	this.getNextEdges = function (element) {
+		throw new OG.NotImplementedException();
+	};
+
+	/**
+	 * 연결된 이전 노드 Element 들을 반환한다.
+	 *
+	 * @param {Element,String} element Element 또는 ID
+	 * @return {Element[]} Previous Element's Array
+	 */
+	this.getPrevShapes = function (element) {
+		throw new OG.NotImplementedException();
+	};
+
+	/**
+	 * 연결된 이전 노드 Element ID들을 반환한다.
+	 *
+	 * @param {Element,String} element Element 또는 ID
+	 * @return {String[]} Previous Element Id's Array
+	 */
+	this.getPrevShapeIds = function (element) {
+		throw new OG.NotImplementedException();
+	};
+
+	/**
+	 * 연결된 이후 노드 Element 들을 반환한다.
+	 *
+	 * @param {Element,String} element Element 또는 ID
+	 * @return {Element[]} Previous Element's Array
+	 */
+	this.getNextShapes = function (element) {
+		throw new OG.NotImplementedException();
+	};
+
+	/**
+	 * 연결된 이후 노드 Element ID들을 반환한다.
+	 *
+	 * @param {Element,String} element Element 또는 ID
+	 * @return {String[]} Previous Element Id's Array
+	 */
+	this.getNextShapeIds = function (element) {
+		throw new OG.NotImplementedException();
+	};
 };
 OG.renderer.IRenderer.prototype = new OG.renderer.IRenderer();
 OG.renderer.IRenderer.prototype.constructor = OG.renderer.IRenderer;

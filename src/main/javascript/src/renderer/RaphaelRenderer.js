@@ -4122,6 +4122,154 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 	this.isVML = function () {
 		return Raphael.vml;
 	};
+
+	/**
+	 * 연결된 이전 Edge Element 들을 반환한다.
+	 *
+	 * @param {Element,String} element Element 또는 ID
+	 * @return {Element[]} Previous Element's Array
+	 * @override
+	 */
+	this.getPrevEdges = function (element) {
+		var prevEdgeIds = $(element).attr('_fromedge'),
+			edgeArray = [],
+			edgeIds, edge, i;
+
+		if (prevEdgeIds) {
+			edgeIds = prevEdgeIds.split(',');
+			for (i = 0; i < edgeIds.length; i++) {
+				edge = this.getElementById(edgeIds[i]);
+				if (edge) {
+					edgeArray.push(edge);
+				}
+			}
+		}
+
+		return edgeArray;
+	};
+
+	/**
+	 * 연결된 이후 Edge Element 들을 반환한다.
+	 *
+	 * @param {Element,String} element Element 또는 ID
+	 * @return {Element[]} Previous Element's Array
+	 * @override
+	 */
+	this.getNextEdges = function (element) {
+		var nextEdgeIds = $(element).attr('_toedge'),
+			edgeArray = [],
+			edgeIds, edge, i;
+
+		if (nextEdgeIds) {
+			edgeIds = nextEdgeIds.split(',');
+			for (i = 0; i < edgeIds.length; i++) {
+				edge = this.getElementById(edgeIds[i]);
+				if (edge) {
+					edgeArray.push(edge);
+				}
+			}
+		}
+
+		return edgeArray;
+	};
+
+	/**
+	 * 연결된 이전 노드 Element 들을 반환한다.
+	 *
+	 * @param {Element,String} element Element 또는 ID
+	 * @return {Element[]} Previous Element's Array
+	 * @override
+	 */
+	this.getPrevShapes = function (element) {
+		var prevEdges = this.getPrevEdges(element),
+			shapeArray = [],
+			prevShapeId, shape, i;
+
+		for (i = 0; i < prevEdges.length; i++) {
+			prevShapeId = $(prevEdges[i]).attr('_from');
+			if (prevShapeId) {
+				prevShapeId = prevShapeId.substring(0, prevShapeId.indexOf(OG.Constants.TERMINAL_SUFFIX.GROUP));
+				shape = this.getElementById(prevShapeId);
+				if (shape) {
+					shapeArray.push(shape);
+				}
+			}
+		}
+
+		return shapeArray;
+	};
+
+	/**
+	 * 연결된 이전 노드 Element ID들을 반환한다.
+	 *
+	 * @param {Element,String} element Element 또는 ID
+	 * @return {String[]} Previous Element Id's Array
+	 * @override
+	 */
+	this.getPrevShapeIds = function (element) {
+		var prevEdges = this.getPrevEdges(element),
+			shapeArray = [],
+			prevShapeId, i;
+
+		for (i = 0; i < prevEdges.length; i++) {
+			prevShapeId = $(prevEdges[i]).attr('_from');
+			if (prevShapeId) {
+				prevShapeId = prevShapeId.substring(0, prevShapeId.indexOf(OG.Constants.TERMINAL_SUFFIX.GROUP));
+				shapeArray.push(prevShapeId);
+			}
+		}
+
+		return shapeArray;
+	};
+
+	/**
+	 * 연결된 이후 노드 Element 들을 반환한다.
+	 *
+	 * @param {Element,String} element Element 또는 ID
+	 * @return {Element[]} Previous Element's Array
+	 * @override
+	 */
+	this.getNextShapes = function (element) {
+		var nextEdges = this.getNextEdges(element),
+			shapeArray = [],
+			nextShapeId, shape, i;
+
+		for (i = 0; i < nextEdges.length; i++) {
+			nextShapeId = $(nextEdges[i]).attr('_to');
+			if (nextShapeId) {
+				nextShapeId = nextShapeId.substring(0, nextShapeId.indexOf(OG.Constants.TERMINAL_SUFFIX.GROUP));
+				shape = this.getElementById(nextShapeId);
+				if (shape) {
+					shapeArray.push(shape);
+				}
+			}
+		}
+
+		return shapeArray;
+	};
+
+	/**
+	 * 연결된 이후 노드 Element ID들을 반환한다.
+	 *
+	 * @param {Element,String} element Element 또는 ID
+	 * @return {String[]} Previous Element Id's Array
+	 * @override
+	 */
+	this.getNextShapeIds = function (element) {
+		var nextEdges = this.getNextEdges(element),
+			shapeArray = [],
+			nextShapeId, i;
+
+		for (i = 0; i < nextEdges.length; i++) {
+			nextShapeId = $(nextEdges[i]).attr('_to');
+			if (nextShapeId) {
+				nextShapeId = nextShapeId.substring(0, nextShapeId.indexOf(OG.Constants.TERMINAL_SUFFIX.GROUP));
+				shapeArray.push(nextShapeId);
+			}
+		}
+
+		return shapeArray;
+	};
 };
 OG.renderer.RaphaelRenderer.prototype = new OG.renderer.IRenderer();
 OG.renderer.RaphaelRenderer.prototype.constructor = OG.renderer.RaphaelRenderer;

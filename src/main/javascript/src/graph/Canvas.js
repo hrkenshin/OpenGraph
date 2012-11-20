@@ -742,7 +742,9 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroun
 					cell = {},
 					vertices,
 					from,
-					to;
+					to,
+					prevShapeIds,
+					nextShapeIds;
 
 				cell['@id'] = $(item).attr('id');
 				if (!isRoot) {
@@ -758,16 +760,24 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroun
 					cell['@style'] = escape(OG.JSON.encode(style));
 				}
 
-				if ($(item).attr('_from')) {
-					cell['@from'] = $(item).attr('_from');
-				} else if (shape.TYPE !== OG.Constants.SHAPE_TYPE.EDGE) {
-					cell['@from'] = CANVAS.getPrevShapeIds(item).toString();
+				if (shape.TYPE === OG.Constants.SHAPE_TYPE.EDGE) {
+					if ($(item).attr('_from')) {
+						cell['@from'] = $(item).attr('_from');
+					}
+					if ($(item).attr('_to')) {
+						cell['@to'] = $(item).attr('_to');
+					}
+				} else {
+					prevShapeIds = CANVAS.getPrevShapeIds(item);
+					nextShapeIds = CANVAS.getNextShapeIds(item);
+					if (prevShapeIds.length > 0) {
+						cell['@from'] = prevShapeIds.toString();
+					}
+					if (nextShapeIds.length > 0) {
+						cell['@to'] = nextShapeIds.toString();
+					}
 				}
-				if ($(item).attr('_to')) {
-					cell['@to'] = $(item).attr('_to');
-				} else if (shape.TYPE !== OG.Constants.SHAPE_TYPE.EDGE) {
-					cell['@to'] = CANVAS.getNextShapeIds(item).toString();
-				}
+
 				if ($(item).attr('_fromedge')) {
 					cell['@fromEdge'] = $(item).attr('_fromedge');
 				}
@@ -992,21 +1002,7 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroun
 	 * @return {Element[]} Previous Element's Array
 	 */
 	this.getPrevEdges = function (element) {
-		var prevEdgeIds = $(element).attr('_fromedge'),
-			edgeArray = [],
-			edgeIds, edge, i;
-
-		if (prevEdgeIds) {
-			edgeIds = prevEdgeIds.split(',');
-			for (i = 0; i < edgeIds.length; i++) {
-				edge = this.getElementById(edgeIds[i]);
-				if (edge) {
-					edgeArray.push(edge);
-				}
-			}
-		}
-
-		return edgeArray;
+		return _RENDERER.getPrevEdges(element);
 	};
 
 	/**
@@ -1016,21 +1012,7 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroun
 	 * @return {Element[]} Previous Element's Array
 	 */
 	this.getNextEdges = function (element) {
-		var nextEdgeIds = $(element).attr('_toedge'),
-			edgeArray = [],
-			edgeIds, edge, i;
-
-		if (nextEdgeIds) {
-			edgeIds = nextEdgeIds.split(',');
-			for (i = 0; i < edgeIds.length; i++) {
-				edge = this.getElementById(edgeIds[i]);
-				if (edge) {
-					edgeArray.push(edge);
-				}
-			}
-		}
-
-		return edgeArray;
+		return _RENDERER.getNextEdges(element);
 	};
 
 	/**
@@ -1040,22 +1022,7 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroun
 	 * @return {Element[]} Previous Element's Array
 	 */
 	this.getPrevShapes = function (element) {
-		var prevEdges = this.getPrevEdges(element),
-			shapeArray = [],
-			prevShapeId, shape, i;
-
-		for (i = 0; i < prevEdges.length; i++) {
-			prevShapeId = $(prevEdges[i]).attr('_from');
-			if (prevShapeId) {
-				prevShapeId = prevShapeId.substring(0, prevShapeId.indexOf(OG.Constants.TERMINAL_SUFFIX.GROUP));
-				shape = this.getElementById(prevShapeId);
-				if (shape) {
-					shapeArray.push(shape);
-				}
-			}
-		}
-
-		return shapeArray;
+		return _RENDERER.getPrevShapes(element);
 	};
 
 	/**
@@ -1065,19 +1032,7 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroun
 	 * @return {String[]} Previous Element Id's Array
 	 */
 	this.getPrevShapeIds = function (element) {
-		var prevEdges = this.getPrevEdges(element),
-			shapeArray = [],
-			prevShapeId, i;
-
-		for (i = 0; i < prevEdges.length; i++) {
-			prevShapeId = $(prevEdges[i]).attr('_from');
-			if (prevShapeId) {
-				prevShapeId = prevShapeId.substring(0, prevShapeId.indexOf(OG.Constants.TERMINAL_SUFFIX.GROUP));
-				shapeArray.push(prevShapeId);
-			}
-		}
-
-		return shapeArray;
+		return _RENDERER.getPrevShapeIds(element);
 	};
 
 	/**
@@ -1087,22 +1042,7 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroun
 	 * @return {Element[]} Previous Element's Array
 	 */
 	this.getNextShapes = function (element) {
-		var nextEdges = this.getNextEdges(element),
-			shapeArray = [],
-			nextShapeId, shape, i;
-
-		for (i = 0; i < nextEdges.length; i++) {
-			nextShapeId = $(nextEdges[i]).attr('_to');
-			if (nextShapeId) {
-				nextShapeId = nextShapeId.substring(0, nextShapeId.indexOf(OG.Constants.TERMINAL_SUFFIX.GROUP));
-				shape = this.getElementById(nextShapeId);
-				if (shape) {
-					shapeArray.push(shape);
-				}
-			}
-		}
-
-		return shapeArray;
+		return _RENDERER.getNextShapes(element);
 	};
 
 	/**
@@ -1112,19 +1052,7 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroun
 	 * @return {String[]} Previous Element Id's Array
 	 */
 	this.getNextShapeIds = function (element) {
-		var nextEdges = this.getNextEdges(element),
-			shapeArray = [],
-			nextShapeId, i;
-
-		for (i = 0; i < nextEdges.length; i++) {
-			nextShapeId = $(nextEdges[i]).attr('_to');
-			if (nextShapeId) {
-				nextShapeId = nextShapeId.substring(0, nextShapeId.indexOf(OG.Constants.TERMINAL_SUFFIX.GROUP));
-				shapeArray.push(nextShapeId);
-			}
-		}
-
-		return shapeArray;
+		return _RENDERER.getNextShapeIds(element);
 	};
 
 	/**
