@@ -3975,6 +3975,16 @@ OG.shape.TextShape.prototype.createShape = function () {
 };
 
 /**
+ * Shape 간의 연결을 위한 Terminal 을 반환한다.
+ *
+ * @return {OG.Terminal[]} Terminal
+ * @override
+ */
+OG.shape.TextShape.prototype.createTerminal = function () {
+	return [];
+};
+
+/**
  * Shape 을 복사하여 새로인 인스턴스로 반환한다.
  *
  * @return {OG.shape.IShape} 복사된 인스턴스
@@ -4109,6 +4119,16 @@ OG.shape.EdgeShape.prototype.createShape = function () {
 };
 
 /**
+ * Shape 간의 연결을 위한 Terminal 을 반환한다.
+ *
+ * @return {OG.Terminal[]} Terminal
+ * @override
+ */
+OG.shape.EdgeShape.prototype.createTerminal = function () {
+	return [];
+};
+
+/**
  * Shape 을 복사하여 새로인 인스턴스로 반환한다.
  *
  * @return {OG.shape.IShape} 복사된 인스턴스
@@ -4226,6 +4246,16 @@ OG.shape.GroupShape.prototype.createShape = function () {
 	});
 
 	return this.geom;
+};
+
+/**
+ * Shape 간의 연결을 위한 Terminal 을 반환한다.
+ *
+ * @return {OG.Terminal[]} Terminal
+ * @override
+ */
+OG.shape.GroupShape.prototype.createTerminal = function () {
+	return [];
 };
 
 /**
