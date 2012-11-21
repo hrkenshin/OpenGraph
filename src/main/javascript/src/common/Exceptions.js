@@ -8,12 +8,14 @@
  */
 OG.common.NotSupportedException = function (message) {
 	/**
-	 * {String} 예외명
+	 * 예외명
+	 * @type String
 	 */
 	this.name = "OG.NotSupportedException";
 
 	/**
-	 * {String} 메시지
+	 * 메시지
+	 * @type String
 	 */
 	this.message = message || "Not Supported!";
 };
@@ -29,12 +31,14 @@ OG.NotSupportedException = OG.common.NotSupportedException;
  */
 OG.common.NotImplementedException = function (message) {
 	/**
-	 * {String} 예외명
+	 * 예외명
+	 * @type String
 	 */
 	this.name = "OG.NotImplementedException";
 
 	/**
-	 * {String} 메시지
+	 * 메시지
+	 * @type String
 	 */
 	this.message = message || "Not Implemented!";
 };
@@ -50,12 +54,14 @@ OG.NotImplementedException = OG.common.NotImplementedException;
  */
 OG.common.ParamError = function (message) {
 	/**
-	 * {String} 예외명
+	 * 예외명
+	 * @type String
 	 */
 	this.name = "OG.ParamError";
 
 	/**
-	 * {String} 메시지
+	 * 메시지
+	 * @type String
 	 */
 	this.message = message || "Invalid Parameter Error!";
 };

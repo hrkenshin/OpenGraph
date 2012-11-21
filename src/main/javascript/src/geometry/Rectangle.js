@@ -2,8 +2,11 @@
  * Rectangle 공간 기하 객체(Spatial Geometry Object)
  *
  * @class
- * @extends OG.geometry.Geometry
+ * @extends OG.geometry.Polygon
  * @requires OG.geometry.Coordinate, OG.geometry.Envelope, OG.geometry.Geometry
+ *
+ * @example
+ * var geom = new OG.geometry.Rectangle([20, 5], 10, 10);
  *
  * @param {OG.geometry.Coordinate} upperLeft 좌상단좌표
  * @param {Number} width 너비
@@ -28,42 +31,30 @@ OG.geometry.Rectangle = function (upperLeft, width, height) {
 		[_upperLeft.x, _upperLeft.y]
 	]);
 
-	/**
-	 * {Number} 공간 기하 객체 타입
-	 */
 	this.TYPE = OG.Constants.GEOM_TYPE.RECTANGLE;
-
-	/**
-	 * {Boolean} 닫힌 기하 객체 인지 여부
-	 */
-	this.IS_CLOSED = true;
-
-	/**
-	 * {OG.geometry.Style} 스타일 속성
-	 */
 	this.style = new OG.geometry.Style();
-
-	/**
-	 * 객체 프라퍼티 정보를 JSON 스트링으로 반환한다.
-	 *
-	 * @return {String} 프라퍼티 정보
-	 * @override
-	 */
-	this.toString = function () {
-		var s = [],
-			angle = OG.Util.round(Math.atan2(this.vertices[1].y - this.vertices[0].y,
-				this.vertices[1].x - this.vertices[0].x) * 180 / Math.PI);
-
-		s.push("type:'" + OG.Constants.GEOM_NAME[this.TYPE] + "'");
-		s.push("upperLeft:" + this.vertices[0]);
-		s.push("width:" + (this.vertices[0].distance(this.vertices[1])));
-		s.push("height:" + (this.vertices[0].distance(this.vertices[3])));
-		s.push("angle:" + angle);
-
-		return "{" + s.join() + "}";
-	};
 };
 OG.geometry.Rectangle.prototype = new OG.geometry.Polygon();
 OG.geometry.Rectangle.superclass = OG.geometry.Polygon;
 OG.geometry.Rectangle.prototype.constructor = OG.geometry.Rectangle;
 OG.Rectangle = OG.geometry.Rectangle;
+
+/**
+ * 객체 프라퍼티 정보를 JSON 스트링으로 반환한다.
+ *
+ * @return {String} 프라퍼티 정보
+ * @override
+ */
+OG.geometry.Rectangle.prototype.toString = function () {
+	var s = [],
+		angle = OG.Util.round(Math.atan2(this.vertices[1].y - this.vertices[0].y,
+			this.vertices[1].x - this.vertices[0].x) * 180 / Math.PI);
+
+	s.push("type:'" + OG.Constants.GEOM_NAME[this.TYPE] + "'");
+	s.push("upperLeft:" + this.vertices[0]);
+	s.push("width:" + (this.vertices[0].distance(this.vertices[1])));
+	s.push("height:" + (this.vertices[0].distance(this.vertices[3])));
+	s.push("angle:" + angle);
+
+	return "{" + s.join() + "}";
+};

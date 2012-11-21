@@ -9,24 +9,30 @@
 OG.geometry.Geometry = function () {
 
 	/**
-	 * {Number} 공간 기하 객체 타입
+	 * 공간 기하 객체 타입
+	 * @type Number
 	 */
 	this.TYPE = OG.Constants.GEOM_TYPE.NULL;
 
 	/**
-	 * {Boolean} 닫힌 기하 객체 인지 여부
+	 * 닫힌 기하 객체 인지 여부
+	 * @type Boolean
 	 */
 	this.IS_CLOSED = false;
 
 	/**
-	 * {OG.geometry.Style} 스타일 속성
+	 * 스타일 속성
+	 * @type OG.geometry.Style
 	 */
-	this.style = new OG.geometry.Style();
+	this.style = null;
 
 	/**
-	 * {OG.geometry.Envelope} 공간기하객체를 포함하는 사각형의 Boundary 영역
+	 * 공간기하객체를 포함하는 사각형의 Boundary 영역
+	 * @type OG.geometry.Envelope
 	 */
 	this.boundary = null;
+};
+OG.geometry.Geometry.prototype = {
 
 	// 다른 Geometry 객체와의 Spatial Relation 을 테스트하는 함수들
 
@@ -36,9 +42,9 @@ OG.geometry.Geometry = function () {
 	 * @param {OG.geometry.Geometry} _geometry Geometry 객체
 	 * @return {Boolean} true:같음, false:다름
 	 */
-	this.isEquals = function (_geometry) {
+	isEquals: function (_geometry) {
 		return _geometry && _geometry.toString() === this.toString();
-	};
+	},
 
 	/**
 	 * 주어진 공간기하객체를 포함하는지 비교한다.
@@ -46,9 +52,9 @@ OG.geometry.Geometry = function () {
 	 * @param {OG.geometry.Geometry} _geometry Geometry 객체
 	 * @return {Boolean} 포함하면 true
 	 */
-	this.isContains = function (_geometry) {
+	isContains: function (_geometry) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * 주어진 공간기하객체에 포함되는지 비교한다.
@@ -56,25 +62,25 @@ OG.geometry.Geometry = function () {
 	 * @param {OG.geometry.Geometry} _geometry Geometry 객체
 	 * @return {Boolean} 포함되면 true
 	 */
-	this.isWithin = function (_geometry) {
+	isWithin: function (_geometry) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
-//	this.isDisjoint = function (_geometry) {
+//	isDisjoint: function (_geometry) {
 //		throw new OG.NotImplementedException();
-//	};
+//	},
 //
-//	this.isIntersects = function (_geometry) {
+//	isIntersects: function (_geometry) {
 //		throw new OG.NotImplementedException();
-//	};
+//	},
 //
-//	this.isOverlaps = function (_geometry) {
+//	isOverlaps: function (_geometry) {
 //		throw new OG.NotImplementedException();
-//	};
+//	},
 //
-//	this.isTouches = function (_geometry) {
+//	isTouches: function (_geometry) {
 //		throw new OG.NotImplementedException();
-//	};
+//	},
 
 	// 현 Geometry 객체의 Spatial Analysis 를 지원하는 함수들
 
@@ -83,7 +89,7 @@ OG.geometry.Geometry = function () {
 	 *
 	 * @return {OG.geometry.Envelope} Envelope 영역
 	 */
-	this.getBoundary = function () {
+	getBoundary: function () {
 		if (this.boundary === null) {
 			var minX, minY, maxX, maxY, upperLeft, width, height,
 				vertices = this.getVertices(), i;
@@ -105,16 +111,16 @@ OG.geometry.Geometry = function () {
 		}
 
 		return this.boundary;
-	};
+	},
 
 	/**
 	 * 공간기하객체의 중심좌표를 반환한다.
 	 *
 	 * @return {OG.geometry.Coordinate} 중심좌표
 	 */
-	this.getCentroid = function () {
+	getCentroid: function () {
 		return this.getBoundary().getCentroid();
-	};
+	},
 
 	/**
 	 * 공간기하객체의 모든 꼭지점을 반환한다.
@@ -122,9 +128,9 @@ OG.geometry.Geometry = function () {
 	 * @return {OG.geometry.Coordinate[]} 꼭지점 좌표 Array
 	 * @abstract
 	 */
-	this.getVertices = function () {
+	getVertices: function () {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * 주어진 좌표와의 최단거리를 반환한다.
@@ -132,7 +138,7 @@ OG.geometry.Geometry = function () {
 	 * @param {OG.geometry.Coordinate} _coordinate 좌표
 	 * @return {Number} 최단거리
 	 */
-	this.minDistance = function (_coordinate) {
+	minDistance: function (_coordinate) {
 		var minDistance = Number.MAX_VALUE,
 			distance = 0,
 			vertices = this.getVertices(),
@@ -152,7 +158,7 @@ OG.geometry.Geometry = function () {
 		}
 
 		return minDistance;
-	};
+	},
 
 	/**
 	 * 주어진 공간기하객체와의 중심점 간의 거리를 반환한다.
@@ -160,16 +166,16 @@ OG.geometry.Geometry = function () {
 	 * @param {OG.geometry.Geometry} _geometry 공간 기하 객체
 	 * @return {Number} 거리
 	 */
-	this.distance = function (_geometry) {
+	distance: function (_geometry) {
 		return this.getCentroid().distance(_geometry.getCentroid());
-	};
+	},
 
 	/**
 	 * 공간기하객체의 길이를 반환한다.
 	 *
 	 * @return {Number} 길이
 	 */
-	this.getLength = function () {
+	getLength: function () {
 		var length = 0,
 			vertices = this.getVertices(),
 			i;
@@ -178,15 +184,15 @@ OG.geometry.Geometry = function () {
 		}
 
 		return length;
-	};
+	},
 
-//	this.intersect = function (_geometry) {
+//	intersect : function (_geometry) {
 //		throw new OG.NotImplementedException();
-//	};
+//	},
 //
-//	this.union = function (_geometry) {
+//	union : function (_geometry) {
 //		throw new OG.NotImplementedException();
-//	};
+//	},
 
 	// 현 Geometry 객체의 Spatial Transform 를 지원하는 함수들
 
@@ -198,21 +204,21 @@ OG.geometry.Geometry = function () {
 	 * @return {OG.geometry.Geometry} 이동된 공간 기하 객체
 	 * @abstract
 	 */
-	this.move = function (offsetX, offsetY) {
+	move: function (offsetX, offsetY) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * 주어진 중심좌표로 공간기하객체를 이동한다.
 	 *
 	 * @param {OG.geometry.Coordinate} 중심 좌표
 	 */
-	this.moveCentroid = function (target) {
+	moveCentroid: function (target) {
 		var origin = this.getCentroid();
 		target = new OG.geometry.Coordinate(target);
 
 		this.move(target.x - origin.x, target.y - origin.y);
-	};
+	},
 
 	/**
 	 * 상, 하, 좌, 우 외곽선을 이동하여 Envelope 을 리사이즈 한다.
@@ -224,9 +230,9 @@ OG.geometry.Geometry = function () {
 	 * @return {OG.geometry.Geometry} 리사이즈된 공간 기하 객체
 	 * @abstract
 	 */
-	this.resize = function (upper, lower, left, right) {
+	resize: function (upper, lower, left, right) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * 중심좌표는 고정한 채 Bounding Box 의 width, height 를 리사이즈 한다.
@@ -235,7 +241,7 @@ OG.geometry.Geometry = function () {
 	 * @param {Number} height 높이
 	 * @return {OG.geometry.Geometry} 리사이즈된 공간 기하 객체
 	 */
-	this.resizeBox = function (width, height) {
+	resizeBox: function (width, height) {
 		var boundary = this.getBoundary(),
 			offsetWidth = OG.Util.round((width - boundary.getWidth()) / 2),
 			offsetHeight = OG.Util.round((height - boundary.getHeight()) / 2);
@@ -243,7 +249,7 @@ OG.geometry.Geometry = function () {
 		this.resize(offsetHeight, offsetHeight, offsetWidth, offsetWidth);
 
 		return this;
-	};
+	},
 
 	/**
 	 * 기준 좌표를 기준으로 주어진 각도 만큼 회전한다.
@@ -253,9 +259,9 @@ OG.geometry.Geometry = function () {
 	 * @return {OG.geometry.Geometry} 회전된 공간 기하 객체
 	 * @abstract
 	 */
-	this.rotate = function (angle, origin) {
+	rotate: function (angle, origin) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * 주어진 Boundary 영역 안으로 공간 기하 객체를 적용한다.(이동 & 리사이즈)
@@ -263,7 +269,7 @@ OG.geometry.Geometry = function () {
 	 * @param {OG.geometry.Envelope} envelope Envelope 영역
 	 * @return {OG.geometry.Geometry} 적용된 공간 기하 객체
 	 */
-	this.fitToBoundary = function (envelope) {
+	fitToBoundary: function (envelope) {
 		var boundary = this.getBoundary(),
 			upper = boundary.getUpperCenter().y - envelope.getUpperCenter().y,
 			lower = envelope.getLowerCenter().y - boundary.getLowerCenter().y,
@@ -273,7 +279,7 @@ OG.geometry.Geometry = function () {
 		this.resize(upper, lower, left, right);
 
 		return this;
-	};
+	},
 
 	// 유틸리티 함수들
 
@@ -283,7 +289,7 @@ OG.geometry.Geometry = function () {
 	 * @param {OG.geometry.Coordinate,Number[]} coordinate [x, y] 형식의 좌표 Array 또는 OG.geometry.Coordinate 인스턴스
 	 * @return {OG.geometry.Coordinate}
 	 */
-	this.convertCoordinate = function (coordinate) {
+	convertCoordinate: function (coordinate) {
 		// Array 좌표를 OG.geometry.Coordinate 로 변환
 		if (coordinate) {
 			if (coordinate.constructor === Array) {
@@ -296,7 +302,7 @@ OG.geometry.Geometry = function () {
 		} else {
 			return undefined;
 		}
-	};
+	},
 
 	/**
 	 * 포인트 P 로부터 라인 AB의 거리를 계산한다.
@@ -306,7 +312,7 @@ OG.geometry.Geometry = function () {
 	 * @param {OG.geometry.Coordinate[]} line 라인 시작좌표, 끝좌표 Array
 	 * @return {Number} 거리
 	 */
-	this.distanceToLine = function (p, line) {
+	distanceToLine: function (p, line) {
 		var A = this.convertCoordinate(line[0]),
 			B = this.convertCoordinate(line[1]),
 			r, s;
@@ -350,7 +356,7 @@ OG.geometry.Geometry = function () {
 
 		return OG.Util.round(Math.abs(s) *
 			Math.sqrt(((B.x - A.x) * (B.x - A.x) + (B.y - A.y) * (B.y - A.y))));
-	};
+	},
 
 	/**
 	 * 라인1 로부터 라인2 의 거리를 계산한다.
@@ -360,7 +366,7 @@ OG.geometry.Geometry = function () {
 	 * @param {OG.geometry.Coordinate[]} line2 line2 라인 시작좌표, 끝좌표 Array
 	 * @return {Number} 거리
 	 */
-	this.distanceLineToLine = function (line1, line2) {
+	distanceLineToLine: function (line1, line2) {
 		var A = this.convertCoordinate(line1[0]),
 			B = this.convertCoordinate(line1[1]),
 			C = this.convertCoordinate(line2[0]),
@@ -419,7 +425,7 @@ OG.geometry.Geometry = function () {
 
 		//intersection exists
 		return 0;
-	};
+	},
 
 	/**
 	 * 주어진 라인과 교차하는 좌표를 반환한다.
@@ -427,7 +433,7 @@ OG.geometry.Geometry = function () {
 	 * @param {OG.geometry.Coordinate[]} line 라인 시작좌표, 끝좌표 Array
 	 * @return {OG.geometry.Coordinate[]}
 	 */
-	this.intersectToLine = function (line) {
+	intersectToLine: function (line) {
 		var vertices = this.getVertices(), result = [], point, i,
 			contains = function (coordinateArray, coordinate) {
 				var k;
@@ -447,7 +453,7 @@ OG.geometry.Geometry = function () {
 		}
 
 		return result;
-	};
+	},
 
 	/**
 	 * 라인1 로부터 라인2 의 교차점을 계산한다.
@@ -456,7 +462,7 @@ OG.geometry.Geometry = function () {
 	 * @param {OG.geometry.Coordinate[]} line2 line2 라인 시작좌표, 끝좌표 Array
 	 * @return {OG.geometry.Coordinate} 교차점
 	 */
-	this.intersectLineToLine = function (line1, line2) {
+	intersectLineToLine: function (line1, line2) {
 		var A = this.convertCoordinate(line1[0]),
 			B = this.convertCoordinate(line1[1]),
 			C = this.convertCoordinate(line2[0]),
@@ -517,7 +523,7 @@ OG.geometry.Geometry = function () {
 		}
 
 		return result;
-	};
+	},
 
 	/**
 	 * 라인1 로부터 라인2 의 교차점을 계산한다.
@@ -528,7 +534,7 @@ OG.geometry.Geometry = function () {
 	 * @param {OG.geometry.Coordinate} to line 라인 끝좌표
 	 * @return {OG.geometry.Coordinate[]} 교차점
 	 */
-	this.intersectCircleToLine = function (center, radius, from, to) {
+	intersectCircleToLine: function (center, radius, from, to) {
 		var result = [],
 			a = (to.x - from.x) * (to.x - from.x) +
 				(to.y - from.y) * (to.y - from.y),
@@ -576,14 +582,14 @@ OG.geometry.Geometry = function () {
 		}
 
 		return result;
-	};
+	},
 
 	/**
 	 * 저장된 boundary 를 클리어하여 새로 계산하도록 한다.
 	 */
-	this.reset = function () {
+	reset: function () {
 		this.boundary = null;
-	};
-};
-OG.geometry.Geometry.prototype = new OG.geometry.Geometry();
+	}
+}
+;
 OG.geometry.Geometry.prototype.constructor = OG.geometry.Geometry;

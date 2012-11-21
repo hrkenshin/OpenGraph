@@ -4,13 +4,17 @@
  * @class
  * @extends OG.common.HashMap
  *
- * @param {OG.common.HashMap} style 키:값 매핑된 스타일 프라퍼티 정보
+ * @example
+ * var style = new OG.geometry.Style({
+ *     'cursor': 'default',
+ *     'stroke': 'black'
+ * });
+ *
+ * @param {Object} style 키:값 매핑된 스타일 프라퍼티 정보
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.geometry.Style = function (style) {
-	var DEFAULT_STYLE = {
-		},
-		_style = {};
+	var DEFAULT_STYLE = {}, _style = {};
 
 	OG.Util.apply(_style, style, DEFAULT_STYLE);
 

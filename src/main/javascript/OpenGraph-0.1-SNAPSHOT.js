@@ -1351,12 +1351,14 @@ OG.CurveUtil = OG.common.CurveUtil;
  */
 OG.common.NotSupportedException = function (message) {
 	/**
-	 * {String} 예외명
+	 * 예외명
+	 * @type String
 	 */
 	this.name = "OG.NotSupportedException";
 
 	/**
-	 * {String} 메시지
+	 * 메시지
+	 * @type String
 	 */
 	this.message = message || "Not Supported!";
 };
@@ -1372,12 +1374,14 @@ OG.NotSupportedException = OG.common.NotSupportedException;
  */
 OG.common.NotImplementedException = function (message) {
 	/**
-	 * {String} 예외명
+	 * 예외명
+	 * @type String
 	 */
 	this.name = "OG.NotImplementedException";
 
 	/**
-	 * {String} 메시지
+	 * 메시지
+	 * @type String
 	 */
 	this.message = message || "Not Implemented!";
 };
@@ -1393,12 +1397,14 @@ OG.NotImplementedException = OG.common.NotImplementedException;
  */
 OG.common.ParamError = function (message) {
 	/**
-	 * {String} 예외명
+	 * 예외명
+	 * @type String
 	 */
 	this.name = "OG.ParamError";
 
 	/**
-	 * {String} 메시지
+	 * 메시지
+	 * @type String
 	 */
 	this.message = message || "Invalid Parameter Error!";
 };
@@ -1408,22 +1414,40 @@ OG.ParamError = OG.common.ParamError;
  *
  * @class
  *
+ * @example
+ * var map1 = new OG.common.HashMap({
+ *     'key1': 'value1',
+ *     'key2': 'value2'
+ * });
+ *
+ * console.log(map1.get('key1'));
+ *
+ * var map2 = new OG.common.HashMap();
+ * map2.put('key1', 'value1');
+ * map2.put('key2', 'value2');
+ *
+ * console.log(map2.get('key1'));
+ *
  * @param {Object} jsonObject key:value 매핑 JSON 오브젝트
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.common.HashMap = function (jsonObject) {
-
+	/**
+	 * key:value 매핑 JSON 오브젝트
+	 * @type Object
+	 */
 	this.map = jsonObject || {};
-
+};
+OG.common.HashMap.prototype = {
 	/**
 	 * key : value 를 매핑한다.
 	 *
 	 * @param {String} key 키
 	 * @param {Object} value 값
 	 */
-	this.put = function (key, value) {
+	put: function (key, value) {
 		this.map[key] = value;
-	};
+	},
 
 	/**
 	 * key 에 대한 value 를 반환한다.
@@ -1431,9 +1455,9 @@ OG.common.HashMap = function (jsonObject) {
 	 * @param {String} key 키
 	 * @return {Object} 값
 	 */
-	this.get = function (key) {
+	get: function (key) {
 		return this.map[key];
-	};
+	},
 
 	/**
 	 * 주어진 key 를 포함하는지 여부를 반환한다.
@@ -1441,9 +1465,9 @@ OG.common.HashMap = function (jsonObject) {
 	 * @param {String} key 키
 	 * @return {Boolean}
 	 */
-	this.containsKey = function (key) {
+	containsKey: function (key) {
 		return this.map.hasOwnProperty(key);
-	};
+	},
 
 	/**
 	 * 주어진 value 를 포함하는지 여부를 반환한다.
@@ -1451,7 +1475,7 @@ OG.common.HashMap = function (jsonObject) {
 	 * @param {Object} value 값
 	 * @return {Boolean}
 	 */
-	this.containsValue = function (value) {
+	containsValue: function (value) {
 		var prop;
 		for (prop in this.map) {
 			if (this.map[prop] === value) {
@@ -1459,76 +1483,76 @@ OG.common.HashMap = function (jsonObject) {
 			}
 		}
 		return false;
-	};
+	},
 
 	/**
 	 * Empty 여부를 반환한다.
 	 *
 	 * @return {Boolean}
 	 */
-	this.isEmpty = function () {
+	isEmpty: function () {
 		return this.size() === 0;
-	};
+	},
 
 	/**
 	 * 매핑정보를 클리어한다.
 	 */
-	this.clear = function () {
+	clear: function () {
 		var prop;
 		for (prop in this.map) {
 			delete this.map[prop];
 		}
-	};
+	},
 
 	/**
 	 * 주어진 key 의 매핑정보를 삭제한다.
 	 *
 	 * @param {String} key 키
 	 */
-	this.remove = function (key) {
+	remove: function (key) {
 		if (this.map[key]) {
 			delete this.map[key];
 		}
-	};
+	},
 
 	/**
 	 * key 목록을 반환한다.
 	 *
 	 * @return {String[]} 키목록
 	 */
-	this.keys = function () {
+	keys: function () {
 		var keys = [], prop;
 		for (prop in this.map) {
 			keys.push(prop);
 		}
 		return keys;
-	};
+	},
 
 	/**
 	 * value 목록을 반환한다.
 	 *
 	 * @return {Object[]} 값목록
 	 */
-	this.values = function () {
+	values: function () {
 		var values = [], prop;
 		for (prop in this.map) {
 			values.push(this.map[prop]);
 		}
 		return values;
-	};
+	},
 
 	/**
 	 * 매핑된 key:value 갯수를 반환한다.
 	 *
 	 * @return {Number}
 	 */
-	this.size = function () {
+	size: function () {
 		var count = 0, prop;
 		for (prop in this.map) {
 			count++;
 		}
 		return count;
-	};
+	},
 
 	/**
 	 * 객체 프라퍼티 정보를 JSON 스트링으로 반환한다.
@@ -1536,16 +1560,15 @@ OG.common.HashMap = function (jsonObject) {
 	 * @return {String} 프라퍼티 정보
 	 * @override
 	 */
-	this.toString = function () {
+	toString: function () {
 		var s = [], prop;
 		for (prop in this.map) {
 			s.push("'" + prop + "':'" + this.map[prop] + "'");
 		}
 
 		return "{" + s.join() + "}";
-	};
+	}
 };
-OG.common.HashMap.prototype = new OG.common.HashMap();
 OG.common.HashMap.prototype.constructor = OG.common.HashMap;
 OG.HashMap = OG.common.HashMap;
 /**
@@ -1726,13 +1749,17 @@ OG.JSON = OG.common.JSON;
  * @class
  * @extends OG.common.HashMap
  *
- * @param {OG.common.HashMap} style 키:값 매핑된 스타일 프라퍼티 정보
+ * @example
+ * var style = new OG.geometry.Style({
+ *     'cursor': 'default',
+ *     'stroke': 'black'
+ * });
+ *
+ * @param {Object} style 키:값 매핑된 스타일 프라퍼티 정보
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.geometry.Style = function (style) {
-	var DEFAULT_STYLE = {
-		},
-		_style = {};
+	var DEFAULT_STYLE = {}, _style = {};
 
 	OG.Util.apply(_style, style, DEFAULT_STYLE);
 
@@ -1746,9 +1773,9 @@ OG.Style = OG.geometry.Style;
  * 2차원 좌표계에서의 좌표값
  *
  * @example
- * var coordinate1 = new OG.Coordinate(10, 10);
+ * var coordinate1 = new OG.geometry.Coordinate(10, 10);
  * or
- * var coordinate2 = new OG.Coordinate([20, 20]);
+ * var coordinate2 = new OG.geometry.Coordinate([20, 20]);
  *
  * @class
  *
@@ -1759,12 +1786,14 @@ OG.Style = OG.geometry.Style;
 OG.geometry.Coordinate = function (x, y) {
 
 	/**
-	 * {Number} x좌표
+	 * x좌표
+	 * @type Number
 	 */
 	this.x = undefined;
 
 	/**
-	 * {Number} y좌표
+	 * y좌표
+	 * @type Number
 	 */
 	this.y = undefined;
 
@@ -1778,6 +1807,8 @@ OG.geometry.Coordinate = function (x, y) {
 	} else if (arguments.length !== 0) {
 		throw new OG.ParamError();
 	}
+};
+OG.geometry.Coordinate.prototype = {
 
 	/**
 	 * 주어진 좌표와의 거리를 계산한다.
@@ -1791,14 +1822,14 @@ OG.geometry.Coordinate = function (x, y) {
 	 * @param {OG.geometry.Coordinate,Number[]} coordinate 좌표값
 	 * @return {Number} 좌표간의 거리값
 	 */
-	this.distance = function (coordinate) {
+	distance: function (coordinate) {
 		if (coordinate.constructor === Array) {
 			coordinate = new OG.geometry.Coordinate(coordinate[0], coordinate[1]);
 		}
 
 		var dx = this.x - coordinate.x, dy = this.y - coordinate.y;
 		return OG.Util.round(Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2)));
-	};
+	},
 
 	/**
 	 * 가로, 세로 Offset 만큼 좌표를 이동한다.
@@ -1807,12 +1838,12 @@ OG.geometry.Coordinate = function (x, y) {
 	 * @param {Number} offsetY 세로 Offset
 	 * @return {OG.geometry.Coordinate} 이동된 좌표
 	 */
-	this.move = function (offsetX, offsetY) {
+	move: function (offsetX, offsetY) {
 		this.x += offsetX;
 		this.y += offsetY;
 
 		return this;
-	};
+	},
 
 	/**
 	 * 기준 좌표를 기준으로 주어진 각도 만큼 회전한다.
@@ -1826,7 +1857,7 @@ OG.geometry.Coordinate = function (x, y) {
 	 * @param {OG.geometry.Coordinate,Number[]} origin 기준 좌표
 	 * @return {OG.geometry.Coordinate} 회전된 좌표
 	 */
-	this.rotate = function (angle, origin) {
+	rotate: function (angle, origin) {
 		if (origin.constructor === Array) {
 			origin = new OG.geometry.Coordinate(origin[0], origin[1]);
 		}
@@ -1838,7 +1869,7 @@ OG.geometry.Coordinate = function (x, y) {
 		this.y = OG.Util.round(origin.y + (radius * Math.sin(theta)));
 
 		return this;
-	};
+	},
 
 	/**
 	 * 주어진 좌표값과 같은지 비교한다.
@@ -1851,7 +1882,7 @@ OG.geometry.Coordinate = function (x, y) {
 	 * @param {OG.geometry.Coordinate,Number[]} coordinate 좌표값
 	 * @return {Boolean} true:같음, false:다름
 	 */
-	this.isEquals = function (coordinate) {
+	isEquals: function (coordinate) {
 		if (coordinate.constructor === Array) {
 			coordinate = new OG.geometry.Coordinate(coordinate[0], coordinate[1]);
 		}
@@ -1863,7 +1894,7 @@ OG.geometry.Coordinate = function (x, y) {
 		}
 
 		return false;
-	};
+	},
 
 	/**
 	 * 객체 프라퍼티 정보를 JSON 스트링으로 반환한다.
@@ -1871,25 +1902,24 @@ OG.geometry.Coordinate = function (x, y) {
 	 * @return {String} 프라퍼티 정보
 	 * @override
 	 */
-	this.toString = function () {
+	toString: function () {
 		var s = [];
 		s.push(this.x);
 		s.push(this.y);
 
 		return "[" + s.join() + "]";
-	};
+	}
 };
-OG.geometry.Coordinate.prototype = new OG.geometry.Coordinate();
 OG.geometry.Coordinate.prototype.constructor = OG.geometry.Coordinate;
 OG.Coordinate = OG.geometry.Coordinate;
 /**
  * 2차원 좌표계에서 Envelope 영역을 정의
  *
- * @example
- * var boundingBox = new OG.Envelope([50, 50], 200, 100);
- *
  * @class
  * @requires OG.geometry.Coordinate
+ *
+ * @example
+ * var boundingBox = new OG.geometry.Envelope([50, 50], 200, 100);
  *
  * @param {OG.geometry.Coordinate,Number[]} upperLeft 기준 좌상단 좌표
  * @param {Number} width 너비
@@ -1897,190 +1927,260 @@ OG.Coordinate = OG.geometry.Coordinate;
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.geometry.Envelope = function (upperLeft, width, height) {
-	var _upperLeft, _width = width, _height = height,
-		_upperRight, _lowerLeft, _lowerRight, _leftCenter, _upperCenter, _rightCenter, _lowerCenter, _centroid,
-		reset;
+
+	/**
+	 * @type OG.geometry.Coordinate
+	 * @private
+	 */
+	this._upperLeft = null;
+
+	/**
+	 * @type Number
+	 * @private
+	 */
+	this._width = width;
+
+	/**
+	 * @type Number
+	 * @private
+	 */
+	this._height = height;
+
+	/**
+	 * @type OG.geometry.Coordinate
+	 * @private
+	 */
+	this._upperRight = null;
+
+	/**
+	 * @type OG.geometry.Coordinate
+	 * @private
+	 */
+	this._lowerLeft = null;
+
+	/**
+	 * @type OG.geometry.Coordinate
+	 * @private
+	 */
+	this._lowerRight = null;
+
+	/**
+	 * @type OG.geometry.Coordinate
+	 * @private
+	 */
+	this._leftCenter = null;
+
+	/**
+	 * @type OG.geometry.Coordinate
+	 * @private
+	 */
+	this._leftCenter = null;
+
+	/**
+	 * @type OG.geometry.Coordinate
+	 * @private
+	 */
+	this._upperCenter = null;
+
+	/**
+	 * @type OG.geometry.Coordinate
+	 * @private
+	 */
+	this._rightCenter = null;
+
+	/**
+	 * @type OG.geometry.Coordinate
+	 * @private
+	 */
+	this._lowerCenter = null;
+
+	/**
+	 * @type OG.geometry.Coordinate
+	 * @private
+	 */
+	this._centroid = null;
 
 	// Array 좌표를 OG.geometry.Coordinate 로 변환
 	if (upperLeft) {
 		if (upperLeft.constructor === Array) {
-			_upperLeft = new OG.geometry.Coordinate(upperLeft);
+			this._upperLeft = new OG.geometry.Coordinate(upperLeft);
 		} else {
-			_upperLeft = new OG.geometry.Coordinate(upperLeft.x, upperLeft.y);
+			this._upperLeft = new OG.geometry.Coordinate(upperLeft.x, upperLeft.y);
 		}
 	}
-
+};
+OG.geometry.Envelope.prototype = {
 	/**
 	 * 기준 좌상단 좌표를 반환한다.
 	 *
 	 * @return {OG.geometry.Coordinate} 좌상단 좌표
 	 */
-	this.getUpperLeft = function () {
-		return _upperLeft;
-	};
+	getUpperLeft: function () {
+		return this._upperLeft;
+	},
 
 	/**
 	 * 주어진 좌표로 기준 좌상단 좌표를 설정한다. 새로 설정된 값으로 이동된다.
 	 *
 	 * @param {OG.geometry.Coordinate,Number[]} upperLeft 좌상단 좌표
 	 */
-	this.setUpperLeft = function (upperLeft) {
+	setUpperLeft: function (upperLeft) {
 		if (upperLeft.constructor === Array) {
 			upperLeft = new OG.geometry.Coordinate(upperLeft[0], upperLeft[1]);
 		}
 
-		_upperLeft = upperLeft;
-		reset();
-	};
+		this._upperLeft = upperLeft;
+		this._reset();
+	},
 
 	/**
 	 * 우상단 좌표를 반환한다.
 	 *
 	 * @return {OG.geometry.Coordinate} 우상단 좌표
 	 */
-	this.getUpperRight = function () {
-		if (!_upperRight) {
-			_upperRight = new OG.geometry.Coordinate(_upperLeft.x + _width, _upperLeft.y);
+	getUpperRight: function () {
+		if (!this._upperRight) {
+			this._upperRight = new OG.geometry.Coordinate(this._upperLeft.x + this._width, this._upperLeft.y);
 		}
-		return _upperRight;
-	};
+		return this._upperRight;
+	},
 
 	/**
 	 * 우하단 좌표를 반환한다.
 	 *
 	 * @return {OG.geometry.Coordinate} 우하단 좌표
 	 */
-	this.getLowerRight = function () {
-		if (!_lowerRight) {
-			_lowerRight = new OG.geometry.Coordinate(_upperLeft.x + _width, _upperLeft.y + _height);
+	getLowerRight: function () {
+		if (!this._lowerRight) {
+			this._lowerRight = new OG.geometry.Coordinate(this._upperLeft.x + this._width, this._upperLeft.y + this._height);
 		}
-		return _lowerRight;
-	};
+		return this._lowerRight;
+	},
 
 	/**
 	 * 좌하단 좌표를 반환한다.
 	 *
 	 * @return {OG.geometry.Coordinate} 좌하단 좌표
 	 */
-	this.getLowerLeft = function () {
-		if (!_lowerLeft) {
-			_lowerLeft = new OG.geometry.Coordinate(_upperLeft.x, _upperLeft.y + _height);
+	getLowerLeft: function () {
+		if (!this._lowerLeft) {
+			this._lowerLeft = new OG.geometry.Coordinate(this._upperLeft.x, this._upperLeft.y + this._height);
 		}
-		return _lowerLeft;
-	};
+		return this._lowerLeft;
+	},
 
 	/**
 	 * 좌중간 좌표를 반환한다.
 	 *
 	 * @return {OG.geometry.Coordinate} 좌중간 좌표
 	 */
-	this.getLeftCenter = function () {
-		if (!_leftCenter) {
-			_leftCenter = new OG.geometry.Coordinate(_upperLeft.x, OG.Util.round(_upperLeft.y + _height / 2));
+	getLeftCenter: function () {
+		if (!this._leftCenter) {
+			this._leftCenter = new OG.geometry.Coordinate(this._upperLeft.x, OG.Util.round(this._upperLeft.y + this._height / 2));
 		}
-		return _leftCenter;
-	};
+		return this._leftCenter;
+	},
 
 	/**
 	 * 상단중간 좌표를 반환한다.
 	 *
 	 * @return {OG.geometry.Coordinate} 상단중간 좌표
 	 */
-	this.getUpperCenter = function () {
-		if (!_upperCenter) {
-			_upperCenter = new OG.geometry.Coordinate(OG.Util.round(_upperLeft.x + _width / 2), _upperLeft.y);
+	getUpperCenter: function () {
+		if (!this._upperCenter) {
+			this._upperCenter = new OG.geometry.Coordinate(OG.Util.round(this._upperLeft.x + this._width / 2), this._upperLeft.y);
 		}
-		return _upperCenter;
-	};
+		return this._upperCenter;
+	},
 
 	/**
 	 * 우중간 좌표를 반환한다.
 	 *
 	 * @return {OG.geometry.Coordinate} 우중간 좌표
 	 */
-	this.getRightCenter = function () {
-		if (!_rightCenter) {
-			_rightCenter = new OG.geometry.Coordinate(_upperLeft.x + _width, OG.Util.round(_upperLeft.y + _height / 2));
+	getRightCenter: function () {
+		if (!this._rightCenter) {
+			this._rightCenter = new OG.geometry.Coordinate(this._upperLeft.x + this._width, OG.Util.round(this._upperLeft.y + this._height / 2));
 		}
-		return _rightCenter;
-	};
+		return this._rightCenter;
+	},
 
 	/**
 	 * 하단중간 좌표를 반환한다.
 	 *
 	 * @return {OG.geometry.Coordinate} 하단중간 좌표
 	 */
-	this.getLowerCenter = function () {
-		if (!_lowerCenter) {
-			_lowerCenter = new OG.geometry.Coordinate(OG.Util.round(_upperLeft.x + _width / 2), _upperLeft.y + _height);
+	getLowerCenter: function () {
+		if (!this._lowerCenter) {
+			this._lowerCenter = new OG.geometry.Coordinate(OG.Util.round(this._upperLeft.x + this._width / 2), this._upperLeft.y + this._height);
 		}
-		return _lowerCenter;
-	};
+		return this._lowerCenter;
+	},
 
 	/**
 	 * Envelope 의 중심좌표를 반환한다.
 	 *
 	 * @return {OG.geometry.Coordinate} 중심좌표
 	 */
-	this.getCentroid = function () {
-		if (!_centroid) {
-			_centroid = new OG.geometry.Coordinate(OG.Util.round(_upperLeft.x + _width / 2),
-				OG.Util.round(_upperLeft.y + _height / 2));
+	getCentroid: function () {
+		if (!this._centroid) {
+			this._centroid = new OG.geometry.Coordinate(OG.Util.round(this._upperLeft.x + this._width / 2),
+				OG.Util.round(this._upperLeft.y + this._height / 2));
 		}
 
-		return _centroid;
-	};
+		return this._centroid;
+	},
 
 	/**
 	 * 주어진 좌표로 중심 좌표를 설정한다. 새로 설정된 값으로 이동된다.
 	 *
 	 * @param {OG.geometry.Coordinate,Number[]} centroid 중심좌표
 	 */
-	this.setCentroid = function (centroid) {
+	setCentroid: function (centroid) {
 		if (centroid.constructor === Array) {
 			centroid = new OG.geometry.Coordinate(centroid[0], centroid[1]);
 		}
 
 		this.move(centroid.x - this.getCentroid().x, centroid.y - this.getCentroid().y);
-	};
+	},
 
 	/**
 	 * Envelope 의 가로 사이즈를 반환한다.
 	 *
 	 * @return {Number} 너비
 	 */
-	this.getWidth = function () {
-		return _width;
-	};
+	getWidth: function () {
+		return this._width;
+	},
 
 	/**
 	 * 주어진 값으로 Envelope 의 가로 사이즈를 설정한다.
 	 *
 	 * @param {Number} width 너비
 	 */
-	this.setWidth = function (width) {
-		_width = width;
-		reset();
-	};
+	setWidth: function (width) {
+		this._width = width;
+		this._reset();
+	},
 
 	/**
 	 * Envelope 의 세로 사이즈를 반환한다.
 	 *
 	 * @return {Number} 높이
 	 */
-	this.getHeight = function () {
-		return _height;
-	};
+	getHeight: function () {
+		return this._height;
+	},
 
 	/**
 	 * 주어진 값으로 Envelope 의 세로 사이즈를 설정한다.
 	 *
 	 * @param {Number} height 높이
 	 */
-	this.setHeight = function (height) {
-		_height = height;
-		reset();
-	};
+	setHeight: function (height) {
+		this._height = height;
+		this._reset();
+	},
 
 	/**
 	 * Envelope 모든 꼭지점을 반환한다.
@@ -2088,7 +2188,7 @@ OG.geometry.Envelope = function (upperLeft, width, height) {
 	 *
 	 * @return {OG.geometry.Coordinate[]} 꼭지점 좌표 Array : [좌상단, 상단중간, 우상단, 우중간, 우하단, 하단중간, 좌하단, 좌중간, 좌상단]
 	 */
-	this.getVertices = function () {
+	getVertices: function () {
 		var vertices = [];
 
 		vertices.push(this.getUpperLeft());
@@ -2102,7 +2202,7 @@ OG.geometry.Envelope = function (upperLeft, width, height) {
 		vertices.push(this.getUpperLeft());
 
 		return vertices;
-	};
+	},
 
 	/**
 	 * 주어진 좌표값이 Envelope 영역에 포함되는지 비교한다.
@@ -2110,15 +2210,15 @@ OG.geometry.Envelope = function (upperLeft, width, height) {
 	 * @param {OG.geometry.Coordinate,Number[]} coordinate 좌표값
 	 * @return {Boolean} true:포함, false:비포함
 	 */
-	this.isContains = function (coordinate) {
+	isContains: function (coordinate) {
 		if (coordinate.constructor === Array) {
-			return coordinate[0] >= _upperLeft.x && coordinate[0] <= this.getLowerRight().x &&
-				coordinate[1] >= _upperLeft.y && coordinate[1] <= this.getLowerRight().y;
+			return coordinate[0] >= this._upperLeft.x && coordinate[0] <= this.getLowerRight().x &&
+				coordinate[1] >= this._upperLeft.y && coordinate[1] <= this.getLowerRight().y;
 		} else {
-			return coordinate.x >= _upperLeft.x && coordinate.x <= this.getLowerRight().x &&
-				coordinate.y >= _upperLeft.y && coordinate.y <= this.getLowerRight().y;
+			return coordinate.x >= this._upperLeft.x && coordinate.x <= this.getLowerRight().x &&
+				coordinate.y >= this._upperLeft.y && coordinate.y <= this.getLowerRight().y;
 		}
-	};
+	},
 
 	/**
 	 * 주어진 모든 좌표값이 Envelope 영역에 포함되는지 비교한다.
@@ -2126,7 +2226,7 @@ OG.geometry.Envelope = function (upperLeft, width, height) {
 	 * @param {OG.geometry.Coordinate[]} coordinateArray 좌표값 Array
 	 * @return {Boolean} true:포함, false:비포함
 	 */
-	this.isContainsAll = function (coordinateArray) {
+	isContainsAll: function (coordinateArray) {
 		var i;
 		for (i = 0; i < coordinateArray.length; i++) {
 			if (!this.isContains(coordinateArray[i])) {
@@ -2135,7 +2235,7 @@ OG.geometry.Envelope = function (upperLeft, width, height) {
 		}
 
 		return true;
-	};
+	},
 
 	/**
 	 * 크기는 고정한 채 가로, 세로 Offset 만큼 Envelope 을 이동한다.
@@ -2144,12 +2244,12 @@ OG.geometry.Envelope = function (upperLeft, width, height) {
 	 * @param {Number} offsetY 세로 Offset
 	 * @return {OG.geometry.Envelope} 이동된 Envelope
 	 */
-	this.move = function (offsetX, offsetY) {
-		_upperLeft.move(offsetX, offsetY);
-		reset();
+	move: function (offsetX, offsetY) {
+		this._upperLeft.move(offsetX, offsetY);
+		this._reset();
 
 		return this;
-	};
+	},
 
 	/**
 	 * 상, 하, 좌, 우 외곽선을 이동하여 Envelope 을 리사이즈 한다.
@@ -2160,23 +2260,23 @@ OG.geometry.Envelope = function (upperLeft, width, height) {
 	 * @param {Number} right 우측 라인 이동 Offset(우측 방향으로 +)
 	 * @return {OG.geometry.Envelope} 리사이즈된 Envelope
 	 */
-	this.resize = function (upper, lower, left, right) {
+	resize: function (upper, lower, left, right) {
 		upper = upper || 0;
 		lower = lower || 0;
 		left = left || 0;
 		right = right || 0;
 
-		if (_width + (left + right) < 0 || _height + (upper + lower) < 0) {
+		if (this._width + (left + right) < 0 || this._height + (upper + lower) < 0) {
 			throw new OG.ParamError();
 		}
 
-		_upperLeft.move(-1 * left, -1 * upper);
-		_width += (left + right);
-		_height += (upper + lower);
-		reset();
+		this._upperLeft.move(-1 * left, -1 * upper);
+		this._width += (left + right);
+		this._height += (upper + lower);
+		this._reset();
 
 		return this;
-	};
+	},
 
 	/**
 	 * 주어진 Envelope 영역과 같은지 비교한다.
@@ -2184,7 +2284,7 @@ OG.geometry.Envelope = function (upperLeft, width, height) {
 	 * @param {OG.geometry.Envelope} Envelope 영역
 	 * @return {Boolean} true:같음, false:다름
 	 */
-	this.isEquals = function (envelope) {
+	isEquals: function (envelope) {
 		if (envelope && envelope instanceof OG.geometry.Envelope) {
 			if (this.getUpperLeft().isEquals(envelope.getUpperLeft()) &&
 				this.getWidth() === envelope.getWidth() &&
@@ -2194,7 +2294,7 @@ OG.geometry.Envelope = function (upperLeft, width, height) {
 		}
 
 		return false;
-	};
+	},
 
 	/**
 	 * 객체 프라퍼티 정보를 JSON 스트링으로 반환한다.
@@ -2202,7 +2302,7 @@ OG.geometry.Envelope = function (upperLeft, width, height) {
 	 * @return {String} 프라퍼티 정보
 	 * @override
 	 */
-	this.toString = function () {
+	toString: function () {
 		var s = [];
 		s.push("upperLeft:" + this.getUpperLeft());
 		s.push("width:" + this.getWidth());
@@ -2217,25 +2317,24 @@ OG.geometry.Envelope = function (upperLeft, width, height) {
 		s.push("centroid:" + this.getCentroid());
 
 		return "{" + s.join() + "}";
-	};
+	},
 
 	/**
-	 * _upperLeft, _width, _height 를 제외한 로컬 멤버 변수의 값을 리셋한다.
+	 * _upperLeft, _width, _height 를 제외한 private 멤버 변수의 값을 리셋한다.
 	 *
 	 * @private
 	 */
-	reset = function () {
-		_upperRight = null;
-		_lowerLeft = null;
-		_lowerRight = null;
-		_leftCenter = null;
-		_upperCenter = null;
-		_rightCenter = null;
-		_lowerCenter = null;
-		_centroid = null;
-	};
+	_reset: function () {
+		this._upperRight = null;
+		this._lowerLeft = null;
+		this._lowerRight = null;
+		this._leftCenter = null;
+		this._upperCenter = null;
+		this._rightCenter = null;
+		this._lowerCenter = null;
+		this._centroid = null;
+	}
 };
-OG.geometry.Envelope.prototype = new OG.geometry.Envelope();
 OG.geometry.Envelope.prototype.constructor = OG.geometry.Envelope;
 OG.Envelope = OG.geometry.Envelope;
 /**
@@ -2249,24 +2348,30 @@ OG.Envelope = OG.geometry.Envelope;
 OG.geometry.Geometry = function () {
 
 	/**
-	 * {Number} 공간 기하 객체 타입
+	 * 공간 기하 객체 타입
+	 * @type Number
 	 */
 	this.TYPE = OG.Constants.GEOM_TYPE.NULL;
 
 	/**
-	 * {Boolean} 닫힌 기하 객체 인지 여부
+	 * 닫힌 기하 객체 인지 여부
+	 * @type Boolean
 	 */
 	this.IS_CLOSED = false;
 
 	/**
-	 * {OG.geometry.Style} 스타일 속성
+	 * 스타일 속성
+	 * @type OG.geometry.Style
 	 */
-	this.style = new OG.geometry.Style();
+	this.style = null;
 
 	/**
-	 * {OG.geometry.Envelope} 공간기하객체를 포함하는 사각형의 Boundary 영역
+	 * 공간기하객체를 포함하는 사각형의 Boundary 영역
+	 * @type OG.geometry.Envelope
 	 */
 	this.boundary = null;
+};
+OG.geometry.Geometry.prototype = {
 
 	// 다른 Geometry 객체와의 Spatial Relation 을 테스트하는 함수들
 
@@ -2276,9 +2381,9 @@ OG.geometry.Geometry = function () {
 	 * @param {OG.geometry.Geometry} _geometry Geometry 객체
 	 * @return {Boolean} true:같음, false:다름
 	 */
-	this.isEquals = function (_geometry) {
+	isEquals: function (_geometry) {
 		return _geometry && _geometry.toString() === this.toString();
-	};
+	},
 
 	/**
 	 * 주어진 공간기하객체를 포함하는지 비교한다.
@@ -2286,9 +2391,9 @@ OG.geometry.Geometry = function () {
 	 * @param {OG.geometry.Geometry} _geometry Geometry 객체
 	 * @return {Boolean} 포함하면 true
 	 */
-	this.isContains = function (_geometry) {
+	isContains: function (_geometry) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * 주어진 공간기하객체에 포함되는지 비교한다.
@@ -2296,25 +2401,25 @@ OG.geometry.Geometry = function () {
 	 * @param {OG.geometry.Geometry} _geometry Geometry 객체
 	 * @return {Boolean} 포함되면 true
 	 */
-	this.isWithin = function (_geometry) {
+	isWithin: function (_geometry) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
-//	this.isDisjoint = function (_geometry) {
+//	isDisjoint: function (_geometry) {
 //		throw new OG.NotImplementedException();
-//	};
+//	},
 //
-//	this.isIntersects = function (_geometry) {
+//	isIntersects: function (_geometry) {
 //		throw new OG.NotImplementedException();
-//	};
+//	},
 //
-//	this.isOverlaps = function (_geometry) {
+//	isOverlaps: function (_geometry) {
 //		throw new OG.NotImplementedException();
-//	};
+//	},
 //
-//	this.isTouches = function (_geometry) {
+//	isTouches: function (_geometry) {
 //		throw new OG.NotImplementedException();
-//	};
+//	},
 
 	// 현 Geometry 객체의 Spatial Analysis 를 지원하는 함수들
 
@@ -2323,7 +2428,7 @@ OG.geometry.Geometry = function () {
 	 *
 	 * @return {OG.geometry.Envelope} Envelope 영역
 	 */
-	this.getBoundary = function () {
+	getBoundary: function () {
 		if (this.boundary === null) {
 			var minX, minY, maxX, maxY, upperLeft, width, height,
 				vertices = this.getVertices(), i;
@@ -2345,16 +2450,16 @@ OG.geometry.Geometry = function () {
 		}
 
 		return this.boundary;
-	};
+	},
 
 	/**
 	 * 공간기하객체의 중심좌표를 반환한다.
 	 *
 	 * @return {OG.geometry.Coordinate} 중심좌표
 	 */
-	this.getCentroid = function () {
+	getCentroid: function () {
 		return this.getBoundary().getCentroid();
-	};
+	},
 
 	/**
 	 * 공간기하객체의 모든 꼭지점을 반환한다.
@@ -2362,9 +2467,9 @@ OG.geometry.Geometry = function () {
 	 * @return {OG.geometry.Coordinate[]} 꼭지점 좌표 Array
 	 * @abstract
 	 */
-	this.getVertices = function () {
+	getVertices: function () {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * 주어진 좌표와의 최단거리를 반환한다.
@@ -2372,7 +2477,7 @@ OG.geometry.Geometry = function () {
 	 * @param {OG.geometry.Coordinate} _coordinate 좌표
 	 * @return {Number} 최단거리
 	 */
-	this.minDistance = function (_coordinate) {
+	minDistance: function (_coordinate) {
 		var minDistance = Number.MAX_VALUE,
 			distance = 0,
 			vertices = this.getVertices(),
@@ -2392,7 +2497,7 @@ OG.geometry.Geometry = function () {
 		}
 
 		return minDistance;
-	};
+	},
 
 	/**
 	 * 주어진 공간기하객체와의 중심점 간의 거리를 반환한다.
@@ -2400,16 +2505,16 @@ OG.geometry.Geometry = function () {
 	 * @param {OG.geometry.Geometry} _geometry 공간 기하 객체
 	 * @return {Number} 거리
 	 */
-	this.distance = function (_geometry) {
+	distance: function (_geometry) {
 		return this.getCentroid().distance(_geometry.getCentroid());
-	};
+	},
 
 	/**
 	 * 공간기하객체의 길이를 반환한다.
 	 *
 	 * @return {Number} 길이
 	 */
-	this.getLength = function () {
+	getLength: function () {
 		var length = 0,
 			vertices = this.getVertices(),
 			i;
@@ -2418,15 +2523,15 @@ OG.geometry.Geometry = function () {
 		}
 
 		return length;
-	};
+	},
 
-//	this.intersect = function (_geometry) {
+//	intersect : function (_geometry) {
 //		throw new OG.NotImplementedException();
-//	};
+//	},
 //
-//	this.union = function (_geometry) {
+//	union : function (_geometry) {
 //		throw new OG.NotImplementedException();
-//	};
+//	},
 
 	// 현 Geometry 객체의 Spatial Transform 를 지원하는 함수들
 
@@ -2438,21 +2543,21 @@ OG.geometry.Geometry = function () {
 	 * @return {OG.geometry.Geometry} 이동된 공간 기하 객체
 	 * @abstract
 	 */
-	this.move = function (offsetX, offsetY) {
+	move: function (offsetX, offsetY) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * 주어진 중심좌표로 공간기하객체를 이동한다.
 	 *
 	 * @param {OG.geometry.Coordinate} 중심 좌표
 	 */
-	this.moveCentroid = function (target) {
+	moveCentroid: function (target) {
 		var origin = this.getCentroid();
 		target = new OG.geometry.Coordinate(target);
 
 		this.move(target.x - origin.x, target.y - origin.y);
-	};
+	},
 
 	/**
 	 * 상, 하, 좌, 우 외곽선을 이동하여 Envelope 을 리사이즈 한다.
@@ -2464,9 +2569,9 @@ OG.geometry.Geometry = function () {
 	 * @return {OG.geometry.Geometry} 리사이즈된 공간 기하 객체
 	 * @abstract
 	 */
-	this.resize = function (upper, lower, left, right) {
+	resize: function (upper, lower, left, right) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * 중심좌표는 고정한 채 Bounding Box 의 width, height 를 리사이즈 한다.
@@ -2475,7 +2580,7 @@ OG.geometry.Geometry = function () {
 	 * @param {Number} height 높이
 	 * @return {OG.geometry.Geometry} 리사이즈된 공간 기하 객체
 	 */
-	this.resizeBox = function (width, height) {
+	resizeBox: function (width, height) {
 		var boundary = this.getBoundary(),
 			offsetWidth = OG.Util.round((width - boundary.getWidth()) / 2),
 			offsetHeight = OG.Util.round((height - boundary.getHeight()) / 2);
@@ -2483,7 +2588,7 @@ OG.geometry.Geometry = function () {
 		this.resize(offsetHeight, offsetHeight, offsetWidth, offsetWidth);
 
 		return this;
-	};
+	},
 
 	/**
 	 * 기준 좌표를 기준으로 주어진 각도 만큼 회전한다.
@@ -2493,9 +2598,9 @@ OG.geometry.Geometry = function () {
 	 * @return {OG.geometry.Geometry} 회전된 공간 기하 객체
 	 * @abstract
 	 */
-	this.rotate = function (angle, origin) {
+	rotate: function (angle, origin) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * 주어진 Boundary 영역 안으로 공간 기하 객체를 적용한다.(이동 & 리사이즈)
@@ -2503,7 +2608,7 @@ OG.geometry.Geometry = function () {
 	 * @param {OG.geometry.Envelope} envelope Envelope 영역
 	 * @return {OG.geometry.Geometry} 적용된 공간 기하 객체
 	 */
-	this.fitToBoundary = function (envelope) {
+	fitToBoundary: function (envelope) {
 		var boundary = this.getBoundary(),
 			upper = boundary.getUpperCenter().y - envelope.getUpperCenter().y,
 			lower = envelope.getLowerCenter().y - boundary.getLowerCenter().y,
@@ -2513,7 +2618,7 @@ OG.geometry.Geometry = function () {
 		this.resize(upper, lower, left, right);
 
 		return this;
-	};
+	},
 
 	// 유틸리티 함수들
 
@@ -2523,7 +2628,7 @@ OG.geometry.Geometry = function () {
 	 * @param {OG.geometry.Coordinate,Number[]} coordinate [x, y] 형식의 좌표 Array 또는 OG.geometry.Coordinate 인스턴스
 	 * @return {OG.geometry.Coordinate}
 	 */
-	this.convertCoordinate = function (coordinate) {
+	convertCoordinate: function (coordinate) {
 		// Array 좌표를 OG.geometry.Coordinate 로 변환
 		if (coordinate) {
 			if (coordinate.constructor === Array) {
@@ -2536,7 +2641,7 @@ OG.geometry.Geometry = function () {
 		} else {
 			return undefined;
 		}
-	};
+	},
 
 	/**
 	 * 포인트 P 로부터 라인 AB의 거리를 계산한다.
@@ -2546,7 +2651,7 @@ OG.geometry.Geometry = function () {
 	 * @param {OG.geometry.Coordinate[]} line 라인 시작좌표, 끝좌표 Array
 	 * @return {Number} 거리
 	 */
-	this.distanceToLine = function (p, line) {
+	distanceToLine: function (p, line) {
 		var A = this.convertCoordinate(line[0]),
 			B = this.convertCoordinate(line[1]),
 			r, s;
@@ -2590,7 +2695,7 @@ OG.geometry.Geometry = function () {
 
 		return OG.Util.round(Math.abs(s) *
 			Math.sqrt(((B.x - A.x) * (B.x - A.x) + (B.y - A.y) * (B.y - A.y))));
-	};
+	},
 
 	/**
 	 * 라인1 로부터 라인2 의 거리를 계산한다.
@@ -2600,7 +2705,7 @@ OG.geometry.Geometry = function () {
 	 * @param {OG.geometry.Coordinate[]} line2 line2 라인 시작좌표, 끝좌표 Array
 	 * @return {Number} 거리
 	 */
-	this.distanceLineToLine = function (line1, line2) {
+	distanceLineToLine: function (line1, line2) {
 		var A = this.convertCoordinate(line1[0]),
 			B = this.convertCoordinate(line1[1]),
 			C = this.convertCoordinate(line2[0]),
@@ -2659,7 +2764,7 @@ OG.geometry.Geometry = function () {
 
 		//intersection exists
 		return 0;
-	};
+	},
 
 	/**
 	 * 주어진 라인과 교차하는 좌표를 반환한다.
@@ -2667,7 +2772,7 @@ OG.geometry.Geometry = function () {
 	 * @param {OG.geometry.Coordinate[]} line 라인 시작좌표, 끝좌표 Array
 	 * @return {OG.geometry.Coordinate[]}
 	 */
-	this.intersectToLine = function (line) {
+	intersectToLine: function (line) {
 		var vertices = this.getVertices(), result = [], point, i,
 			contains = function (coordinateArray, coordinate) {
 				var k;
@@ -2687,7 +2792,7 @@ OG.geometry.Geometry = function () {
 		}
 
 		return result;
-	};
+	},
 
 	/**
 	 * 라인1 로부터 라인2 의 교차점을 계산한다.
@@ -2696,7 +2801,7 @@ OG.geometry.Geometry = function () {
 	 * @param {OG.geometry.Coordinate[]} line2 line2 라인 시작좌표, 끝좌표 Array
 	 * @return {OG.geometry.Coordinate} 교차점
 	 */
-	this.intersectLineToLine = function (line1, line2) {
+	intersectLineToLine: function (line1, line2) {
 		var A = this.convertCoordinate(line1[0]),
 			B = this.convertCoordinate(line1[1]),
 			C = this.convertCoordinate(line2[0]),
@@ -2757,7 +2862,7 @@ OG.geometry.Geometry = function () {
 		}
 
 		return result;
-	};
+	},
 
 	/**
 	 * 라인1 로부터 라인2 의 교차점을 계산한다.
@@ -2768,7 +2873,7 @@ OG.geometry.Geometry = function () {
 	 * @param {OG.geometry.Coordinate} to line 라인 끝좌표
 	 * @return {OG.geometry.Coordinate[]} 교차점
 	 */
-	this.intersectCircleToLine = function (center, radius, from, to) {
+	intersectCircleToLine: function (center, radius, from, to) {
 		var result = [],
 			a = (to.x - from.x) * (to.x - from.x) +
 				(to.y - from.y) * (to.y - from.y),
@@ -2816,16 +2921,16 @@ OG.geometry.Geometry = function () {
 		}
 
 		return result;
-	};
+	},
 
 	/**
 	 * 저장된 boundary 를 클리어하여 새로 계산하도록 한다.
 	 */
-	this.reset = function () {
+	reset: function () {
 		this.boundary = null;
-	};
-};
-OG.geometry.Geometry.prototype = new OG.geometry.Geometry();
+	}
+}
+;
 OG.geometry.Geometry.prototype.constructor = OG.geometry.Geometry;
 /**
  * PolyLine 공간 기하 객체(Spatial Geometry Object)
@@ -2834,6 +2939,9 @@ OG.geometry.Geometry.prototype.constructor = OG.geometry.Geometry;
  * @extends OG.geometry.Geometry
  * @requires OG.geometry.Coordinate, OG.geometry.Envelope, OG.geometry.Geometry
  *
+ * @example
+ * var geom = new OG.geometry.PolyLine([[20, 5], [30, 15], [40, 25], [50, 15]]);
+ *
  * @param {OG.geometry.Coordinate[]} vertices Line Vertex 좌표 Array
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
@@ -2841,23 +2949,12 @@ OG.geometry.PolyLine = function (vertices) {
 
 	var i;
 
-	/**
-	 * {Number} 공간 기하 객체 타입
-	 */
 	this.TYPE = OG.Constants.GEOM_TYPE.POLYLINE;
-
-	/**
-	 * {Boolean} 닫힌 기하 객체 인지 여부
-	 */
-	this.IS_CLOSED = false;
-
-	/**
-	 * {OG.geometry.Style} 스타일 속성
-	 */
 	this.style = new OG.geometry.Style();
 
 	/**
-	 * {OG.geometry.Coordinate[]} Line Vertex 좌표 Array
+	 * Line Vertex 좌표 Array
+	 * @type OG.geometry.Coordinate[]
 	 */
 	this.vertices = [];
 
@@ -2867,108 +2964,115 @@ OG.geometry.PolyLine = function (vertices) {
 			this.vertices.push(this.convertCoordinate(vertices[i]));
 		}
 	}
-
-	/**
-	 * 공간기하객체의 모든 꼭지점을 반환한다.
-	 *
-	 * @return {OG.geometry.Coordinate[]} 꼭지점 좌표 Array
-	 * @override
-	 */
-	this.getVertices = function () {
-		return this.vertices;
-	};
-
-	/**
-	 * 가로, 세로 Offset 만큼 좌표를 이동한다.
-	 *
-	 * @param {Number} offsetX 가로 Offset
-	 * @param {Number} offsetY 세로 Offset
-	 * @return {OG.geometry.Geometry} 이동된 공간 기하 객체
-	 * @override
-	 */
-	this.move = function (offsetX, offsetY) {
-		this.getBoundary().move(offsetX, offsetY);
-		for (i = 0; i < this.vertices.length; i++) {
-			this.vertices[i].move(offsetX, offsetY);
-		}
-
-		return this;
-	};
-
-	/**
-	 * 상, 하, 좌, 우 외곽선을 이동하여 Envelope 을 리사이즈 한다.
-	 *
-	 * @param {Number} upper 상단 라인 이동 Offset(위 방향으로 +)
-	 * @param {Number} lower 하단 라인 이동 Offset(아래 방향으로 +)
-	 * @param {Number} left 좌측 라인 이동 Offset(좌측 방향으로 +)
-	 * @param {Number} right 우측 라인 이동 Offset(우측 방향으로 +)
-	 * @return {OG.geometry.Geometry} 리사이즈된 공간 기하 객체
-	 * @override
-	 */
-	this.resize = function (upper, lower, left, right) {
-		var boundary = this.getBoundary(),
-			offsetX = left + right,
-			offsetY = upper + lower,
-			width = boundary.getWidth() + offsetX,
-			height = boundary.getHeight() + offsetY,
-			rateWidth = boundary.getWidth() === 0 ? 1 : width / boundary.getWidth(),
-			rateHeight = boundary.getHeight() === 0 ? 1 : height / boundary.getHeight(),
-			upperLeft = boundary.getUpperLeft();
-
-		if (width < 0 || height < 0) {
-			throw new OG.ParamError();
-		}
-
-		for (i = 0; i < this.vertices.length; i++) {
-			this.vertices[i].x = OG.Util.round((upperLeft.x - left) + (this.vertices[i].x - upperLeft.x) * rateWidth);
-			this.vertices[i].y = OG.Util.round((upperLeft.y - upper) + (this.vertices[i].y - upperLeft.y) * rateHeight);
-		}
-		boundary.resize(upper, lower, left, right);
-
-		return this;
-	};
-
-	/**
-	 * 기준 좌표를 기준으로 주어진 각도 만큼 회전한다.
-	 *
-	 * @param {Number} angle 회전 각도
-	 * @param {OG.geometry.Coordinate} origin 기준 좌표
-	 * @return {OG.geometry.Geometry} 회전된 공간 기하 객체
-	 * @override
-	 */
-	this.rotate = function (angle, origin) {
-		origin = origin || this.getCentroid();
-		for (i = 0; i < this.vertices.length; i++) {
-			this.vertices[i].rotate(angle, origin);
-		}
-		this.reset();
-
-		return this;
-	};
-
-	/**
-	 * 객체 프라퍼티 정보를 JSON 스트링으로 반환한다.
-	 *
-	 * @return {String} 프라퍼티 정보
-	 * @override
-	 */
-	this.toString = function () {
-		var s = [];
-		s.push("type:'" + OG.Constants.GEOM_NAME[this.TYPE] + "'");
-		s.push("vertices:[" + this.vertices + "]");
-
-		return "{" + s.join() + "}";
-	};
 };
 OG.geometry.PolyLine.prototype = new OG.geometry.Geometry();
+OG.geometry.PolyLine.superclass = OG.geometry.Geometry;
 OG.geometry.PolyLine.prototype.constructor = OG.geometry.PolyLine;
 OG.PolyLine = OG.geometry.PolyLine;
+
+/**
+ * 공간기하객체의 모든 꼭지점을 반환한다.
+ *
+ * @return {OG.geometry.Coordinate[]} 꼭지점 좌표 Array
+ * @override
+ */
+OG.geometry.PolyLine.prototype.getVertices = function () {
+	return this.vertices;
+};
+
+/**
+ * 가로, 세로 Offset 만큼 좌표를 이동한다.
+ *
+ * @param {Number} offsetX 가로 Offset
+ * @param {Number} offsetY 세로 Offset
+ * @return {OG.geometry.Geometry} 이동된 공간 기하 객체
+ * @override
+ */
+OG.geometry.PolyLine.prototype.move = function (offsetX, offsetY) {
+	var i;
+	this.getBoundary().move(offsetX, offsetY);
+	for (i = 0; i < this.vertices.length; i++) {
+		this.vertices[i].move(offsetX, offsetY);
+	}
+
+	return this;
+};
+
+/**
+ * 상, 하, 좌, 우 외곽선을 이동하여 Envelope 을 리사이즈 한다.
+ *
+ * @param {Number} upper 상단 라인 이동 Offset(위 방향으로 +)
+ * @param {Number} lower 하단 라인 이동 Offset(아래 방향으로 +)
+ * @param {Number} left 좌측 라인 이동 Offset(좌측 방향으로 +)
+ * @param {Number} right 우측 라인 이동 Offset(우측 방향으로 +)
+ * @return {OG.geometry.Geometry} 리사이즈된 공간 기하 객체
+ * @override
+ */
+OG.geometry.PolyLine.prototype.resize = function (upper, lower, left, right) {
+	var boundary = this.getBoundary(),
+		offsetX = left + right,
+		offsetY = upper + lower,
+		width = boundary.getWidth() + offsetX,
+		height = boundary.getHeight() + offsetY,
+		rateWidth = boundary.getWidth() === 0 ? 1 : width / boundary.getWidth(),
+		rateHeight = boundary.getHeight() === 0 ? 1 : height / boundary.getHeight(),
+		upperLeft = boundary.getUpperLeft(),
+		i;
+
+	if (width < 0 || height < 0) {
+		throw new OG.ParamError();
+	}
+
+	for (i = 0; i < this.vertices.length; i++) {
+		this.vertices[i].x = OG.Util.round((upperLeft.x - left) + (this.vertices[i].x - upperLeft.x) * rateWidth);
+		this.vertices[i].y = OG.Util.round((upperLeft.y - upper) + (this.vertices[i].y - upperLeft.y) * rateHeight);
+	}
+	boundary.resize(upper, lower, left, right);
+
+	return this;
+};
+
+/**
+ * 기준 좌표를 기준으로 주어진 각도 만큼 회전한다.
+ *
+ * @param {Number} angle 회전 각도
+ * @param {OG.geometry.Coordinate} origin 기준 좌표
+ * @return {OG.geometry.Geometry} 회전된 공간 기하 객체
+ * @override
+ */
+OG.geometry.PolyLine.prototype.rotate = function (angle, origin) {
+	var i;
+	origin = origin || this.getCentroid();
+	for (i = 0; i < this.vertices.length; i++) {
+		this.vertices[i].rotate(angle, origin);
+	}
+	this.reset();
+
+	return this;
+};
+
+/**
+ * 객체 프라퍼티 정보를 JSON 스트링으로 반환한다.
+ *
+ * @return {String} 프라퍼티 정보
+ * @override
+ */
+OG.geometry.PolyLine.prototype.toString = function () {
+	var s = [];
+	s.push("type:'" + OG.Constants.GEOM_NAME[this.TYPE] + "'");
+	s.push("vertices:[" + this.vertices + "]");
+
+	return "{" + s.join() + "}";
+};
 /**
  * Catmull-Rom Spline Curve 공간 기하 객체(Spatial Geometry Object)
  *
  * @class
- * @extends OG.geometry.Geometry
+ * @extends OG.geometry.PolyLine
  * @requires OG.geometry.Coordinate, OG.geometry.Envelope, OG.geometry.Geometry, OG.common.CurveUtil
+ *
+ * @example
+ * var geom = new OG.geometry.Curve([[200, 100], [100, 300], [-100, -100], [-200, 100]]);
  *
  * @param {OG.geometry.Coordinate[]} controlPoints Curve Vertex 좌표 Array
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
@@ -2988,75 +3092,66 @@ OG.geometry.Curve = function (controlPoints) {
 		));
 	}
 
-	/**
-	 * {Number} 공간 기하 객체 타입
-	 */
 	this.TYPE = OG.Constants.GEOM_TYPE.CURVE;
-
-	/**
-	 * {Boolean} 닫힌 기하 객체 인지 여부
-	 */
-	this.IS_CLOSED = false;
-
-	/**
-	 * {OG.geometry.Style} 스타일 속성
-	 */
 	this.style = new OG.geometry.Style();
-
-	/**
-	 * 공간기하객체의 모든 꼭지점을 반환한다.
-	 *
-	 * @return {OG.geometry.Coordinate[]} 꼭지점 좌표 Array
-	 * @override
-	 */
-	this.getVertices = function () {
-		var vertices = [], i;
-		for (i = 10; i <= this.vertices.length - 10; i++) {
-			vertices.push(this.vertices[i]);
-		}
-
-		return vertices;
-	};
-
-	/**
-	 * 콘트롤 포인트 목록을 반환한다.
-	 *
-	 * @return {OG.geometry.Coordinate[]} controlPoints Array
-	 */
-	this.getControlPoints = function () {
-		var controlPoints = [], i;
-		for (i = 10; i <= this.vertices.length - 10; i += 10) {
-			controlPoints.push(this.vertices[i]);
-		}
-
-		return controlPoints;
-	};
-
-	/**
-	 * 객체 프라퍼티 정보를 JSON 스트링으로 반환한다.
-	 *
-	 * @return {String} 프라퍼티 정보
-	 * @override
-	 */
-	this.toString = function () {
-		var s = [];
-		s.push("type:'" + OG.Constants.GEOM_NAME[this.TYPE] + "'");
-		s.push("vertices:[" + this.getVertices() + "]");
-		s.push("controlPoints:[" + this.getControlPoints() + "]");
-
-		return "{" + s.join() + "}";
-	};
 };
 OG.geometry.Curve.prototype = new OG.geometry.PolyLine();
 OG.geometry.Curve.superclass = OG.geometry.PolyLine;
 OG.geometry.Curve.prototype.constructor = OG.geometry.Curve;
 OG.Curve = OG.geometry.Curve;
+
+/**
+ * 콘트롤 포인트 목록을 반환한다.
+ *
+ * @return {OG.geometry.Coordinate[]} controlPoints Array
+ */
+OG.geometry.Curve.prototype.getControlPoints = function () {
+	var controlPoints = [], i;
+	for (i = 10; i <= this.vertices.length - 10; i += 10) {
+		controlPoints.push(this.vertices[i]);
+	}
+
+	return controlPoints;
+};
+
+/**
+ * 공간기하객체의 모든 꼭지점을 반환한다.
+ *
+ * @return {OG.geometry.Coordinate[]} 꼭지점 좌표 Array
+ * @override
+ */
+OG.geometry.Curve.prototype.getVertices = function () {
+	var vertices = [], i;
+	for (i = 10; i <= this.vertices.length - 10; i++) {
+		vertices.push(this.vertices[i]);
+	}
+
+	return vertices;
+};
+
+/**
+ * 객체 프라퍼티 정보를 JSON 스트링으로 반환한다.
+ *
+ * @return {String} 프라퍼티 정보
+ * @override
+ */
+OG.geometry.Curve.prototype.toString = function () {
+	var s = [];
+	s.push("type:'" + OG.Constants.GEOM_NAME[this.TYPE] + "'");
+	s.push("vertices:[" + this.getVertices() + "]");
+	s.push("controlPoints:[" + this.getControlPoints() + "]");
+
+	return "{" + s.join() + "}";
+};
 /**
  * Ellipse 공간 기하 객체(Spatial Geometry Object)
  *
  * @class
  * @extends OG.geometry.Curve
  * @requires OG.geometry.Coordinate, OG.geometry.Envelope, OG.geometry.Geometry
+ *
+ * @example
+ * var geom = new OG.geometry.Ellipse([10, 10], 10, 5);
  *
  * @param {OG.geometry.Coordinate} center Ellipse 중심 좌표
  * @param {Number} radiusX X축 반경
@@ -3066,11 +3161,7 @@ OG.Curve = OG.geometry.Curve;
  */
 OG.geometry.Ellipse = function (center, radiusX, radiusY, angle) {
 
-	var _center = this.convertCoordinate(center),
-		_angle = angle || 0,
-		theta,
-		i,
-		controlPoints = [];
+	var _angle = angle || 0, _center = this.convertCoordinate(center), controlPoints = [], theta, i;
 
 	if (_center) {
 		for (i = -45; i <= 405; i += 45) {
@@ -3084,97 +3175,91 @@ OG.geometry.Ellipse = function (center, radiusX, radiusY, angle) {
 
 	OG.geometry.Ellipse.superclass.call(this, controlPoints);
 
-	/**
-	 * {Number} 공간 기하 객체 타입
-	 */
 	this.TYPE = OG.Constants.GEOM_TYPE.ELLIPSE;
-
-	/**
-	 * {Boolean} 닫힌 기하 객체 인지 여부
-	 */
 	this.IS_CLOSED = true;
-
-	/**
-	 * {OG.geometry.Style} 스타일 속성
-	 */
 	this.style = new OG.geometry.Style();
-
-	/**
-	 * 공간기하객체의 모든 꼭지점을 반환한다.
-	 *
-	 * @return {OG.geometry.Coordinate[]} 꼭지점 좌표 Array
-	 * @override
-	 */
-	this.getVertices = function () {
-		var vertices = [];
-		for (i = 20; i < this.vertices.length - 20; i++) {
-			vertices.push(this.vertices[i]);
-		}
-
-		return vertices;
-	};
-
-	/**
-	 * 콘트롤 포인트 목록을 반환한다.
-	 *
-	 * @return {OG.geometry.Coordinate[]} controlPoints Array
-	 */
-	this.getControlPoints = function () {
-		var controlPoints = [];
-		for (i = 10; i <= this.vertices.length - 10; i += 10) {
-			controlPoints.push(this.vertices[i]);
-		}
-
-		return controlPoints;
-	};
-
-	/**
-	 * 공간기하객체의 길이를 반환한다.
-	 *
-	 * @return {Number} 길이
-	 * @override
-	 */
-	this.getLength = function () {
-		// π{5(a+b)/4 - ab/(a+b)}
-		var controlPoints = this.getControlPoints(),
-			radiusX = center.distance(controlPoints[1]),
-			radiusY = center.distance(controlPoints[3]);
-		return Math.PI * (5 * (radiusX + radiusY) / 4 - radiusX * radiusY / (radiusX + radiusY));
-	};
-
-	/**
-	 * 객체 프라퍼티 정보를 JSON 스트링으로 반환한다.
-	 *
-	 * @return {String} 프라퍼티 정보
-	 * @override
-	 */
-	this.toString = function () {
-		var s = [],
-			controlPoints = this.getControlPoints(),
-			center = this.getCentroid(),
-			radiusX = center.distance(controlPoints[1]),
-			radiusY = center.distance(controlPoints[3]),
-			angle = OG.Util.round(Math.atan2(controlPoints[1].y - center.y, controlPoints[1].x - center.x) * 180 / Math.PI);
-
-		s.push("type:'" + OG.Constants.GEOM_NAME[this.TYPE] + "'");
-		s.push("center:" + center);
-		s.push("radiusX:" + radiusX);
-		s.push("radiusY:" + radiusY);
-		s.push("angle:" + angle);
-
-		return "{" + s.join() + "}";
-	};
 };
 OG.geometry.Ellipse.prototype = new OG.geometry.Curve();
 OG.geometry.Ellipse.superclass = OG.geometry.Curve;
 OG.geometry.Ellipse.prototype.constructor = OG.geometry.Ellipse;
 OG.Ellipse = OG.geometry.Ellipse;
+
+/**
+ * 공간기하객체의 모든 꼭지점을 반환한다.
+ *
+ * @return {OG.geometry.Coordinate[]} 꼭지점 좌표 Array
+ * @override
+ */
+OG.geometry.Ellipse.prototype.getVertices = function () {
+	var vertices = [], i;
+	for (i = 20; i < this.vertices.length - 20; i++) {
+		vertices.push(this.vertices[i]);
+	}
+
+	return vertices;
+};
+
+/**
+ * 콘트롤 포인트 목록을 반환한다.
+ *
+ * @return {OG.geometry.Coordinate[]} controlPoints Array
+ * @override
+ */
+OG.geometry.Ellipse.prototype.getControlPoints = function () {
+	var controlPoints = [], i;
+	for (i = 10; i <= this.vertices.length - 10; i += 10) {
+		controlPoints.push(this.vertices[i]);
+	}
+
+	return controlPoints;
+};
+
+/**
+ * 공간기하객체의 길이를 반환한다.
+ *
+ * @return {Number} 길이
+ * @override
+ */
+OG.geometry.Ellipse.prototype.getLength = function () {
+	// π{5(a+b)/4 - ab/(a+b)}
+	var controlPoints = this.getControlPoints(),
+		center = this.getCentroid(),
+		radiusX = center.distance(controlPoints[1]),
+		radiusY = center.distance(controlPoints[3]);
+	return Math.PI * (5 * (radiusX + radiusY) / 4 - radiusX * radiusY / (radiusX + radiusY));
+};
+
+/**
+ * 객체 프라퍼티 정보를 JSON 스트링으로 반환한다.
+ *
+ * @return {String} 프라퍼티 정보
+ * @override
+ */
+OG.geometry.Ellipse.prototype.toString = function () {
+	var s = [],
+		controlPoints = this.getControlPoints(),
+		center = this.getCentroid(),
+		radiusX = center.distance(controlPoints[1]),
+		radiusY = center.distance(controlPoints[3]),
+		angle = OG.Util.round(Math.atan2(controlPoints[1].y - center.y, controlPoints[1].x - center.x) * 180 / Math.PI);
+
+	s.push("type:'" + OG.Constants.GEOM_NAME[this.TYPE] + "'");
+	s.push("center:" + center);
+	s.push("radiusX:" + radiusX);
+	s.push("radiusY:" + radiusY);
+	s.push("angle:" + angle);
+
+	return "{" + s.join() + "}";
+};
 /**
  * Circle 공간 기하 객체(Spatial Geometry Object)
  *
  * @class
  * @extends OG.geometry.Ellipse
  * @requires OG.geometry.Coordinate, OG.geometry.Envelope, OG.geometry.Geometry
+ *
+ * @example
+ * var geom = new OG.geometry.Circle([10, 10], 5);
  *
  * @param {OG.geometry.Coordinate} center Circle 중심 좌표
  * @param {Number} radius radius 반경
@@ -3184,66 +3269,55 @@ OG.geometry.Circle = function (center, radius) {
 
 	OG.geometry.Circle.superclass.call(this, center, radius, radius, 0);
 
-	/**
-	 * {Number} 공간 기하 객체 타입
-	 */
 	this.TYPE = OG.Constants.GEOM_TYPE.CIRCLE;
-
-	/**
-	 * {Boolean} 닫힌 기하 객체 인지 여부
-	 */
-	this.IS_CLOSED = true;
-
-	/**
-	 * {OG.geometry.Style} 스타일 속성
-	 */
 	this.style = new OG.geometry.Style();
-
-	/**
-	 * 공간기하객체의 길이를 반환한다.
-	 *
-	 * @return {Number} 길이
-	 * @override
-	 */
-	this.getLength = function () {
-		var controlPoints = this.getControlPoints(),
-			radiusX = center.distance(controlPoints[1]);
-		return 2 * Math.PI * radiusX;
-	};
-
-	/**
-	 * 객체 프라퍼티 정보를 JSON 스트링으로 반환한다.
-	 *
-	 * @return {String} 프라퍼티 정보
-	 * @override
-	 */
-	this.toString = function () {
-		var s = [],
-			controlPoints = this.getControlPoints(),
-			center = this.getCentroid(),
-			radiusX = center.distance(controlPoints[1]),
-			radiusY = center.distance(controlPoints[3]),
-			angle = OG.Util.round(Math.atan2(controlPoints[1].y - center.y, controlPoints[1].x - center.x) * 180 / Math.PI);
-
-		if (radiusX === radiusY) {
-			s.push("type:'" + OG.Constants.GEOM_NAME[this.TYPE] + "'");
-			s.push("center:" + center);
-			s.push("radius:" + radiusX);
-		} else {
-			s.push("type:'" + OG.Constants.GEOM_NAME[OG.Constants.GEOM_TYPE.ELLIPSE] + "'");
-			s.push("center:" + center);
-			s.push("radiusX:" + radiusX);
-			s.push("radiusY:" + radiusY);
-			s.push("angle:" + angle);
-		}
-
-		return "{" + s.join() + "}";
-	};
 };
 OG.geometry.Circle.prototype = new OG.geometry.Ellipse();
 OG.geometry.Circle.superclass = OG.geometry.Ellipse;
 OG.geometry.Circle.prototype.constructor = OG.geometry.Circle;
 OG.Circle = OG.geometry.Circle;
+
+/**
+ * 공간기하객체의 길이를 반환한다.
+ *
+ * @return {Number} 길이
+ * @override
+ */
+OG.geometry.Circle.prototype.getLength = function () {
+	var controlPoints = this.getControlPoints(),
+		center = this.getCentroid(),
+		radiusX = center.distance(controlPoints[1]);
+	return 2 * Math.PI * radiusX;
+};
+
+/**
+ * 객체 프라퍼티 정보를 JSON 스트링으로 반환한다.
+ *
+ * @return {String} 프라퍼티 정보
+ * @override
+ */
+OG.geometry.Circle.prototype.toString = function () {
+	var s = [],
+		controlPoints = this.getControlPoints(),
+		center = this.getCentroid(),
+		radiusX = center.distance(controlPoints[1]),
+		radiusY = center.distance(controlPoints[3]),
+		angle = OG.Util.round(Math.atan2(controlPoints[1].y - center.y, controlPoints[1].x - center.x) * 180 / Math.PI);
+
+	if (radiusX === radiusY) {
+		s.push("type:'" + OG.Constants.GEOM_NAME[this.TYPE] + "'");
+		s.push("center:" + center);
+		s.push("radius:" + radiusX);
+	} else {
+		s.push("type:'" + OG.Constants.GEOM_NAME[OG.Constants.GEOM_TYPE.ELLIPSE] + "'");
+		s.push("center:" + center);
+		s.push("radiusX:" + radiusX);
+		s.push("radiusY:" + radiusY);
+		s.push("angle:" + angle);
+	}
+
+	return "{" + s.join() + "}";
+};
 /**
  * 공간 기하 객체(Spatial Geometry Object) Collection
  *
@@ -3251,187 +3325,188 @@ OG.Circle = OG.geometry.Circle;
  * @extends OG.geometry.Geometry
  * @requires OG.geometry.Coordinate, OG.geometry.Envelope, OG.geometry.Geometry
  *
+ * @example
+ * var geom1 = new OG.geometry.Point([20, 5]),
+ *     geom2 = new OG.geometry.Line([20, 5], [30, 15]),
+ *     geom3 = new OG.geometry.PolyLine([[20, 5], [30, 15], [40, 25], [50, 15]]);
+ *
+ * var collection = new OG.geometry.GeometryCollection([geom1, geom2, geom3]);
+ *
  * @param geometries {OG.geometry.Geometry[]} 공간 기하 객체 Array
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.geometry.GeometryCollection = function (geometries) {
 
-	var i, j;
-
-	/**
-	 * {Number} 공간 기하 객체 타입
-	 */
 	this.TYPE = OG.Constants.GEOM_TYPE.COLLECTION;
-
-	/**
-	 * {OG.geometry.Geometry[]} 공간 기하 객체 Array
-	 */
-	this.geometries = geometries;
-
-	/**
-	 * {Boolean} 닫힌 기하 객체 인지 여부
-	 */
-	this.IS_CLOSED = false;
-
-	/**
-	 * {OG.geometry.Style} 스타일 속성
-	 */
 	this.style = new OG.geometry.Style();
 
 	/**
-	 * 공간기하객체의 모든 꼭지점을 반환한다.
-	 *
-	 * @return {OG.geometry.Coordinate[]} 꼭지점 좌표 Array
-	 * @override
+	 * 공간 기하 객체 Array
+	 * @type OG.geometry.Geometry[]
 	 */
-	this.getVertices = function () {
-		var vertices = [], _vertices;
-		for (i = 0; i < this.geometries.length; i++) {
-			_vertices = this.geometries[i].getVertices();
-			for (j = 0; j < _vertices.length; j++) {
-				vertices.push(_vertices[j]);
-			}
-		}
-
-		return vertices;
-	};
-
-	/**
-	 * 가로, 세로 Offset 만큼 좌표를 이동한다.
-	 *
-	 * @param {Number} offsetX 가로 Offset
-	 * @param {Number} offsetY 세로 Offset
-	 * @return {OG.geometry.Geometry} 이동된 공간 기하 객체
-	 * @override
-	 */
-	this.move = function (offsetX, offsetY) {
-		var i;
-		this.getBoundary().move(offsetX, offsetY);
-		for (i = 0; i < this.geometries.length; i++) {
-			this.geometries[i].move(offsetX, offsetY);
-			this.geometries[i].reset();
-		}
-
-		return this;
-	};
-
-	/**
-	 * 상, 하, 좌, 우 외곽선을 이동하여 Envelope 을 리사이즈 한다.
-	 *
-	 * @param {Number} upper 상단 라인 이동 Offset(위 방향으로 +)
-	 * @param {Number} lower 하단 라인 이동 Offset(아래 방향으로 +)
-	 * @param {Number} left 좌측 라인 이동 Offset(좌측 방향으로 +)
-	 * @param {Number} right 우측 라인 이동 Offset(우측 방향으로 +)
-	 * @return {OG.geometry.Geometry} 리사이즈된 공간 기하 객체
-	 * @override
-	 */
-	this.resize = function (upper, lower, left, right) {
-		var boundary = this.getBoundary(),
-			offsetX = left + right,
-			offsetY = upper + lower,
-			width = boundary.getWidth() + offsetX,
-			height = boundary.getHeight() + offsetY,
-			rateWidth = boundary.getWidth() === 0 ? 1 : width / boundary.getWidth(),
-			rateHeight = boundary.getHeight() === 0 ? 1 : height / boundary.getHeight(),
-			upperLeft = boundary.getUpperLeft(),
-			vertices;
-
-		if (width < 0 || height < 0) {
-			throw new OG.ParamError();
-		}
-
-		for (i = 0; i < this.geometries.length; i++) {
-			vertices = this.geometries[i].vertices;
-			for (j = 0; j < vertices.length; j++) {
-				vertices[j].x = OG.Util.round((upperLeft.x - left) + (vertices[j].x - upperLeft.x) * rateWidth);
-				vertices[j].y = OG.Util.round((upperLeft.y - upper) + (vertices[j].y - upperLeft.y) * rateHeight);
-			}
-			this.geometries[i].reset();
-		}
-		boundary.resize(upper, lower, left, right);
-
-		return this;
-	};
-
-	/**
-	 * 중심좌표는 고정한 채 Bounding Box 의 width, height 를 리사이즈 한다.
-	 *
-	 * @param {Number} width 너비
-	 * @param {Number} height 높이
-	 */
-	this.resizeBox = function (width, height) {
-		var boundary = this.getBoundary(),
-			offsetWidth = OG.Util.round((width - boundary.getWidth()) / 2),
-			offsetHeight = OG.Util.round((height - boundary.getHeight()) / 2);
-
-		this.resize(offsetHeight, offsetHeight, offsetWidth, offsetWidth);
-
-		return this;
-	};
-
-	/**
-	 * 기준 좌표를 기준으로 주어진 각도 만큼 회전한다.
-	 *
-	 * @param {Number} angle 회전 각도
-	 * @param {OG.geometry.Coordinate} origin 기준 좌표(default:중심좌표)
-	 * @return {OG.geometry.Geometry} 회전된 공간 기하 객체
-	 * @override
-	 */
-	this.rotate = function (angle, origin) {
-		origin = origin || this.getCentroid();
-		for (i = 0; i < this.geometries.length; i++) {
-			this.geometries[i].rotate(angle, origin);
-			this.geometries[i].reset();
-		}
-		this.reset();
-
-		return this;
-	};
-
-	/**
-	 * 주어진 Boundary 영역 안으로 공간 기하 객체를 적용한다.(이동 & 리사이즈)
-	 *
-	 * @param {OG.geometry.Envelope} envelope Envelope 영역
-	 * @return {OG.geometry.Geometry} 적용된 공간 기하 객체
-	 * @override
-	 */
-	this.fitToBoundary = function (envelope) {
-		var boundary = this.getBoundary(),
-			upper = boundary.getUpperCenter().y - envelope.getUpperCenter().y,
-			lower = envelope.getLowerCenter().y - boundary.getLowerCenter().y,
-			left = boundary.getLeftCenter().x - envelope.getLeftCenter().x,
-			right = envelope.getRightCenter().x - boundary.getRightCenter().x;
-
-		this.resize(upper, lower, left, right);
-
-		return this;
-	};
-
-	/**
-	 * 객체 프라퍼티 정보를 JSON 스트링으로 반환한다.
-	 *
-	 * @return {String} 프라퍼티 정보
-	 * @override
-	 */
-	this.toString = function () {
-		var s = [];
-
-		for (i = 0; i < this.geometries.length; i++) {
-			s.push(this.geometries[i].toString());
-		}
-
-		return "{type:'" + OG.Constants.GEOM_NAME[this.TYPE] + "',geometries:[" + s.join() + "]}";
-	};
+	this.geometries = geometries;
 };
 OG.geometry.GeometryCollection.prototype = new OG.geometry.Geometry();
+OG.geometry.GeometryCollection.superclass = OG.geometry.Geometry;
 OG.geometry.GeometryCollection.prototype.constructor = OG.geometry.GeometryCollection;
 OG.GeometryCollection = OG.geometry.GeometryCollection;
+
+/**
+ * 공간기하객체의 모든 꼭지점을 반환한다.
+ *
+ * @return {OG.geometry.Coordinate[]} 꼭지점 좌표 Array
+ * @override
+ */
+OG.geometry.GeometryCollection.prototype.getVertices = function () {
+	var vertices = [], _vertices, i, j;
+	for (i = 0; i < this.geometries.length; i++) {
+		_vertices = this.geometries[i].getVertices();
+		for (j = 0; j < _vertices.length; j++) {
+			vertices.push(_vertices[j]);
+		}
+	}
+
+	return vertices;
+};
+
+/**
+ * 가로, 세로 Offset 만큼 좌표를 이동한다.
+ *
+ * @param {Number} offsetX 가로 Offset
+ * @param {Number} offsetY 세로 Offset
+ * @return {OG.geometry.Geometry} 이동된 공간 기하 객체
+ * @override
+ */
+OG.geometry.GeometryCollection.prototype.move = function (offsetX, offsetY) {
+	var i;
+	this.getBoundary().move(offsetX, offsetY);
+	for (i = 0; i < this.geometries.length; i++) {
+		this.geometries[i].move(offsetX, offsetY);
+		this.geometries[i].reset();
+	}
+
+	return this;
+};
+
+/**
+ * 상, 하, 좌, 우 외곽선을 이동하여 Envelope 을 리사이즈 한다.
+ *
+ * @param {Number} upper 상단 라인 이동 Offset(위 방향으로 +)
+ * @param {Number} lower 하단 라인 이동 Offset(아래 방향으로 +)
+ * @param {Number} left 좌측 라인 이동 Offset(좌측 방향으로 +)
+ * @param {Number} right 우측 라인 이동 Offset(우측 방향으로 +)
+ * @return {OG.geometry.Geometry} 리사이즈된 공간 기하 객체
+ * @override
+ */
+OG.geometry.GeometryCollection.prototype.resize = function (upper, lower, left, right) {
+	var boundary = this.getBoundary(),
+		offsetX = left + right,
+		offsetY = upper + lower,
+		width = boundary.getWidth() + offsetX,
+		height = boundary.getHeight() + offsetY,
+		rateWidth = boundary.getWidth() === 0 ? 1 : width / boundary.getWidth(),
+		rateHeight = boundary.getHeight() === 0 ? 1 : height / boundary.getHeight(),
+		upperLeft = boundary.getUpperLeft(),
+		vertices, i, j;
+
+	if (width < 0 || height < 0) {
+		throw new OG.ParamError();
+	}
+
+	for (i = 0; i < this.geometries.length; i++) {
+		vertices = this.geometries[i].vertices;
+		for (j = 0; j < vertices.length; j++) {
+			vertices[j].x = OG.Util.round((upperLeft.x - left) + (vertices[j].x - upperLeft.x) * rateWidth);
+			vertices[j].y = OG.Util.round((upperLeft.y - upper) + (vertices[j].y - upperLeft.y) * rateHeight);
+		}
+		this.geometries[i].reset();
+	}
+	boundary.resize(upper, lower, left, right);
+
+	return this;
+};
+
+/**
+ * 중심좌표는 고정한 채 Bounding Box 의 width, height 를 리사이즈 한다.
+ *
+ * @param {Number} width 너비
+ * @param {Number} height 높이
+ * @return {OG.geometry.Geometry} 리사이즈된 공간 기하 객체
+ * @override
+ */
+OG.geometry.GeometryCollection.prototype.resizeBox = function (width, height) {
+	var boundary = this.getBoundary(),
+		offsetWidth = OG.Util.round((width - boundary.getWidth()) / 2),
+		offsetHeight = OG.Util.round((height - boundary.getHeight()) / 2);
+
+	this.resize(offsetHeight, offsetHeight, offsetWidth, offsetWidth);
+
+	return this;
+};
+
+/**
+ * 기준 좌표를 기준으로 주어진 각도 만큼 회전한다.
+ *
+ * @param {Number} angle 회전 각도
+ * @param {OG.geometry.Coordinate} origin 기준 좌표(default:중심좌표)
+ * @return {OG.geometry.Geometry} 회전된 공간 기하 객체
+ * @override
+ */
+OG.geometry.GeometryCollection.prototype.rotate = function (angle, origin) {
+	var i;
+	origin = origin || this.getCentroid();
+	for (i = 0; i < this.geometries.length; i++) {
+		this.geometries[i].rotate(angle, origin);
+		this.geometries[i].reset();
+	}
+	this.reset();
+
+	return this;
+};
+
+/**
+ * 주어진 Boundary 영역 안으로 공간 기하 객체를 적용한다.(이동 & 리사이즈)
+ *
+ * @param {OG.geometry.Envelope} envelope Envelope 영역
+ * @return {OG.geometry.Geometry} 적용된 공간 기하 객체
+ * @override
+ */
+OG.geometry.GeometryCollection.prototype.fitToBoundary = function (envelope) {
+	var boundary = this.getBoundary(),
+		upper = boundary.getUpperCenter().y - envelope.getUpperCenter().y,
+		lower = envelope.getLowerCenter().y - boundary.getLowerCenter().y,
+		left = boundary.getLeftCenter().x - envelope.getLeftCenter().x,
+		right = envelope.getRightCenter().x - boundary.getRightCenter().x;
+
+	this.resize(upper, lower, left, right);
+
+	return this;
+};
+
+/**
+ * 객체 프라퍼티 정보를 JSON 스트링으로 반환한다.
+ *
+ * @return {String} 프라퍼티 정보
+ * @override
+ */
+OG.geometry.GeometryCollection.prototype.toString = function () {
+	var s = [], i;
+
+	for (i = 0; i < this.geometries.length; i++) {
+		s.push(this.geometries[i].toString());
+	}
+
+	return "{type:'" + OG.Constants.GEOM_NAME[this.TYPE] + "',geometries:[" + s.join() + "]}";
+};
 /**
  * Line 공간 기하 객체(Spatial Geometry Object)
  *
  * @class
- * @extends OG.geometry.Geometry
+ * @extends OG.geometry.PolyLine
  * @requires OG.geometry.Coordinate, OG.geometry.Envelope, OG.geometry.Geometry
+ *
+ * @example
+ * var geom = new OG.geometry.Line([20, 5], [30, 15]);
  *
  * @param {OG.geometry.Coordinate} from 라인 시작 좌표값
  * @param {OG.geometry.Coordinate} to 라인 끝 좌표값
@@ -3447,40 +3522,29 @@ OG.geometry.Line = function (from, to) {
 		[_to.x, _to.y]
 	]);
 
-	/**
-	 * {Number} 공간 기하 객체 타입
-	 */
 	this.TYPE = OG.Constants.GEOM_TYPE.LINE;
-
-	/**
-	 * {Boolean} 닫힌 기하 객체 인지 여부
-	 */
-	this.IS_CLOSED = false;
-
-	/**
-	 * {OG.geometry.Style} 스타일 속성
-	 */
 	this.style = new OG.geometry.Style();
-
-	/**
-	 * 객체 프라퍼티 정보를 JSON 스트링으로 반환한다.
-	 *
-	 * @return {String} 프라퍼티 정보
-	 * @override
-	 */
-	this.toString = function () {
-		var s = [];
-		s.push("type:'" + OG.Constants.GEOM_NAME[this.TYPE] + "'");
-		s.push("from:" + this.vertices[0]);
-		s.push("to:" + this.vertices[1]);
-
-		return "{" + s.join() + "}";
-	};
 };
 OG.geometry.Line.prototype = new OG.geometry.PolyLine();
 OG.geometry.Line.superclass = OG.geometry.PolyLine;
 OG.geometry.Line.prototype.constructor = OG.geometry.Line;
 OG.Line = OG.geometry.Line;
+
+
+/**
+ * 객체 프라퍼티 정보를 JSON 스트링으로 반환한다.
+ *
+ * @return {String} 프라퍼티 정보
+ * @override
+ */
+OG.geometry.Line.prototype.toString = function () {
+	var s = [];
+	s.push("type:'" + OG.Constants.GEOM_NAME[this.TYPE] + "'");
+	s.push("from:" + this.vertices[0]);
+	s.push("to:" + this.vertices[1]);
+
+	return "{" + s.join() + "}";
+};
 /**
  * Point 공간 기하 객체(Spatial Geometry Object)
  *
@@ -3488,162 +3552,160 @@ OG.Line = OG.geometry.Line;
  * @extends OG.geometry.Geometry
  * @requires OG.geometry.Coordinate, OG.geometry.Envelope, OG.geometry.Geometry
  *
+ * @example
+ * var geom = new OG.geometry.Point([20, 5]);
+ *
  * @param {OG.geometry.Coordinate} coordinate 좌표값
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.geometry.Point = function (coordinate) {
 
-	/**
-	 * {Number} 공간 기하 객체 타입
-	 */
 	this.TYPE = OG.Constants.GEOM_TYPE.POINT;
-
-	/**
-	 * {Boolean} 닫힌 기하 객체 인지 여부
-	 */
-	this.IS_CLOSED = false;
-
-	/**
-	 * {OG.geometry.Style} 스타일 속성
-	 */
 	this.style = new OG.geometry.Style();
 
 	/**
-	 * {OG.geometry.Coordinate} 좌표값
+	 * 좌표값
+	 * @type OG.geometry.Coordinate
 	 */
 	this.coordinate = this.convertCoordinate(coordinate);
 
 	/**
-	 * {OG.geometry.Coordinate[]} Line Vertex 좌표 Array
+	 * Line Vertex 좌표 Array
+	 * @type OG.geometry.Coordinate[]
 	 */
 	this.vertices = [this.coordinate];
-
-	/**
-	 * 공간기하객체의 모든 꼭지점을 반환한다.
-	 *
-	 * @return {OG.geometry.Coordinate[]} 꼭지점 좌표 Array
-	 * @override
-	 */
-	this.getVertices = function () {
-		return this.vertices;
-	};
-
-	/**
-	 * 가로, 세로 Offset 만큼 좌표를 이동한다.
-	 *
-	 * @param {Number} offsetX 가로 Offset
-	 * @param {Number} offsetY 세로 Offset
-	 * @return {OG.geometry.Geometry} 이동된 공간 기하 객체
-	 * @override
-	 */
-	this.move = function (offsetX, offsetY) {
-		this.getBoundary().move(offsetX, offsetY);
-		this.coordinate.move(offsetX, offsetY);
-		this.vertices = [this.coordinate];
-
-		return this;
-	};
-
-	/**
-	 * 주어진 중심좌표로 공간기하객체를 이동한다.
-	 *
-	 * @param {OG.geometry.Coordinate} 중심 좌표
-	 */
-	this.moveCentroid = function (target) {
-		this.getBoundary().setUpperLeft(target);
-		this.coordinate = new OG.geometry.Coordinate(target);
-		this.vertices = [this.coordinate];
-	};
-
-	/**
-	 * 상, 하, 좌, 우 외곽선을 이동하여 Envelope 을 리사이즈 한다.
-	 *
-	 * @param {Number} upper 상단 라인 이동 Offset(위 방향으로 +)
-	 * @param {Number} lower 하단 라인 이동 Offset(아래 방향으로 +)
-	 * @param {Number} left 좌측 라인 이동 Offset(좌측 방향으로 +)
-	 * @param {Number} right 우측 라인 이동 Offset(우측 방향으로 +)
-	 * @return {OG.geometry.Geometry} 리사이즈된 공간 기하 객체
-	 * @override
-	 */
-	this.resize = function (upper, lower, left, right) {
-		var boundary = this.getBoundary();
-		boundary.resize(upper, lower, left, right);
-
-		this.coordinate = boundary.getCentroid();
-		this.vertices = [this.coordinate];
-		this.boundary = new OG.Envelope(this.coordinate, 0, 0);
-
-		return this;
-	};
-
-	/**
-	 * 중심좌표는 고정한 채 Bounding Box 의 width, height 를 리사이즈 한다.
-	 *
-	 * @param {Number} width 너비
-	 * @param {Number} height 높이
-	 * @return {OG.geometry.Geometry} 리사이즈된 공간 기하 객체
-	 * @override
-	 */
-	this.resizeBox = function (width, height) {
-		return this;
-	};
-
-	/**
-	 * 기준 좌표를 기준으로 주어진 각도 만큼 회전한다.
-	 *
-	 * @param {Number} angle 회전 각도
-	 * @param {OG.geometry.Coordinate} origin 기준 좌표
-	 * @return {OG.geometry.Geometry} 회전된 공간 기하 객체
-	 * @override
-	 */
-	this.rotate = function (angle, origin) {
-		origin = origin || this.getCentroid();
-
-		this.coordinate.rotate(angle, origin);
-		this.vertices = [this.coordinate];
-		this.reset();
-
-		return this;
-	};
-
-	/**
-	 * 주어진 Boundary 영역 안으로 공간 기하 객체를 적용한다.(이동 & 리사이즈)
-	 *
-	 * @param {OG.geometry.Envelope} envelope Envelope 영역
-	 * @return {OG.geometry.Geometry} 적용된 공간 기하 객체
-	 * @override
-	 */
-	this.fitToBoundary = function (envelope) {
-		this.coordinate = envelope.getCentroid();
-		this.vertices = [this.coordinate];
-		this.boundary = new OG.Envelope(this.coordinate, 0, 0);
-
-		return this;
-	};
-
-	/**
-	 * 객체 프라퍼티 정보를 JSON 스트링으로 반환한다.
-	 *
-	 * @return {String} 프라퍼티 정보
-	 * @override
-	 */
-	this.toString = function () {
-		var s = [];
-		s.push("type:'" + OG.Constants.GEOM_NAME[this.TYPE] + "'");
-		s.push("coordinate:" + this.coordinate);
-
-		return "{" + s.join() + "}";
-	};
 };
 OG.geometry.Point.prototype = new OG.geometry.Geometry();
+OG.geometry.Point.superclass = OG.geometry.Geometry;
 OG.geometry.Point.prototype.constructor = OG.geometry.Point;
 OG.Point = OG.geometry.Point;
+
+/**
+ * 공간기하객체의 모든 꼭지점을 반환한다.
+ *
+ * @return {OG.geometry.Coordinate[]} 꼭지점 좌표 Array
+ * @override
+ */
+OG.geometry.Point.prototype.getVertices = function () {
+	return this.vertices;
+};
+
+/**
+ * 가로, 세로 Offset 만큼 좌표를 이동한다.
+ *
+ * @param {Number} offsetX 가로 Offset
+ * @param {Number} offsetY 세로 Offset
+ * @return {OG.geometry.Geometry} 이동된 공간 기하 객체
+ * @override
+ */
+OG.geometry.Point.prototype.move = function (offsetX, offsetY) {
+	this.getBoundary().move(offsetX, offsetY);
+	this.coordinate.move(offsetX, offsetY);
+	this.vertices = [this.coordinate];
+
+	return this;
+};
+
+/**
+ * 주어진 중심좌표로 공간기하객체를 이동한다.
+ *
+ * @param {OG.geometry.Coordinate} 중심 좌표
+ * @override
+ */
+OG.geometry.Point.prototype.moveCentroid = function (target) {
+	this.getBoundary().setUpperLeft(target);
+	this.coordinate = new OG.geometry.Coordinate(target);
+	this.vertices = [this.coordinate];
+};
+
+/**
+ * 상, 하, 좌, 우 외곽선을 이동하여 Envelope 을 리사이즈 한다.
+ *
+ * @param {Number} upper 상단 라인 이동 Offset(위 방향으로 +)
+ * @param {Number} lower 하단 라인 이동 Offset(아래 방향으로 +)
+ * @param {Number} left 좌측 라인 이동 Offset(좌측 방향으로 +)
+ * @param {Number} right 우측 라인 이동 Offset(우측 방향으로 +)
+ * @return {OG.geometry.Geometry} 리사이즈된 공간 기하 객체
+ * @override
+ */
+OG.geometry.Point.prototype.resize = function (upper, lower, left, right) {
+	var boundary = this.getBoundary();
+	boundary.resize(upper, lower, left, right);
+
+	this.coordinate = boundary.getCentroid();
+	this.vertices = [this.coordinate];
+	this.boundary = new OG.Envelope(this.coordinate, 0, 0);
+
+	return this;
+};
+
+/**
+ * 중심좌표는 고정한 채 Bounding Box 의 width, height 를 리사이즈 한다.
+ *
+ * @param {Number} width 너비
+ * @param {Number} height 높이
+ * @return {OG.geometry.Geometry} 리사이즈된 공간 기하 객체
+ * @override
+ */
+OG.geometry.Point.prototype.resizeBox = function (width, height) {
+	return this;
+};
+
+/**
+ * 기준 좌표를 기준으로 주어진 각도 만큼 회전한다.
+ *
+ * @param {Number} angle 회전 각도
+ * @param {OG.geometry.Coordinate} origin 기준 좌표
+ * @return {OG.geometry.Geometry} 회전된 공간 기하 객체
+ * @override
+ */
+OG.geometry.Point.prototype.rotate = function (angle, origin) {
+	origin = origin || this.getCentroid();
+
+	this.coordinate.rotate(angle, origin);
+	this.vertices = [this.coordinate];
+	this.reset();
+
+	return this;
+};
+
+/**
+ * 주어진 Boundary 영역 안으로 공간 기하 객체를 적용한다.(이동 & 리사이즈)
+ *
+ * @param {OG.geometry.Envelope} envelope Envelope 영역
+ * @return {OG.geometry.Geometry} 적용된 공간 기하 객체
+ * @override
+ */
+OG.geometry.Point.prototype.fitToBoundary = function (envelope) {
+	this.coordinate = envelope.getCentroid();
+	this.vertices = [this.coordinate];
+	this.boundary = new OG.Envelope(this.coordinate, 0, 0);
+
+	return this;
+};
+
+/**
+ * 객체 프라퍼티 정보를 JSON 스트링으로 반환한다.
+ *
+ * @return {String} 프라퍼티 정보
+ * @override
+ */
+OG.geometry.Point.prototype.toString = function () {
+	var s = [];
+	s.push("type:'" + OG.Constants.GEOM_NAME[this.TYPE] + "'");
+	s.push("coordinate:" + this.coordinate);
+
+	return "{" + s.join() + "}";
+};
 /**
  * Polygon 공간 기하 객체(Spatial Geometry Object)
  *
  * @class
  * @extends OG.geometry.PolyLine
  * @requires OG.geometry.Coordinate, OG.geometry.Envelope, OG.geometry.Geometry
+ *
+ * @example
+ * var geom = new OG.geometry.Polygon([[20, 5], [30, 15], [40, 25], [50, 15], [60, 5], [20, 5]]);
  *
  * @param {OG.geometry.Coordinate[]} vertices Line Vertex 좌표 Array
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
@@ -3657,19 +3719,8 @@ OG.geometry.Polygon = function (vertices) {
 		this.vertices.push(new OG.geometry.Coordinate(this.vertices[0].x, this.vertices[0].y));
 	}
 
-	/**
-	 * {Number} 공간 기하 객체 타입
-	 */
 	this.TYPE = OG.Constants.GEOM_TYPE.POLYGON;
-
-	/**
-	 * {Boolean} 닫힌 기하 객체 인지 여부
-	 */
 	this.IS_CLOSED = true;
-
-	/**
-	 * {OG.geometry.Style} 스타일 속성
-	 */
 	this.style = new OG.geometry.Style();
 };
 OG.geometry.Polygon.prototype = new OG.geometry.PolyLine();
@@ -3680,8 +3731,11 @@ OG.Polygon = OG.geometry.Polygon;
  * Rectangle 공간 기하 객체(Spatial Geometry Object)
  *
  * @class
- * @extends OG.geometry.Geometry
+ * @extends OG.geometry.Polygon
  * @requires OG.geometry.Coordinate, OG.geometry.Envelope, OG.geometry.Geometry
+ *
+ * @example
+ * var geom = new OG.geometry.Rectangle([20, 5], 10, 10);
  *
  * @param {OG.geometry.Coordinate} upperLeft 좌상단좌표
  * @param {Number} width 너비
@@ -3706,45 +3760,33 @@ OG.geometry.Rectangle = function (upperLeft, width, height) {
 		[_upperLeft.x, _upperLeft.y]
 	]);
 
-	/**
-	 * {Number} 공간 기하 객체 타입
-	 */
 	this.TYPE = OG.Constants.GEOM_TYPE.RECTANGLE;
-
-	/**
-	 * {Boolean} 닫힌 기하 객체 인지 여부
-	 */
-	this.IS_CLOSED = true;
-
-	/**
-	 * {OG.geometry.Style} 스타일 속성
-	 */
 	this.style = new OG.geometry.Style();
-
-	/**
-	 * 객체 프라퍼티 정보를 JSON 스트링으로 반환한다.
-	 *
-	 * @return {String} 프라퍼티 정보
-	 * @override
-	 */
-	this.toString = function () {
-		var s = [],
-			angle = OG.Util.round(Math.atan2(this.vertices[1].y - this.vertices[0].y,
-				this.vertices[1].x - this.vertices[0].x) * 180 / Math.PI);
-
-		s.push("type:'" + OG.Constants.GEOM_NAME[this.TYPE] + "'");
-		s.push("upperLeft:" + this.vertices[0]);
-		s.push("width:" + (this.vertices[0].distance(this.vertices[1])));
-		s.push("height:" + (this.vertices[0].distance(this.vertices[3])));
-		s.push("angle:" + angle);
-
-		return "{" + s.join() + "}";
-	};
 };
 OG.geometry.Rectangle.prototype = new OG.geometry.Polygon();
 OG.geometry.Rectangle.superclass = OG.geometry.Polygon;
 OG.geometry.Rectangle.prototype.constructor = OG.geometry.Rectangle;
 OG.Rectangle = OG.geometry.Rectangle;
+
+/**
+ * 객체 프라퍼티 정보를 JSON 스트링으로 반환한다.
+ *
+ * @return {String} 프라퍼티 정보
+ * @override
+ */
+OG.geometry.Rectangle.prototype.toString = function () {
+	var s = [],
+		angle = OG.Util.round(Math.atan2(this.vertices[1].y - this.vertices[0].y,
+			this.vertices[1].x - this.vertices[0].x) * 180 / Math.PI);
+
+	s.push("type:'" + OG.Constants.GEOM_NAME[this.TYPE] + "'");
+	s.push("upperLeft:" + this.vertices[0]);
+	s.push("width:" + (this.vertices[0].distance(this.vertices[1])));
+	s.push("height:" + (this.vertices[0].distance(this.vertices[3])));
+	s.push("angle:" + angle);
+
+	return "{" + s.join() + "}";
+};
 /**
  * 도형, 텍스트, 이미지 등의 드로잉 될 Object 의 정보를 저장하는 Shape 정보 최상위 인터페이스
  *
@@ -3754,25 +3796,57 @@ OG.Rectangle = OG.geometry.Rectangle;
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.IShape = function () {
-	this.TYPE = OG.Constants.NODE_TYPE.SHAPE;
+	/**
+	 * Shape 유형(GEOM, TEXT, HTML, IMAGE, EDGE, GROUP)
+	 * @type String
+	 */
+	this.TYPE = null;
 
-	this.SHAPE_ID = 'OG.shape.IShape';
+	/**
+	 * Shape 을 구분하는 Shape ID(Shape 클래스명과 일치)
+	 * @type String
+	 */
+	this.SHAPE_ID = null;
 
+	/**
+	 * Shape 모양을 나타내는 공간기하객체(Geometry)
+	 * @type OG.geometry.Geometry
+	 */
 	this.geom = null;
 
+	/**
+	 * Shape 라벨 텍스트
+	 * @type String
+	 */
 	this.label = null;
 
+	/**
+	 * Shape 의 Collapse 여부
+	 * @type Boolean
+	 */
 	this.isCollapsed = false;
-
+};
+OG.shape.IShape.prototype = {
 	/**
 	 * Shape 간의 연결을 위한 Terminal 을 반환한다.
 	 *
 	 * @return {OG.Terminal[]} Terminal
-	 * @abstract
 	 */
-	this.createTerminal = function () {
-		return [];
-	};
+	createTerminal: function () {
+		if (!this.geom) {
+			return [];
+		}
+
+		var envelope = this.geom.getBoundary();
+
+		return [
+			new OG.Terminal(envelope.getCentroid(), OG.Constants.TERMINAL_TYPE.C, OG.Constants.TERMINAL_TYPE.INOUT),
+			new OG.Terminal(envelope.getRightCenter(), OG.Constants.TERMINAL_TYPE.E, OG.Constants.TERMINAL_TYPE.INOUT),
+			new OG.Terminal(envelope.getLeftCenter(), OG.Constants.TERMINAL_TYPE.W, OG.Constants.TERMINAL_TYPE.INOUT),
+			new OG.Terminal(envelope.getLowerCenter(), OG.Constants.TERMINAL_TYPE.S, OG.Constants.TERMINAL_TYPE.INOUT),
+			new OG.Terminal(envelope.getUpperCenter(), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT)
+		];
+	},
 
 	/**
 	 * 드로잉할 Shape 를 생성하여 반환한다.
@@ -3780,9 +3854,9 @@ OG.shape.IShape = function () {
 	 * @return {*} Shape 정보
 	 * @abstract
 	 */
-	this.createShape = function () {
+	createShape: function () {
 		throw new OG.NotImplementedException("OG.shape.IShape.createShape");
-	};
+	},
 
 	/**
 	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
@@ -3790,11 +3864,11 @@ OG.shape.IShape = function () {
 	 * @return {OG.shape.IShape} 복사된 인스턴스
 	 * @abstract
 	 */
-	this.clone = function () {
+	clone: function () {
 		throw new OG.NotImplementedException("OG.shape.IShape.clone");
-	};
-};
-OG.shape.IShape.prototype = new OG.shape.IShape();
+	}
+}
+;
 OG.shape.IShape.prototype.constructor = OG.shape.IShape;
 OG.IShape = OG.shape.IShape;
 /**
@@ -3803,11 +3877,28 @@ OG.IShape = OG.shape.IShape;
  * @class
  * @requires OG.common.*, OG.geometry.*
  *
+ * @param position {OG.geometry.Coordinate} 위치좌표값
+ * @param direction {String} 연결위치 (C:Center, E:East, W:West, S:South, N:North)
+ * @param inout {String} 연결모드 (IN, OUT, INOUT)
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.Terminal = function (position, direction, inout) {
+	/**
+	 * 위치좌표값
+	 * @type OG.geometry.Coordinate
+	 */
 	this.position = position;
+
+	/**
+	 * 연결위치 (C:Center, E:East, W:West, S:South, N:North)
+	 * @type String
+	 */
 	this.direction = direction || OG.Constants.TERMINAL_TYPE.E;
+
+	/**
+	 * 연결모드 (IN, OUT, INOUT)
+	 * @type String
+	 */
 	this.inout = inout || OG.Constants.TERMINAL_TYPE.INOUT;
 };
 OG.shape.Terminal.prototype = new OG.shape.Terminal();
@@ -3824,54 +3915,24 @@ OG.Terminal = OG.shape.Terminal;
  */
 OG.shape.GeomShape = function () {
 	this.TYPE = OG.Constants.SHAPE_TYPE.GEOM;
-
-	this.SHAPE_ID = 'OG.shape.GeomShape';
-
-	/**
-	 * Shape 간의 연결을 위한 Terminal 을 반환한다.
-	 *
-	 * @return {OG.Terminal[]} Terminal
-	 * @override
-	 */
-	this.createTerminal = function () {
-		if (!this.geom) {
-			return [];
-		}
-
-		var envelope = this.geom.getBoundary();
-
-		return [
-			new OG.Terminal(envelope.getCentroid(), OG.Constants.TERMINAL_TYPE.C, OG.Constants.TERMINAL_TYPE.INOUT),
-			new OG.Terminal(envelope.getRightCenter(), OG.Constants.TERMINAL_TYPE.E, OG.Constants.TERMINAL_TYPE.INOUT),
-			new OG.Terminal(envelope.getLeftCenter(), OG.Constants.TERMINAL_TYPE.W, OG.Constants.TERMINAL_TYPE.INOUT),
-			new OG.Terminal(envelope.getLowerCenter(), OG.Constants.TERMINAL_TYPE.S, OG.Constants.TERMINAL_TYPE.INOUT),
-			new OG.Terminal(envelope.getUpperCenter(), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT)
-		];
-	};
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @abstract
-	 */
-	this.createShape = function () {
-		throw new OG.NotImplementedException("OG.shape.IShape.createShape");
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @abstract
-	 */
-	this.clone = function () {
-		throw new OG.NotImplementedException("OG.shape.IShape.clone");
-	};
 };
 OG.shape.GeomShape.prototype = new OG.shape.IShape();
+OG.shape.GeomShape.superclass = OG.shape.IShape;
 OG.shape.GeomShape.prototype.constructor = OG.shape.GeomShape;
 OG.GeomShape = OG.shape.GeomShape;
+
+/**
+ * Shape 을 복사하여 새로인 인스턴스로 반환한다.
+ *
+ * @return {OG.shape.IShape} 복사된 인스턴스
+ * @override
+ */
+OG.shape.GeomShape.prototype.clone = function () {
+	var shape = eval('new ' + this.SHAPE_ID + '()');
+	shape.label = this.label;
+
+	return shape;
+};
 /**
  * Text Shape
  *
@@ -3883,38 +3944,49 @@ OG.GeomShape = OG.shape.GeomShape;
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.TextShape = function (text) {
-
 	this.TYPE = OG.Constants.SHAPE_TYPE.TEXT;
-
 	this.SHAPE_ID = 'OG.shape.TextShape';
 
+	/**
+	 * 드로잉할 텍스트
+	 * @type String
+	 */
 	this.text = text || "Text Here";
 
+	/**
+	 * 회전각도
+	 * @type Number
+	 */
 	this.angle = 0;
-
-	/**
-	 * 드로잉할 텍스트를 반환한다.
-	 *
-	 * @return {String} 텍스트
-	 * @override
-	 */
-	this.createShape = function () {
-		return this.text;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.TextShape(this.text);
-	};
 };
 OG.shape.TextShape.prototype = new OG.shape.IShape();
+OG.shape.TextShape.superclass = OG.shape.IShape;
 OG.shape.TextShape.prototype.constructor = OG.shape.TextShape;
 OG.TextShape = OG.shape.TextShape;
+
+/**
+ * 드로잉할 텍스트를 반환한다.
+ *
+ * @return {String} 텍스트
+ * @override
+ */
+OG.shape.TextShape.prototype.createShape = function () {
+	return this.text;
+};
+
+/**
+ * Shape 을 복사하여 새로인 인스턴스로 반환한다.
+ *
+ * @return {OG.shape.IShape} 복사된 인스턴스
+ * @override
+ */
+OG.shape.TextShape.prototype.clone = function () {
+	var shape = eval('new ' + this.SHAPE_ID + '()');
+	shape.text = this.text;
+	shape.angle = this.angle;
+
+	return shape;
+};
 /**
  * Image Shape
  *
@@ -3923,120 +3995,134 @@ OG.TextShape = OG.shape.TextShape;
  * @requires OG.common.*, OG.geometry.*
  *
  * @param {String} image 이미지 URL
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.ImageShape = function (image, label) {
-
 	this.TYPE = OG.Constants.SHAPE_TYPE.IMAGE;
-
 	this.SHAPE_ID = 'OG.shape.ImageShape';
-
-	this.image = image;
-
-	this.angle = 0;
-
 	this.label = label;
 
 	/**
-	 * Shape 간의 연결을 위한 Terminal 을 반환한다.
-	 *
-	 * @return {OG.Terminal[]} Terminal
-	 * @override
+	 * 드로잉할 이미지 URL
+	 * @type String
 	 */
-	this.createTerminal = function () {
-		if (!this.geom) {
-			return [];
-		}
-
-		var envelope = this.geom.getBoundary();
-
-		return [
-			new OG.Terminal(envelope.getCentroid(), OG.Constants.TERMINAL_TYPE.C, OG.Constants.TERMINAL_TYPE.INOUT),
-			new OG.Terminal(envelope.getRightCenter(), OG.Constants.TERMINAL_TYPE.E, OG.Constants.TERMINAL_TYPE.INOUT),
-			new OG.Terminal(envelope.getLeftCenter(), OG.Constants.TERMINAL_TYPE.W, OG.Constants.TERMINAL_TYPE.INOUT),
-			new OG.Terminal(envelope.getLowerCenter(), OG.Constants.TERMINAL_TYPE.S, OG.Constants.TERMINAL_TYPE.INOUT),
-			new OG.Terminal(envelope.getUpperCenter(), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT)
-		];
-	};
+	this.image = image;
 
 	/**
-	 * 드로잉할 이미지 URL을 반환한다.
-	 *
-	 * @return {String} 이미지 URL
-	 * @override
+	 * 회전각도
+	 * @type Number
 	 */
-	this.createShape = function () {
-		return this.image;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.ImageShape(this.image, this.label);
-	};
+	this.angle = 0;
 };
 OG.shape.ImageShape.prototype = new OG.shape.IShape();
+OG.shape.ImageShape.superclass = OG.shape.IShape;
 OG.shape.ImageShape.prototype.constructor = OG.shape.ImageShape;
 OG.ImageShape = OG.shape.ImageShape;
+
 /**
- * Line Shape
+ * 드로잉할 이미지 URL을 반환한다.
+ *
+ * @return {String} 이미지 URL
+ * @override
+ */
+OG.shape.ImageShape.prototype.createShape = function () {
+	return this.image;
+};
+
+/**
+ * Shape 을 복사하여 새로인 인스턴스로 반환한다.
+ *
+ * @return {OG.shape.IShape} 복사된 인스턴스
+ * @override
+ */
+OG.shape.ImageShape.prototype.clone = function () {
+	var shape = eval('new ' + this.SHAPE_ID + '()');
+	shape.image = this.image;
+	shape.label = this.label;
+	shape.angle = this.angle;
+
+	return shape;
+};
+/**
+ * Edge Shape
  *
  * @class
- * @extends OG.shape.GeomShape
+ * @extends OG.shape.IShape
  * @requires OG.common.*, OG.geometry.*
  *
  * @param {Number[]} from 와이어 시작 좌표
  * @param {Number[]} to 와이어 끝 좌표
- * @param {String} label 라벨
- * @param {String} fromLabel 시작점 라벨
- * @param {String} toLabel 끝점 라벨
+ * @param {String} label 라벨 [Optional]
+ * @param {String} fromLabel 시작점 라벨 [Optional]
+ * @param {String} toLabel 끝점 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.EdgeShape = function (from, to, label, fromLabel, toLabel) {
 	this.TYPE = OG.Constants.SHAPE_TYPE.EDGE;
-
 	this.SHAPE_ID = 'OG.shape.EdgeShape';
 
+	/**
+	 * Edge 시작 좌표
+	 * @type Number[]
+	 */
 	this.from = from;
+
+	/**
+	 * Edge 끝 좌표
+	 * @type Number[]
+	 */
 	this.to = to;
 
 	this.label = label;
+
+	/**
+	 * Edge 시작점 라벨
+	 * @type String
+	 */
 	this.fromLabel = fromLabel;
+
+	/**
+	 * Edge 끝점 라벨
+	 * @type String
+	 */
 	this.toLabel = toLabel;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		if (this.geom) {
-			return this.geom;
-		}
-
-		this.geom = new OG.Line(from, to);
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.EdgeShape(this.from, this.to, this.label, this.fromLabel, this.toLabel);
-	};
 };
 OG.shape.EdgeShape.prototype = new OG.shape.IShape();
+OG.shape.EdgeShape.superclass = OG.shape.IShape;
 OG.shape.EdgeShape.prototype.constructor = OG.shape.EdgeShape;
 OG.EdgeShape = OG.shape.EdgeShape;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.EdgeShape.prototype.createShape = function () {
+	if (this.geom) {
+		return this.geom;
+	}
+
+	this.geom = new OG.Line(this.from, this.to);
+	return this.geom;
+};
+
+/**
+ * Shape 을 복사하여 새로인 인스턴스로 반환한다.
+ *
+ * @return {OG.shape.IShape} 복사된 인스턴스
+ * @override
+ */
+OG.shape.EdgeShape.prototype.clone = function () {
+	var shape = eval('new ' + this.SHAPE_ID + '()');
+	shape.from = this.from;
+	shape.to = this.to;
+	shape.fromLabel = this.fromLabel;
+	shape.toLabel = this.toLabel;
+
+	return shape;
+};
 /**
  * Circle Shape
  *
@@ -4044,43 +4130,32 @@ OG.EdgeShape = OG.shape.EdgeShape;
  * @extends OG.shape.GeomShape
  * @requires OG.common.*, OG.geometry.*
  *
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.CircleShape = function (label) {
-
 	this.SHAPE_ID = 'OG.shape.CircleShape';
-
 	this.label = label;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		if (this.geom) {
-			return this.geom;
-		}
-
-		this.geom = new OG.geometry.Circle([50, 50], 50);
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.CircleShape(this.label);
-	};
 };
 OG.shape.CircleShape.prototype = new OG.shape.GeomShape();
+OG.shape.CircleShape.superclass = OG.shape.GeomShape;
 OG.shape.CircleShape.prototype.constructor = OG.shape.CircleShape;
 OG.CircleShape = OG.shape.CircleShape;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.CircleShape.prototype.createShape = function () {
+	if (this.geom) {
+		return this.geom;
+	}
+
+	this.geom = new OG.geometry.Circle([50, 50], 50);
+	return this.geom;
+};
 /**
  * Ellipse Shape
  *
@@ -4088,43 +4163,32 @@ OG.CircleShape = OG.shape.CircleShape;
  * @extends OG.shape.GeomShape
  * @requires OG.common.*, OG.geometry.*
  *
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.EllipseShape = function (label) {
-
 	this.SHAPE_ID = 'OG.shape.EllipseShape';
-
 	this.label = label;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		if (this.geom) {
-			return this.geom;
-		}
-
-		this.geom = new OG.geometry.Ellipse([50, 50], 50, 30);
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.EllipseShape(this.label);
-	};
 };
 OG.shape.EllipseShape.prototype = new OG.shape.GeomShape();
+OG.shape.EllipseShape.superclass = OG.shape.GeomShape;
 OG.shape.EllipseShape.prototype.constructor = OG.shape.EllipseShape;
 OG.EllipseShape = OG.shape.EllipseShape;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.EllipseShape.prototype.createShape = function () {
+	if (this.geom) {
+		return this.geom;
+	}
+
+	this.geom = new OG.geometry.Ellipse([50, 50], 50, 30);
+	return this.geom;
+};
 /**
  * Group Shape
  *
@@ -4132,71 +4196,50 @@ OG.EllipseShape = OG.shape.EllipseShape;
  * @extends OG.shape.IShape
  * @requires OG.common.*, OG.geometry.*
  *
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.GroupShape = function (label) {
-
 	this.TYPE = OG.Constants.SHAPE_TYPE.GROUP;
-
 	this.SHAPE_ID = 'OG.shape.GroupShape';
-
 	this.label = label;
-
-	/**
-	 * Shape 간의 연결을 위한 Terminal 을 반환한다.
-	 *
-	 * @return {OG.Terminal[]} Terminal
-	 * @override
-	 */
-	this.createTerminal = function () {
-		if (!this.geom) {
-			return [];
-		}
-
-		var envelope = this.geom.getBoundary();
-
-		return [
-			new OG.Terminal(envelope.getCentroid(), OG.Constants.TERMINAL_TYPE.C, OG.Constants.TERMINAL_TYPE.INOUT),
-			new OG.Terminal(envelope.getRightCenter(), OG.Constants.TERMINAL_TYPE.E, OG.Constants.TERMINAL_TYPE.INOUT),
-			new OG.Terminal(envelope.getLeftCenter(), OG.Constants.TERMINAL_TYPE.W, OG.Constants.TERMINAL_TYPE.INOUT),
-			new OG.Terminal(envelope.getLowerCenter(), OG.Constants.TERMINAL_TYPE.S, OG.Constants.TERMINAL_TYPE.INOUT),
-			new OG.Terminal(envelope.getUpperCenter(), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT)
-		];
-	};
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		if (this.geom) {
-			return this.geom;
-		}
-
-		this.geom = new OG.geometry.Rectangle([0, 0], 100, 100);
-		this.geom.style = new OG.geometry.Style({
-			'stroke': 'none'
-		});
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.GroupShape(this.label);
-	};
 };
 OG.shape.GroupShape.prototype = new OG.shape.IShape();
+OG.shape.GroupShape.superclass = OG.shape.IShape;
 OG.shape.GroupShape.prototype.constructor = OG.shape.GroupShape;
 OG.GroupShape = OG.shape.GroupShape;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.GroupShape.prototype.createShape = function () {
+	if (this.geom) {
+		return this.geom;
+	}
+
+	this.geom = new OG.geometry.Rectangle([0, 0], 100, 100);
+	this.geom.style = new OG.geometry.Style({
+		'stroke': 'none'
+	});
+
+	return this.geom;
+};
+
+/**
+ * Shape 을 복사하여 새로인 인스턴스로 반환한다.
+ *
+ * @return {OG.shape.IShape} 복사된 인스턴스
+ * @override
+ */
+OG.shape.GroupShape.prototype.clone = function () {
+	var shape = eval('new ' + this.SHAPE_ID + '()');
+	shape.label = this.label;
+
+	return shape;
+};
 /**
  * Horizontal Swimlane Shape
  *
@@ -4204,72 +4247,37 @@ OG.GroupShape = OG.shape.GroupShape;
  * @extends OG.shape.GroupShape
  * @requires OG.common.*, OG.geometry.*
  *
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.HorizontalLaneShape = function (label) {
-
-	this.TYPE = OG.Constants.SHAPE_TYPE.GROUP;
-
 	this.SHAPE_ID = 'OG.shape.HorizontalLaneShape';
-
 	this.label = label;
-
-	/**
-	 * Shape 간의 연결을 위한 Terminal 을 반환한다.
-	 *
-	 * @return {OG.Terminal[]} Terminal
-	 * @override
-	 */
-	this.createTerminal = function () {
-		if (!this.geom) {
-			return [];
-		}
-
-		var envelope = this.geom.getBoundary();
-
-		return [
-			new OG.Terminal(envelope.getCentroid(), OG.Constants.TERMINAL_TYPE.C, OG.Constants.TERMINAL_TYPE.INOUT),
-			new OG.Terminal(envelope.getRightCenter(), OG.Constants.TERMINAL_TYPE.E, OG.Constants.TERMINAL_TYPE.INOUT),
-			new OG.Terminal(envelope.getLeftCenter(), OG.Constants.TERMINAL_TYPE.W, OG.Constants.TERMINAL_TYPE.INOUT),
-			new OG.Terminal(envelope.getLowerCenter(), OG.Constants.TERMINAL_TYPE.S, OG.Constants.TERMINAL_TYPE.INOUT),
-			new OG.Terminal(envelope.getUpperCenter(), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT)
-		];
-	};
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		if (this.geom) {
-			return this.geom;
-		}
-
-		this.geom = new OG.geometry.Rectangle([0, 0], 100, 100);
-		this.geom.style = new OG.geometry.Style({
-			'label-direction': 'vertical',
-			'vertical-align' : 'top'
-		});
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.HorizontalLaneShape(this.label);
-	};
 };
 OG.shape.HorizontalLaneShape.prototype = new OG.shape.GroupShape();
+OG.shape.HorizontalLaneShape.superclass = OG.shape.GroupShape;
 OG.shape.HorizontalLaneShape.prototype.constructor = OG.shape.HorizontalLaneShape;
 OG.HorizontalLaneShape = OG.shape.HorizontalLaneShape;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.HorizontalLaneShape.prototype.createShape = function () {
+	if (this.geom) {
+		return this.geom;
+	}
+
+	this.geom = new OG.geometry.Rectangle([0, 0], 100, 100);
+	this.geom.style = new OG.geometry.Style({
+		'label-direction': 'vertical',
+		'vertical-align' : 'top'
+	});
+
+	return this.geom;
+};
 /**
  * ForeignObject HTML Shape
  *
@@ -4278,66 +4286,55 @@ OG.HorizontalLaneShape = OG.shape.HorizontalLaneShape;
  * @requires OG.common.*, OG.geometry.*
  *
  * @param {String} html 임베드 HTML String
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.HtmlShape = function (html, label) {
-
 	this.TYPE = OG.Constants.SHAPE_TYPE.HTML;
-
 	this.SHAPE_ID = 'OG.shape.HtmlShape';
-
-	this.html = html || "";
-
 	this.label = label;
 
+	/**
+	 * 드로잉할 임베드 HTML String
+	 * @type String
+	 */
+	this.html = html || "";
+
+	/**
+	 * 회전각도
+	 * @type Number
+	 */
 	this.angle = 0;
-
-	/**
-	 * Shape 간의 연결을 위한 Terminal 을 반환한다.
-	 *
-	 * @return {OG.Terminal[]} Terminal
-	 * @override
-	 */
-	this.createTerminal = function () {
-		if (!this.geom) {
-			return [];
-		}
-
-		var envelope = this.geom.getBoundary();
-
-		return [
-			new OG.Terminal(envelope.getCentroid(), OG.Constants.TERMINAL_TYPE.C, OG.Constants.TERMINAL_TYPE.INOUT),
-			new OG.Terminal(envelope.getRightCenter(), OG.Constants.TERMINAL_TYPE.E, OG.Constants.TERMINAL_TYPE.INOUT),
-			new OG.Terminal(envelope.getLeftCenter(), OG.Constants.TERMINAL_TYPE.W, OG.Constants.TERMINAL_TYPE.INOUT),
-			new OG.Terminal(envelope.getLowerCenter(), OG.Constants.TERMINAL_TYPE.S, OG.Constants.TERMINAL_TYPE.INOUT),
-			new OG.Terminal(envelope.getUpperCenter(), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT)
-		];
-	};
-
-	/**
-	 * 드로잉할 임베드 HTML String을 반환한다.
-	 *
-	 * @return {String} 임베드 HTML String
-	 * @override
-	 */
-	this.createShape = function () {
-		return this.html;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.HtmlShape(this.html, this.label);
-	};
 };
 OG.shape.HtmlShape.prototype = new OG.shape.IShape();
+OG.shape.HtmlShape.superclass = OG.shape.IShape;
 OG.shape.HtmlShape.prototype.constructor = OG.shape.HtmlShape;
 OG.HtmlShape = OG.shape.HtmlShape;
+
+/**
+ * 드로잉할 임베드 HTML String을 반환한다.
+ *
+ * @return {String} 임베드 HTML String
+ * @override
+ */
+OG.shape.HtmlShape.prototype.createShape = function () {
+	return this.html;
+};
+
+/**
+ * Shape 을 복사하여 새로인 인스턴스로 반환한다.
+ *
+ * @return {OG.shape.IShape} 복사된 인스턴스
+ * @override
+ */
+OG.shape.HtmlShape.prototype.clone = function () {
+	var shape = eval('new ' + this.SHAPE_ID + '()');
+	shape.html = this.html;
+	shape.label = this.label;
+	shape.angle = this.angle;
+
+	return shape;
+};
 /**
  * Rectangle Shape
  *
@@ -4345,43 +4342,32 @@ OG.HtmlShape = OG.shape.HtmlShape;
  * @extends OG.shape.GeomShape
  * @requires OG.common.*, OG.geometry.*
  *
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.RectangleShape = function (label) {
-
 	this.SHAPE_ID = 'OG.shape.RectangleShape';
-
 	this.label = label;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		if (this.geom) {
-			return this.geom;
-		}
-
-		this.geom = new OG.geometry.Rectangle([0, 0], 100, 100);
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.RectangleShape(this.label);
-	};
 };
 OG.shape.RectangleShape.prototype = new OG.shape.GeomShape();
+OG.shape.RectangleShape.superclass = OG.shape.GeomShape;
 OG.shape.RectangleShape.prototype.constructor = OG.shape.RectangleShape;
 OG.RectangleShape = OG.shape.RectangleShape;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.RectangleShape.prototype.createShape = function () {
+	if (this.geom) {
+		return this.geom;
+	}
+
+	this.geom = new OG.geometry.Rectangle([0, 0], 100, 100);
+	return this.geom;
+};
 /**
  * Vertical Swimlane Shape
  *
@@ -4393,68 +4379,33 @@ OG.RectangleShape = OG.shape.RectangleShape;
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.VerticalLaneShape = function (label) {
-
-	this.TYPE = OG.Constants.SHAPE_TYPE.GROUP;
-
 	this.SHAPE_ID = 'OG.shape.VerticalLaneShape';
-
 	this.label = label;
-
-	/**
-	 * Shape 간의 연결을 위한 Terminal 을 반환한다.
-	 *
-	 * @return {OG.Terminal[]} Terminal
-	 * @override
-	 */
-	this.createTerminal = function () {
-		if (!this.geom) {
-			return [];
-		}
-
-		var envelope = this.geom.getBoundary();
-
-		return [
-			new OG.Terminal(envelope.getCentroid(), OG.Constants.TERMINAL_TYPE.C, OG.Constants.TERMINAL_TYPE.INOUT),
-			new OG.Terminal(envelope.getRightCenter(), OG.Constants.TERMINAL_TYPE.E, OG.Constants.TERMINAL_TYPE.INOUT),
-			new OG.Terminal(envelope.getLeftCenter(), OG.Constants.TERMINAL_TYPE.W, OG.Constants.TERMINAL_TYPE.INOUT),
-			new OG.Terminal(envelope.getLowerCenter(), OG.Constants.TERMINAL_TYPE.S, OG.Constants.TERMINAL_TYPE.INOUT),
-			new OG.Terminal(envelope.getUpperCenter(), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT)
-		];
-	};
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		if (this.geom) {
-			return this.geom;
-		}
-
-		this.geom = new OG.geometry.Rectangle([0, 0], 100, 100);
-		this.geom.style = new OG.geometry.Style({
-			'label-direction': 'horizontal',
-			'vertical-align' : 'top'
-		});
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.VerticalLaneShape(this.label);
-	};
 };
 OG.shape.VerticalLaneShape.prototype = new OG.shape.GroupShape();
+OG.shape.VerticalLaneShape.superclass = OG.shape.GroupShape;
 OG.shape.VerticalLaneShape.prototype.constructor = OG.shape.VerticalLaneShape;
 OG.VerticalLaneShape = OG.shape.VerticalLaneShape;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.VerticalLaneShape.prototype.createShape = function () {
+	if (this.geom) {
+		return this.geom;
+	}
+
+	this.geom = new OG.geometry.Rectangle([0, 0], 100, 100);
+	this.geom.style = new OG.geometry.Style({
+		'label-direction': 'horizontal',
+		'vertical-align' : 'top'
+	});
+
+	return this.geom;
+};
 /**
  * BPMN : Subprocess Activity Shape
  *
@@ -4462,48 +4413,37 @@ OG.VerticalLaneShape = OG.shape.VerticalLaneShape;
  * @extends OG.shape.GroupShape
  * @requires OG.common.*, OG.geometry.*
  *
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.A_Subprocess = function (label) {
-
 	this.SHAPE_ID = 'OG.shape.bpmn.A_Subprocess';
-
 	this.label = label;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		if (this.geom) {
-			return this.geom;
-		}
-
-		this.geom = new OG.geometry.Rectangle([0, 0], 100, 100);
-		this.geom.style = new OG.geometry.Style({
-			'stroke': 'black',
-			"r"     : 6
-		});
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.bpmn.A_Subprocess(this.label);
-	};
 };
 OG.shape.bpmn.A_Subprocess.prototype = new OG.shape.GroupShape();
+OG.shape.bpmn.A_Subprocess.superclass = OG.shape.GroupShape;
 OG.shape.bpmn.A_Subprocess.prototype.constructor = OG.shape.bpmn.A_Subprocess;
 OG.A_Subprocess = OG.shape.bpmn.A_Subprocess;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.A_Subprocess.prototype.createShape = function () {
+	if (this.geom) {
+		return this.geom;
+	}
+
+	this.geom = new OG.geometry.Rectangle([0, 0], 100, 100);
+	this.geom.style = new OG.geometry.Style({
+		'stroke': 'black',
+		"r"     : 6
+	});
+
+	return this.geom;
+};
 /**
  * BPMN : Task Activity Shape
  *
@@ -4511,47 +4451,36 @@ OG.A_Subprocess = OG.shape.bpmn.A_Subprocess;
  * @extends OG.shape.GeomShape
  * @requires OG.common.*, OG.geometry.*
  *
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.A_Task = function (label) {
-
 	this.SHAPE_ID = 'OG.shape.bpmn.A_Task';
-
 	this.label = label;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		if (this.geom) {
-			return this.geom;
-		}
-
-		this.geom = new OG.geometry.Rectangle([0, 0], 100, 100);
-		this.geom.style = new OG.geometry.Style({
-			"r": 6
-		});
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.bpmn.A_Task(this.label);
-	};
 };
 OG.shape.bpmn.A_Task.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.A_Task.superclass = OG.shape.GeomShape;
 OG.shape.bpmn.A_Task.prototype.constructor = OG.shape.bpmn.A_Task;
 OG.A_Task = OG.shape.bpmn.A_Task;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.A_Task.prototype.createShape = function () {
+	if (this.geom) {
+		return this.geom;
+	}
+
+	this.geom = new OG.geometry.Rectangle([0, 0], 100, 100);
+	this.geom.style = new OG.geometry.Style({
+		"r": 6
+	});
+
+	return this.geom;
+};
 /**
  * BPMN : Annotation Association Connector Shape
  *
@@ -4561,53 +4490,41 @@ OG.A_Task = OG.shape.bpmn.A_Task;
  *
  * @param {Number[]} from 와이어 시작 좌표
  * @param {Number[]} to 와이어 끝 좌표
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.C_Association = function (from, to, label) {
-
 	this.SHAPE_ID = 'OG.shape.bpmn.C_Association';
-
+	this.label = label;
 	this.from = from;
 	this.to = to;
-
-	this.label = label;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		if (this.geom) {
-			return this.geom;
-		}
-
-		this.geom = new OG.Line(this.from || [0, 0], this.to || [70, 0]);
-		this.geom.style = new OG.geometry.Style({
-			"edge-type"       : "straight",
-			"arrow-start"     : "none",
-			"arrow-end"       : "none",
-			'stroke-dasharray': '.'
-		});
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.bpmn.C_Association(this.from, this.to, this.label);
-	};
 };
 OG.shape.bpmn.C_Association.prototype = new OG.shape.EdgeShape();
+OG.shape.bpmn.C_Association.superclass = OG.shape.EdgeShape;
 OG.shape.bpmn.C_Association.prototype.constructor = OG.shape.bpmn.C_Association;
 OG.C_Association = OG.shape.bpmn.C_Association;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.C_Association.prototype.createShape = function () {
+	if (this.geom) {
+		return this.geom;
+	}
+
+	this.geom = new OG.Line(this.from || [0, 0], this.to || [70, 0]);
+	this.geom.style = new OG.geometry.Style({
+		"edge-type"       : "straight",
+		"arrow-start"     : "none",
+		"arrow-end"       : "none",
+		'stroke-dasharray': '.'
+	});
+
+	return this.geom;
+};
 /**
  * BPMN : Conditional Connector Shape
  *
@@ -4617,52 +4534,40 @@ OG.C_Association = OG.shape.bpmn.C_Association;
  *
  * @param {Number[]} from 와이어 시작 좌표
  * @param {Number[]} to 와이어 끝 좌표
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.C_Conditional = function (from, to, label) {
-
 	this.SHAPE_ID = 'OG.shape.bpmn.C_Conditional';
-
+	this.label = label;
 	this.from = from;
 	this.to = to;
-
-	this.label = label;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		if (this.geom) {
-			return this.geom;
-		}
-
-		this.geom = new OG.Line(this.from || [0, 0], this.to || [70, 0]);
-		this.geom.style = new OG.geometry.Style({
-			"edge-type"       : "straight",
-			"arrow-start"     : "open_diamond-wide-long",
-			"arrow-end"       : "open_block-wide-long"
-		});
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.bpmn.C_Conditional(this.from, this.to, this.label);
-	};
 };
 OG.shape.bpmn.C_Conditional.prototype = new OG.shape.EdgeShape();
+OG.shape.bpmn.C_Conditional.superclass = OG.shape.EdgeShape;
 OG.shape.bpmn.C_Conditional.prototype.constructor = OG.shape.bpmn.C_Conditional;
 OG.C_Conditional = OG.shape.bpmn.C_Conditional;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.C_Conditional.prototype.createShape = function () {
+	if (this.geom) {
+		return this.geom;
+	}
+
+	this.geom = new OG.Line(this.from || [0, 0], this.to || [70, 0]);
+	this.geom.style = new OG.geometry.Style({
+		"edge-type"  : "straight",
+		"arrow-start": "open_diamond-wide-long",
+		"arrow-end"  : "open_block-wide-long"
+	});
+
+	return this.geom;
+};
 /**
  * BPMN : Data Association Connector Shape
  *
@@ -4672,53 +4577,41 @@ OG.C_Conditional = OG.shape.bpmn.C_Conditional;
  *
  * @param {Number[]} from 와이어 시작 좌표
  * @param {Number[]} to 와이어 끝 좌표
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.C_DataAssociation = function (from, to, label) {
-
 	this.SHAPE_ID = 'OG.shape.bpmn.C_DataAssociation';
-
+	this.label = label;
 	this.from = from;
 	this.to = to;
-
-	this.label = label;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		if (this.geom) {
-			return this.geom;
-		}
-
-		this.geom = new OG.Line(this.from || [0, 0], this.to || [70, 0]);
-		this.geom.style = new OG.geometry.Style({
-			"edge-type"       : "straight",
-			"arrow-start"     : "none",
-			"arrow-end"       : "classic-wide-long",
-			'stroke-dasharray': '.'
-		});
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.bpmn.C_DataAssociation(this.from, this.to, this.label);
-	};
 };
 OG.shape.bpmn.C_DataAssociation.prototype = new OG.shape.EdgeShape();
+OG.shape.bpmn.C_DataAssociation.superclass = OG.shape.EdgeShape;
 OG.shape.bpmn.C_DataAssociation.prototype.constructor = OG.shape.bpmn.C_DataAssociation;
 OG.C_DataAssociation = OG.shape.bpmn.C_DataAssociation;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.C_DataAssociation.prototype.createShape = function () {
+	if (this.geom) {
+		return this.geom;
+	}
+
+	this.geom = new OG.Line(this.from || [0, 0], this.to || [70, 0]);
+	this.geom.style = new OG.geometry.Style({
+		"edge-type"       : "straight",
+		"arrow-start"     : "none",
+		"arrow-end"       : "classic-wide-long",
+		'stroke-dasharray': '.'
+	});
+
+	return this.geom;
+};
 /**
  * BPMN : Message Connector Shape
  *
@@ -4728,53 +4621,41 @@ OG.C_DataAssociation = OG.shape.bpmn.C_DataAssociation;
  *
  * @param {Number[]} from 와이어 시작 좌표
  * @param {Number[]} to 와이어 끝 좌표
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.C_Message = function (from, to, label) {
-
 	this.SHAPE_ID = 'OG.shape.bpmn.C_Message';
-
+	this.label = label;
 	this.from = from;
 	this.to = to;
-
-	this.label = label;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		if (this.geom) {
-			return this.geom;
-		}
-
-		this.geom = new OG.Line(this.from || [0, 0], this.to || [80, 0]);
-		this.geom.style = new OG.geometry.Style({
-			"edge-type"       : "straight",
-			"arrow-start"     : "open_oval-wide-long",
-			"arrow-end"       : "open_block-wide-long",
-			'stroke-dasharray': '.'
-		});
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.bpmn.C_Message(this.from, this.to, this.label);
-	};
 };
 OG.shape.bpmn.C_Message.prototype = new OG.shape.EdgeShape();
+OG.shape.bpmn.C_Message.superclass = OG.shape.EdgeShape;
 OG.shape.bpmn.C_Message.prototype.constructor = OG.shape.bpmn.C_Message;
 OG.C_Message = OG.shape.bpmn.C_Message;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.C_Message.prototype.createShape = function () {
+	if (this.geom) {
+		return this.geom;
+	}
+
+	this.geom = new OG.Line(this.from || [0, 0], this.to || [80, 0]);
+	this.geom.style = new OG.geometry.Style({
+		"edge-type"       : "straight",
+		"arrow-start"     : "open_oval-wide-long",
+		"arrow-end"       : "open_block-wide-long",
+		'stroke-dasharray': '.'
+	});
+
+	return this.geom;
+};
 /**
  * BPMN : Sequence Connector Shape
  *
@@ -4784,52 +4665,40 @@ OG.C_Message = OG.shape.bpmn.C_Message;
  *
  * @param {Number[]} from 와이어 시작 좌표
  * @param {Number[]} to 와이어 끝 좌표
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.C_Sequence = function (from, to, label) {
-
 	this.SHAPE_ID = 'OG.shape.bpmn.C_Sequence';
-
+	this.label = label;
 	this.from = from;
 	this.to = to;
-
-	this.label = label;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		if (this.geom) {
-			return this.geom;
-		}
-
-		this.geom = new OG.Line(this.from || [0, 0], this.to || [80, 0]);
-		this.geom.style = new OG.geometry.Style({
-			"edge-type"   : "plain",
-			"arrow-start" : "none",
-			"arrow-end"   : "classic-wide-long"
-		});
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.bpmn.C_Sequence(this.from, this.to, this.label);
-	};
 };
 OG.shape.bpmn.C_Sequence.prototype = new OG.shape.EdgeShape();
+OG.shape.bpmn.C_Sequence.superclass = OG.shape.EdgeShape;
 OG.shape.bpmn.C_Sequence.prototype.constructor = OG.shape.bpmn.C_Sequence;
 OG.C_Sequence = OG.shape.bpmn.C_Sequence;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.C_Sequence.prototype.createShape = function () {
+	if (this.geom) {
+		return this.geom;
+	}
+
+	this.geom = new OG.Line(this.from || [0, 0], this.to || [80, 0]);
+	this.geom.style = new OG.geometry.Style({
+		"edge-type"  : "plain",
+		"arrow-start": "none",
+		"arrow-end"  : "classic-wide-long"
+	});
+
+	return this.geom;
+};
 /**
  * BPMN : Data Object Shape
  *
@@ -4837,44 +4706,43 @@ OG.C_Sequence = OG.shape.bpmn.C_Sequence;
  * @extends OG.shape.GeomShape
  * @requires OG.common.*, OG.geometry.*
  *
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.D_Data = function (label) {
-
 	this.SHAPE_ID = 'OG.shape.bpmn.D_Data';
-
 	this.label = label;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		if (this.geom) {
-			return this.geom;
-		}
-
-		this.geom = new OG.PolyLine([[0, 0], [0, 100], [100, 100], [100, 20], [80, 0], [0, 0], [80, 0], [80, 20], [100, 20]]);
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.bpmn.D_Data(this.label);
-	};
 };
 OG.shape.bpmn.D_Data.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.D_Data.superclass = OG.shape.GeomShape;
 OG.shape.bpmn.D_Data.prototype.constructor = OG.shape.bpmn.D_Data;
 OG.D_Data = OG.shape.bpmn.D_Data;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.D_Data.prototype.createShape = function () {
+	if (this.geom) {
+		return this.geom;
+	}
+
+	this.geom = new OG.PolyLine([
+		[0, 0],
+		[0, 100],
+		[100, 100],
+		[100, 20],
+		[80, 0],
+		[0, 0],
+		[80, 0],
+		[80, 20],
+		[100, 20]
+	]);
+
+	return this.geom;
+};
 /**
  * BPMN : Data Store Shape
  *
@@ -4882,60 +4750,57 @@ OG.D_Data = OG.shape.bpmn.D_Data;
  * @extends OG.shape.GeomShape
  * @requires OG.common.*, OG.geometry.*
  *
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.D_Store = function (label) {
-
 	this.SHAPE_ID = 'OG.shape.bpmn.D_Store';
-
 	this.label = label;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		var geom1, geom2, geom3, geom4, geom5, geomCollection = [];
-		if (this.geom) {
-			return this.geom;
-		}
-
-		geom1 = new OG.geometry.Ellipse([50, 10], 50, 10);
-		geom2 = new OG.geometry.Line([0, 10], [0, 90]);
-		geom3 = new OG.geometry.Line([100, 10], [100, 90]);
-		geom4 = new OG.geometry.Curve([[100, 90], [96, 94], [85, 97], [50, 100], [15, 97], [4, 94], [0, 90]]);
-		geom5 = new OG.geometry.Rectangle([0, 10], 100, 80);
-		geom5.style = new OG.geometry.Style({
-			"stroke": 'none'
-		});
-
-		geomCollection.push(geom1);
-		geomCollection.push(geom2);
-		geomCollection.push(geom3);
-		geomCollection.push(geom4);
-		geomCollection.push(geom5);
-
-		this.geom = new OG.geometry.GeometryCollection(geomCollection);
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.bpmn.D_Store(this.label);
-	};
 };
 OG.shape.bpmn.D_Store.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.D_Store.superclass = OG.shape.GeomShape;
 OG.shape.bpmn.D_Store.prototype.constructor = OG.shape.bpmn.D_Store;
 OG.D_Store = OG.shape.bpmn.D_Store;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.D_Store.prototype.createShape = function () {
+	var geom1, geom2, geom3, geom4, geom5, geomCollection = [];
+	if (this.geom) {
+		return this.geom;
+	}
+
+	geom1 = new OG.geometry.Ellipse([50, 10], 50, 10);
+	geom2 = new OG.geometry.Line([0, 10], [0, 90]);
+	geom3 = new OG.geometry.Line([100, 10], [100, 90]);
+	geom4 = new OG.geometry.Curve([
+		[100, 90],
+		[96, 94],
+		[85, 97],
+		[50, 100],
+		[15, 97],
+		[4, 94],
+		[0, 90]
+	]);
+	geom5 = new OG.geometry.Rectangle([0, 10], 100, 80);
+	geom5.style = new OG.geometry.Style({
+		"stroke": 'none'
+	});
+
+	geomCollection.push(geom1);
+	geomCollection.push(geom2);
+	geomCollection.push(geom3);
+	geomCollection.push(geom4);
+	geomCollection.push(geom5);
+
+	this.geom = new OG.geometry.GeometryCollection(geomCollection);
+
+	return this.geom;
+};
 /**
  * BPMN : End Event Shape
  *
@@ -4943,70 +4808,59 @@ OG.D_Store = OG.shape.bpmn.D_Store;
  * @extends OG.shape.GeomShape
  * @requires OG.common.*, OG.geometry.*
  *
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.E_End = function (label) {
-
 	this.SHAPE_ID = 'OG.shape.bpmn.E_End';
-
 	this.label = label;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		if (this.geom) {
-			return this.geom;
-		}
-
-		this.geom = new OG.geometry.Circle([50, 50], 50);
-		this.geom.style = new OG.geometry.Style({
-			"stroke-width"  : 3,
-			'label-position': 'bottom'
-		});
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 간의 연결을 위한 Terminal 을 반환한다.
-	 *
-	 * @return {OG.Terminal[]} Terminal
-	 * @override
-	 */
-	this.createTerminal = function () {
-		if (!this.geom) {
-			return [];
-		}
-
-		var envelope = this.geom.getBoundary();
-
-		return [
-			new OG.Terminal(envelope.getCentroid(), OG.Constants.TERMINAL_TYPE.C, OG.Constants.TERMINAL_TYPE.IN),
-			new OG.Terminal(envelope.getRightCenter(), OG.Constants.TERMINAL_TYPE.E, OG.Constants.TERMINAL_TYPE.IN),
-			new OG.Terminal(envelope.getLeftCenter(), OG.Constants.TERMINAL_TYPE.W, OG.Constants.TERMINAL_TYPE.IN),
-			new OG.Terminal(envelope.getLowerCenter(), OG.Constants.TERMINAL_TYPE.S, OG.Constants.TERMINAL_TYPE.IN),
-			new OG.Terminal(envelope.getUpperCenter(), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.IN)
-		];
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.bpmn.E_End(this.label);
-	};
 };
 OG.shape.bpmn.E_End.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.E_End.superclass = OG.shape.GeomShape;
 OG.shape.bpmn.E_End.prototype.constructor = OG.shape.bpmn.E_End;
 OG.E_End = OG.shape.bpmn.E_End;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.E_End.prototype.createShape = function () {
+	if (this.geom) {
+		return this.geom;
+	}
+
+	this.geom = new OG.geometry.Circle([50, 50], 50);
+	this.geom.style = new OG.geometry.Style({
+		"stroke-width"  : 3,
+		'label-position': 'bottom'
+	});
+
+	return this.geom;
+};
+
+/**
+ * Shape 간의 연결을 위한 Terminal 을 반환한다.
+ *
+ * @return {OG.Terminal[]} Terminal
+ * @override
+ */
+OG.shape.bpmn.E_End.prototype.createTerminal = function () {
+	if (!this.geom) {
+		return [];
+	}
+
+	var envelope = this.geom.getBoundary();
+
+	return [
+		new OG.Terminal(envelope.getCentroid(), OG.Constants.TERMINAL_TYPE.C, OG.Constants.TERMINAL_TYPE.IN),
+		new OG.Terminal(envelope.getRightCenter(), OG.Constants.TERMINAL_TYPE.E, OG.Constants.TERMINAL_TYPE.IN),
+		new OG.Terminal(envelope.getLeftCenter(), OG.Constants.TERMINAL_TYPE.W, OG.Constants.TERMINAL_TYPE.IN),
+		new OG.Terminal(envelope.getLowerCenter(), OG.Constants.TERMINAL_TYPE.S, OG.Constants.TERMINAL_TYPE.IN),
+		new OG.Terminal(envelope.getUpperCenter(), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.IN)
+	];
+};
 /**
  * BPMN : Cancel End Event Shape
  *
@@ -5014,67 +4868,56 @@ OG.E_End = OG.shape.bpmn.E_End;
  * @extends OG.shape.GeomShape
  * @requires OG.common.*, OG.geometry.*
  *
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.E_End_Cancel = function (label) {
-
 	this.SHAPE_ID = 'OG.shape.bpmn.E_End_Cancel';
-
 	this.label = label;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		var geom1, geom2, geom3, geomCollection = [];
-		if (this.geom) {
-			return this.geom;
-		}
-
-		geom1 = new OG.geometry.Circle([50, 50], 50);
-		geom1.style = new OG.geometry.Style({
-			"stroke-width"  : 3
-		});
-
-		geom2 = new OG.geometry.Line([25, 25], [75, 75]);
-		geom2.style = new OG.geometry.Style({
-			"stroke-width": 5
-		});
-
-		geom3 = new OG.geometry.Line([25, 75], [75, 25]);
-		geom3.style = new OG.geometry.Style({
-			"stroke-width": 5
-		});
-
-		geomCollection.push(geom1);
-		geomCollection.push(geom2);
-		geomCollection.push(geom3);
-
-		this.geom = new OG.geometry.GeometryCollection(geomCollection);
-		this.geom.style = new OG.geometry.Style({
-			'label-position': 'bottom'
-		});
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.bpmn.E_End_Cancel(this.label);
-	};
 };
 OG.shape.bpmn.E_End_Cancel.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.E_End_Cancel.superclass = OG.shape.GeomShape;
 OG.shape.bpmn.E_End_Cancel.prototype.constructor = OG.shape.bpmn.E_End_Cancel;
 OG.E_End_Cancel = OG.shape.bpmn.E_End_Cancel;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.E_End_Cancel.prototype.createShape = function () {
+	var geom1, geom2, geom3, geomCollection = [];
+	if (this.geom) {
+		return this.geom;
+	}
+
+	geom1 = new OG.geometry.Circle([50, 50], 50);
+	geom1.style = new OG.geometry.Style({
+		"stroke-width": 3
+	});
+
+	geom2 = new OG.geometry.Line([25, 25], [75, 75]);
+	geom2.style = new OG.geometry.Style({
+		"stroke-width": 5
+	});
+
+	geom3 = new OG.geometry.Line([25, 75], [75, 25]);
+	geom3.style = new OG.geometry.Style({
+		"stroke-width": 5
+	});
+
+	geomCollection.push(geom1);
+	geomCollection.push(geom2);
+	geomCollection.push(geom3);
+
+	this.geom = new OG.geometry.GeometryCollection(geomCollection);
+	this.geom.style = new OG.geometry.Style({
+		'label-position': 'bottom'
+	});
+
+	return this.geom;
+};
 /**
  * BPMN : Compensation End Event Shape
  *
@@ -5082,77 +4925,66 @@ OG.E_End_Cancel = OG.shape.bpmn.E_End_Cancel;
  * @extends OG.shape.GeomShape
  * @requires OG.common.*, OG.geometry.*
  *
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.E_End_Compensation = function (label) {
-
 	this.SHAPE_ID = 'OG.shape.bpmn.E_End_Compensation';
-
 	this.label = label;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		var geom1, geom2, geom3, geomCollection = [];
-		if (this.geom) {
-			return this.geom;
-		}
-
-		geom1 = new OG.geometry.Circle([50, 50], 50);
-		geom1.style = new OG.geometry.Style({
-			"stroke-width": 3
-		});
-
-		geom2 = new OG.geometry.Polygon([
-			[15, 50],
-			[45, 70],
-			[45, 30]
-		]);
-		geom2.style = new OG.geometry.Style({
-			"fill"        : "black",
-			"fill-opacity": 1
-		});
-
-		geom3 = new OG.geometry.Polygon([
-			[45, 50],
-			[75, 70],
-			[75, 30]
-		]);
-		geom3.style = new OG.geometry.Style({
-			"fill"        : "black",
-			"fill-opacity": 1
-		});
-
-		geomCollection.push(geom1);
-		geomCollection.push(geom2);
-		geomCollection.push(geom3);
-
-		this.geom = new OG.geometry.GeometryCollection(geomCollection);
-		this.geom.style = new OG.geometry.Style({
-			'label-position': 'bottom'
-		});
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.bpmn.E_End_Compensation(this.label);
-	};
 };
 OG.shape.bpmn.E_End_Compensation.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.E_End_Compensation.superclass = OG.shape.GeomShape;
 OG.shape.bpmn.E_End_Compensation.prototype.constructor = OG.shape.bpmn.E_End_Compensation;
 OG.E_End_Compensation = OG.shape.bpmn.E_End_Compensation;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.E_End_Compensation.prototype.createShape = function () {
+	var geom1, geom2, geom3, geomCollection = [];
+	if (this.geom) {
+		return this.geom;
+	}
+
+	geom1 = new OG.geometry.Circle([50, 50], 50);
+	geom1.style = new OG.geometry.Style({
+		"stroke-width": 3
+	});
+
+	geom2 = new OG.geometry.Polygon([
+		[15, 50],
+		[45, 70],
+		[45, 30]
+	]);
+	geom2.style = new OG.geometry.Style({
+		"fill"        : "black",
+		"fill-opacity": 1
+	});
+
+	geom3 = new OG.geometry.Polygon([
+		[45, 50],
+		[75, 70],
+		[75, 30]
+	]);
+	geom3.style = new OG.geometry.Style({
+		"fill"        : "black",
+		"fill-opacity": 1
+	});
+
+	geomCollection.push(geom1);
+	geomCollection.push(geom2);
+	geomCollection.push(geom3);
+
+	this.geom = new OG.geometry.GeometryCollection(geomCollection);
+	this.geom.style = new OG.geometry.Style({
+		'label-position': 'bottom'
+	});
+
+	return this.geom;
+};
 /**
  * BPMN : Error End Event Shape
  *
@@ -5160,66 +4992,55 @@ OG.E_End_Compensation = OG.shape.bpmn.E_End_Compensation;
  * @extends OG.shape.GeomShape
  * @requires OG.common.*, OG.geometry.*
  *
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.E_End_Error = function (label) {
-
 	this.SHAPE_ID = 'OG.shape.bpmn.E_End_Error';
-
 	this.label = label;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		var geom1, geom2, geomCollection = [];
-		if (this.geom) {
-			return this.geom;
-		}
-
-		geom1 = new OG.geometry.Circle([50, 50], 50);
-		geom1.style = new OG.geometry.Style({
-			"stroke-width": 3
-		});
-
-		geom2 = new OG.geometry.PolyLine([
-			[20, 75],
-			[40, 40],
-			[60, 60],
-			[80, 20]
-		]);
-		geom2.style = new OG.geometry.Style({
-			"stroke-width": 2
-		});
-
-		geomCollection.push(geom1);
-		geomCollection.push(geom2);
-
-		this.geom = new OG.geometry.GeometryCollection(geomCollection);
-		this.geom.style = new OG.geometry.Style({
-			'label-position': 'bottom'
-		});
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.bpmn.E_End_Error(this.label);
-	};
 };
 OG.shape.bpmn.E_End_Error.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.E_End_Error.superclass = OG.shape.GeomShape;
 OG.shape.bpmn.E_End_Error.prototype.constructor = OG.shape.bpmn.E_End_Error;
 OG.E_End_Error = OG.shape.bpmn.E_End_Error;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.E_End_Error.prototype.createShape = function () {
+	var geom1, geom2, geomCollection = [];
+	if (this.geom) {
+		return this.geom;
+	}
+
+	geom1 = new OG.geometry.Circle([50, 50], 50);
+	geom1.style = new OG.geometry.Style({
+		"stroke-width": 3
+	});
+
+	geom2 = new OG.geometry.PolyLine([
+		[20, 75],
+		[40, 40],
+		[60, 60],
+		[80, 20]
+	]);
+	geom2.style = new OG.geometry.Style({
+		"stroke-width": 2
+	});
+
+	geomCollection.push(geom1);
+	geomCollection.push(geom2);
+
+	this.geom = new OG.geometry.GeometryCollection(geomCollection);
+	this.geom.style = new OG.geometry.Style({
+		'label-position': 'bottom'
+	});
+
+	return this.geom;
+};
 /**
  * BPMN : Link End Event Shape
  *
@@ -5227,70 +5048,59 @@ OG.E_End_Error = OG.shape.bpmn.E_End_Error;
  * @extends OG.shape.GeomShape
  * @requires OG.common.*, OG.geometry.*
  *
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.E_End_Link = function (label) {
-
 	this.SHAPE_ID = 'OG.shape.bpmn.E_End_Link';
-
 	this.label = label;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		var geom1, geom2, geomCollection = [];
-		if (this.geom) {
-			return this.geom;
-		}
-
-		geom1 = new OG.geometry.Circle([50, 50], 50);
-		geom1.style = new OG.geometry.Style({
-			"stroke-width": 3
-		});
-
-		geom2 = new OG.geometry.Polygon([
-			[20, 40],
-			[20, 60],
-			[60, 60],
-			[60, 80],
-			[85, 50],
-			[60, 20],
-			[60, 40]
-		]);
-		geom2.style = new OG.geometry.Style({
-			"fill"        : "black",
-			"fill-opacity": 1
-		});
-
-		geomCollection.push(geom1);
-		geomCollection.push(geom2);
-
-		this.geom = new OG.geometry.GeometryCollection(geomCollection);
-		this.geom.style = new OG.geometry.Style({
-			'label-position': 'bottom'
-		});
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.bpmn.E_End_Link(this.label);
-	};
 };
 OG.shape.bpmn.E_End_Link.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.E_End_Link.superclass = OG.shape.GeomShape;
 OG.shape.bpmn.E_End_Link.prototype.constructor = OG.shape.bpmn.E_End_Link;
 OG.E_End_Link = OG.shape.bpmn.E_End_Link;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.E_End_Link.prototype.createShape = function () {
+	var geom1, geom2, geomCollection = [];
+	if (this.geom) {
+		return this.geom;
+	}
+
+	geom1 = new OG.geometry.Circle([50, 50], 50);
+	geom1.style = new OG.geometry.Style({
+		"stroke-width": 3
+	});
+
+	geom2 = new OG.geometry.Polygon([
+		[20, 40],
+		[20, 60],
+		[60, 60],
+		[60, 80],
+		[85, 50],
+		[60, 20],
+		[60, 40]
+	]);
+	geom2.style = new OG.geometry.Style({
+		"fill"        : "black",
+		"fill-opacity": 1
+	});
+
+	geomCollection.push(geom1);
+	geomCollection.push(geom2);
+
+	this.geom = new OG.geometry.GeometryCollection(geomCollection);
+	this.geom.style = new OG.geometry.Style({
+		'label-position': 'bottom'
+	});
+
+	return this.geom;
+};
 /**
  * BPMN : Message End Event Shape
  *
@@ -5298,66 +5108,55 @@ OG.E_End_Link = OG.shape.bpmn.E_End_Link;
  * @extends OG.shape.GeomShape
  * @requires OG.common.*, OG.geometry.*
  *
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.E_End_Message = function (label) {
-
 	this.SHAPE_ID = 'OG.shape.bpmn.E_End_Message';
-
 	this.label = label;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		var geom1, geom2, geomCollection = [];
-		if (this.geom) {
-			return this.geom;
-		}
-
-		geom1 = new OG.geometry.Circle([50, 50], 50);
-		geom1.style = new OG.geometry.Style({
-			"stroke-width"  : 3
-		});
-
-		geom2 = new OG.geometry.PolyLine([
-			[20, 30],
-			[20, 70],
-			[80, 70],
-			[80, 30],
-			[20, 30],
-			[50, 50],
-			[80, 30]
-		]);
-
-		geomCollection.push(geom1);
-		geomCollection.push(geom2);
-
-		this.geom = new OG.geometry.GeometryCollection(geomCollection);
-		this.geom.style = new OG.geometry.Style({
-			'label-position': 'bottom'
-		});
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.bpmn.E_End_Message(this.label);
-	};
 };
 OG.shape.bpmn.E_End_Message.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.E_End_Message.superclass = OG.shape.GeomShape;
 OG.shape.bpmn.E_End_Message.prototype.constructor = OG.shape.bpmn.E_End_Message;
 OG.E_End_Message = OG.shape.bpmn.E_End_Message;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.E_End_Message.prototype.createShape = function () {
+	var geom1, geom2, geomCollection = [];
+	if (this.geom) {
+		return this.geom;
+	}
+
+	geom1 = new OG.geometry.Circle([50, 50], 50);
+	geom1.style = new OG.geometry.Style({
+		"stroke-width": 3
+	});
+
+	geom2 = new OG.geometry.PolyLine([
+		[20, 30],
+		[20, 70],
+		[80, 70],
+		[80, 30],
+		[20, 30],
+		[50, 50],
+		[80, 30]
+	]);
+
+	geomCollection.push(geom1);
+	geomCollection.push(geom2);
+
+	this.geom = new OG.geometry.GeometryCollection(geomCollection);
+	this.geom.style = new OG.geometry.Style({
+		'label-position': 'bottom'
+	});
+
+	return this.geom;
+};
 /**
  * BPMN : Multiple End Event Shape
  *
@@ -5365,75 +5164,64 @@ OG.E_End_Message = OG.shape.bpmn.E_End_Message;
  * @extends OG.shape.GeomShape
  * @requires OG.common.*, OG.geometry.*
  *
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.E_End_Multiple = function (label) {
-
 	this.SHAPE_ID = 'OG.shape.bpmn.E_End_Multiple';
-
 	this.label = label;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		var geom1, geom2, geomCollection = [];
-		if (this.geom) {
-			return this.geom;
-		}
-
-		geom1 = new OG.geometry.Circle([50, 50], 50);
-		geom1.style = new OG.geometry.Style({
-			"stroke-width": 3
-		});
-
-		geom2 = new OG.geometry.Polygon([
-			[50, 15],
-			[39, 33],
-			[20, 33],
-			[29, 50],
-			[19, 67],
-			[40, 67],
-			[50, 85],
-			[60, 68],
-			[80, 68],
-			[70, 50],
-			[79, 33],
-			[60, 33]
-		]);
-		geom2.style = new OG.geometry.Style({
-			"fill"        : "black",
-			"fill-opacity": 1
-		});
-
-		geomCollection.push(geom1);
-		geomCollection.push(geom2);
-
-		this.geom = new OG.geometry.GeometryCollection(geomCollection);
-		this.geom.style = new OG.geometry.Style({
-			'label-position': 'bottom'
-		});
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.bpmn.E_End_Multiple(this.label);
-	};
 };
 OG.shape.bpmn.E_End_Multiple.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.E_End_Multiple.superclass = OG.shape.GeomShape;
 OG.shape.bpmn.E_End_Multiple.prototype.constructor = OG.shape.bpmn.E_End_Multiple;
 OG.E_End_Multiple = OG.shape.bpmn.E_End_Multiple;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.E_End_Multiple.prototype.createShape = function () {
+	var geom1, geom2, geomCollection = [];
+	if (this.geom) {
+		return this.geom;
+	}
+
+	geom1 = new OG.geometry.Circle([50, 50], 50);
+	geom1.style = new OG.geometry.Style({
+		"stroke-width": 3
+	});
+
+	geom2 = new OG.geometry.Polygon([
+		[50, 15],
+		[39, 33],
+		[20, 33],
+		[29, 50],
+		[19, 67],
+		[40, 67],
+		[50, 85],
+		[60, 68],
+		[80, 68],
+		[70, 50],
+		[79, 33],
+		[60, 33]
+	]);
+	geom2.style = new OG.geometry.Style({
+		"fill"        : "black",
+		"fill-opacity": 1
+	});
+
+	geomCollection.push(geom1);
+	geomCollection.push(geom2);
+
+	this.geom = new OG.geometry.GeometryCollection(geomCollection);
+	this.geom.style = new OG.geometry.Style({
+		'label-position': 'bottom'
+	});
+
+	return this.geom;
+};
 /**
  * BPMN : Intermediate Event Shape
  *
@@ -5441,51 +5229,40 @@ OG.E_End_Multiple = OG.shape.bpmn.E_End_Multiple;
  * @extends OG.shape.GeomShape
  * @requires OG.common.*, OG.geometry.*
  *
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.E_Intermediate = function (label) {
-
 	this.SHAPE_ID = 'OG.shape.bpmn.E_Intermediate';
-
 	this.label = label;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		var geomCollection = [];
-		if (this.geom) {
-			return this.geom;
-		}
-
-		geomCollection.push(new OG.geometry.Circle([50, 50], 50));
-		geomCollection.push(new OG.geometry.Circle([50, 50], 42));
-
-		this.geom = new OG.geometry.GeometryCollection(geomCollection);
-		this.geom.style = new OG.geometry.Style({
-			'label-position': 'bottom'
-		});
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.bpmn.E_Intermediate(this.label);
-	};
 };
 OG.shape.bpmn.E_Intermediate.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.E_Intermediate.superclass = OG.shape.GeomShape;
 OG.shape.bpmn.E_Intermediate.prototype.constructor = OG.shape.bpmn.E_Intermediate;
 OG.E_Intermediate = OG.shape.bpmn.E_Intermediate;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.E_Intermediate.prototype.createShape = function () {
+	var geomCollection = [];
+	if (this.geom) {
+		return this.geom;
+	}
+
+	geomCollection.push(new OG.geometry.Circle([50, 50], 50));
+	geomCollection.push(new OG.geometry.Circle([50, 50], 42));
+
+	this.geom = new OG.geometry.GeometryCollection(geomCollection);
+	this.geom.style = new OG.geometry.Style({
+		'label-position': 'bottom'
+	});
+
+	return this.geom;
+};
 /**
  * BPMN : Compensation Intermediate Event Shape
  *
@@ -5493,65 +5270,54 @@ OG.E_Intermediate = OG.shape.bpmn.E_Intermediate;
  * @extends OG.shape.GeomShape
  * @requires OG.common.*, OG.geometry.*
  *
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.E_Intermediate_Compensation = function (label) {
-
 	this.SHAPE_ID = 'OG.shape.bpmn.E_Intermediate_Compensation';
-
 	this.label = label;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		var geom1, geom2, geomCollection = [];
-		if (this.geom) {
-			return this.geom;
-		}
-
-		geom1 = new OG.geometry.Polygon([
-			[15, 50],
-			[45, 70],
-			[45, 30]
-		]);
-
-		geom2 = new OG.geometry.Polygon([
-			[45, 50],
-			[75, 70],
-			[75, 30]
-		]);
-
-		geomCollection.push(new OG.geometry.Circle([50, 50], 50));
-		geomCollection.push(new OG.geometry.Circle([50, 50], 42));
-		geomCollection.push(geom1);
-		geomCollection.push(geom2);
-
-		this.geom = new OG.geometry.GeometryCollection(geomCollection);
-		this.geom.style = new OG.geometry.Style({
-			'label-position': 'bottom'
-		});
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.bpmn.E_Intermediate_Compensation(this.label);
-	};
 };
 OG.shape.bpmn.E_Intermediate_Compensation.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.E_Intermediate_Compensation.superclass = OG.shape.GeomShape;
 OG.shape.bpmn.E_Intermediate_Compensation.prototype.constructor = OG.shape.bpmn.E_Intermediate_Compensation;
 OG.E_Intermediate_Compensation = OG.shape.bpmn.E_Intermediate_Compensation;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.E_Intermediate_Compensation.prototype.createShape = function () {
+	var geom1, geom2, geomCollection = [];
+	if (this.geom) {
+		return this.geom;
+	}
+
+	geom1 = new OG.geometry.Polygon([
+		[15, 50],
+		[45, 70],
+		[45, 30]
+	]);
+
+	geom2 = new OG.geometry.Polygon([
+		[45, 50],
+		[75, 70],
+		[75, 30]
+	]);
+
+	geomCollection.push(new OG.geometry.Circle([50, 50], 50));
+	geomCollection.push(new OG.geometry.Circle([50, 50], 42));
+	geomCollection.push(geom1);
+	geomCollection.push(geom2);
+
+	this.geom = new OG.geometry.GeometryCollection(geomCollection);
+	this.geom.style = new OG.geometry.Style({
+		'label-position': 'bottom'
+	});
+
+	return this.geom;
+};
 /**
  * BPMN : Error Intermediate Event Shape
  *
@@ -5559,59 +5325,48 @@ OG.E_Intermediate_Compensation = OG.shape.bpmn.E_Intermediate_Compensation;
  * @extends OG.shape.GeomShape
  * @requires OG.common.*, OG.geometry.*
  *
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.E_Intermediate_Error = function (label) {
-
 	this.SHAPE_ID = 'OG.shape.bpmn.E_Intermediate_Error';
-
 	this.label = label;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		var geom1, geomCollection = [];
-		if (this.geom) {
-			return this.geom;
-		}
-
-		geom1 = new OG.geometry.PolyLine([
-			[20, 75],
-			[40, 40],
-			[60, 60],
-			[80, 20]
-		]);
-
-		geomCollection.push(new OG.geometry.Circle([50, 50], 50));
-		geomCollection.push(new OG.geometry.Circle([50, 50], 42));
-		geomCollection.push(geom1);
-
-		this.geom = new OG.geometry.GeometryCollection(geomCollection);
-		this.geom.style = new OG.geometry.Style({
-			'label-position': 'bottom'
-		});
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.bpmn.E_Intermediate_Error(this.label);
-	};
 };
 OG.shape.bpmn.E_Intermediate_Error.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.E_Intermediate_Error.superclass = OG.shape.GeomShape;
 OG.shape.bpmn.E_Intermediate_Error.prototype.constructor = OG.shape.bpmn.E_Intermediate_Error;
 OG.E_Intermediate_Error = OG.shape.bpmn.E_Intermediate_Error;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.E_Intermediate_Error.prototype.createShape = function () {
+	var geom1, geomCollection = [];
+	if (this.geom) {
+		return this.geom;
+	}
+
+	geom1 = new OG.geometry.PolyLine([
+		[20, 75],
+		[40, 40],
+		[60, 60],
+		[80, 20]
+	]);
+
+	geomCollection.push(new OG.geometry.Circle([50, 50], 50));
+	geomCollection.push(new OG.geometry.Circle([50, 50], 42));
+	geomCollection.push(geom1);
+
+	this.geom = new OG.geometry.GeometryCollection(geomCollection);
+	this.geom.style = new OG.geometry.Style({
+		'label-position': 'bottom'
+	});
+
+	return this.geom;
+};
 /**
  * BPMN : Link Intermediate Event Shape
  *
@@ -5619,62 +5374,51 @@ OG.E_Intermediate_Error = OG.shape.bpmn.E_Intermediate_Error;
  * @extends OG.shape.GeomShape
  * @requires OG.common.*, OG.geometry.*
  *
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.E_Intermediate_Link = function (label) {
-
 	this.SHAPE_ID = 'OG.shape.bpmn.E_Intermediate_Link';
-
 	this.label = label;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		var geom1, geomCollection = [];
-		if (this.geom) {
-			return this.geom;
-		}
-
-		geom1 = new OG.geometry.Polygon([
-			[20, 40],
-			[20, 60],
-			[60, 60],
-			[60, 80],
-			[85, 50],
-			[60, 20],
-			[60, 40]
-		]);
-
-		geomCollection.push(new OG.geometry.Circle([50, 50], 50));
-		geomCollection.push(new OG.geometry.Circle([50, 50], 42));
-		geomCollection.push(geom1);
-
-		this.geom = new OG.geometry.GeometryCollection(geomCollection);
-		this.geom.style = new OG.geometry.Style({
-			'label-position': 'bottom'
-		});
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.bpmn.E_Intermediate_Link(this.label);
-	};
 };
 OG.shape.bpmn.E_Intermediate_Link.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.E_Intermediate_Link.superclass = OG.shape.GeomShape;
 OG.shape.bpmn.E_Intermediate_Link.prototype.constructor = OG.shape.bpmn.E_Intermediate_Link;
 OG.E_Intermediate_Link = OG.shape.bpmn.E_Intermediate_Link;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.E_Intermediate_Link.prototype.createShape = function () {
+	var geom1, geomCollection = [];
+	if (this.geom) {
+		return this.geom;
+	}
+
+	geom1 = new OG.geometry.Polygon([
+		[20, 40],
+		[20, 60],
+		[60, 60],
+		[60, 80],
+		[85, 50],
+		[60, 20],
+		[60, 40]
+	]);
+
+	geomCollection.push(new OG.geometry.Circle([50, 50], 50));
+	geomCollection.push(new OG.geometry.Circle([50, 50], 42));
+	geomCollection.push(geom1);
+
+	this.geom = new OG.geometry.GeometryCollection(geomCollection);
+	this.geom.style = new OG.geometry.Style({
+		'label-position': 'bottom'
+	});
+
+	return this.geom;
+};
 /**
  * BPMN : Message Intermediate Event Shape
  *
@@ -5682,62 +5426,51 @@ OG.E_Intermediate_Link = OG.shape.bpmn.E_Intermediate_Link;
  * @extends OG.shape.GeomShape
  * @requires OG.common.*, OG.geometry.*
  *
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.E_Intermediate_Message = function (label) {
-
 	this.SHAPE_ID = 'OG.shape.bpmn.E_Intermediate_Message';
-
 	this.label = label;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		var geom1, geomCollection = [];
-		if (this.geom) {
-			return this.geom;
-		}
-
-		geom1 = new OG.geometry.PolyLine([
-			[20, 30],
-			[20, 70],
-			[80, 70],
-			[80, 30],
-			[20, 30],
-			[50, 50],
-			[80, 30]
-		]);
-
-		geomCollection.push(new OG.geometry.Circle([50, 50], 50));
-		geomCollection.push(new OG.geometry.Circle([50, 50], 42));
-		geomCollection.push(geom1);
-
-		this.geom = new OG.geometry.GeometryCollection(geomCollection);
-		this.geom.style = new OG.geometry.Style({
-			'label-position': 'bottom'
-		});
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.bpmn.E_Intermediate_Message(this.label);
-	};
 };
 OG.shape.bpmn.E_Intermediate_Message.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.E_Intermediate_Message.superclass = OG.shape.GeomShape;
 OG.shape.bpmn.E_Intermediate_Message.prototype.constructor = OG.shape.bpmn.E_Intermediate_Message;
 OG.E_Intermediate_Message = OG.shape.bpmn.E_Intermediate_Message;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.E_Intermediate_Message.prototype.createShape = function () {
+	var geom1, geomCollection = [];
+	if (this.geom) {
+		return this.geom;
+	}
+
+	geom1 = new OG.geometry.PolyLine([
+		[20, 30],
+		[20, 70],
+		[80, 70],
+		[80, 30],
+		[20, 30],
+		[50, 50],
+		[80, 30]
+	]);
+
+	geomCollection.push(new OG.geometry.Circle([50, 50], 50));
+	geomCollection.push(new OG.geometry.Circle([50, 50], 42));
+	geomCollection.push(geom1);
+
+	this.geom = new OG.geometry.GeometryCollection(geomCollection);
+	this.geom.style = new OG.geometry.Style({
+		'label-position': 'bottom'
+	});
+
+	return this.geom;
+};
 /**
  * BPMN : Multiple Intermediate Event Shape
  *
@@ -5745,67 +5478,56 @@ OG.E_Intermediate_Message = OG.shape.bpmn.E_Intermediate_Message;
  * @extends OG.shape.GeomShape
  * @requires OG.common.*, OG.geometry.*
  *
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.E_Intermediate_Multiple = function (label) {
-
 	this.SHAPE_ID = 'OG.shape.bpmn.E_Intermediate_Multiple';
-
 	this.label = label;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		var geom1, geomCollection = [];
-		if (this.geom) {
-			return this.geom;
-		}
-
-		geom1 = new OG.geometry.Polygon([
-			[50, 15],
-			[39, 33],
-			[20, 33],
-			[29, 50],
-			[19, 67],
-			[40, 67],
-			[50, 85],
-			[60, 68],
-			[80, 68],
-			[70, 50],
-			[79, 33],
-			[60, 33]
-		]);
-
-		geomCollection.push(new OG.geometry.Circle([50, 50], 50));
-		geomCollection.push(new OG.geometry.Circle([50, 50], 42));
-		geomCollection.push(geom1);
-
-		this.geom = new OG.geometry.GeometryCollection(geomCollection);
-		this.geom.style = new OG.geometry.Style({
-			'label-position': 'bottom'
-		});
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.bpmn.E_Intermediate_Multiple(this.label);
-	};
 };
 OG.shape.bpmn.E_Intermediate_Multiple.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.E_Intermediate_Multiple.superclass = OG.shape.GeomShape;
 OG.shape.bpmn.E_Intermediate_Multiple.prototype.constructor = OG.shape.bpmn.E_Intermediate_Multiple;
 OG.E_Intermediate_Multiple = OG.shape.bpmn.E_Intermediate_Multiple;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.E_Intermediate_Multiple.prototype.createShape = function () {
+	var geom1, geomCollection = [];
+	if (this.geom) {
+		return this.geom;
+	}
+
+	geom1 = new OG.geometry.Polygon([
+		[50, 15],
+		[39, 33],
+		[20, 33],
+		[29, 50],
+		[19, 67],
+		[40, 67],
+		[50, 85],
+		[60, 68],
+		[80, 68],
+		[70, 50],
+		[79, 33],
+		[60, 33]
+	]);
+
+	geomCollection.push(new OG.geometry.Circle([50, 50], 50));
+	geomCollection.push(new OG.geometry.Circle([50, 50], 42));
+	geomCollection.push(geom1);
+
+	this.geom = new OG.geometry.GeometryCollection(geomCollection);
+	this.geom.style = new OG.geometry.Style({
+		'label-position': 'bottom'
+	});
+
+	return this.geom;
+};
 /**
  * BPMN : Rule Intermediate Event Shape
  *
@@ -5813,58 +5535,47 @@ OG.E_Intermediate_Multiple = OG.shape.bpmn.E_Intermediate_Multiple;
  * @extends OG.shape.GeomShape
  * @requires OG.common.*, OG.geometry.*
  *
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.E_Intermediate_Rule = function (label) {
-
 	this.SHAPE_ID = 'OG.shape.bpmn.E_Intermediate_Rule';
-
 	this.label = label;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		var geom1, geomCollection = [];
-		if (this.geom) {
-			return this.geom;
-		}
-
-		geom1 = new OG.geometry.Rectangle([25, 20], 50, 60);
-
-		geomCollection.push(new OG.geometry.Circle([50, 50], 50));
-		geomCollection.push(new OG.geometry.Circle([50, 50], 42));
-		geomCollection.push(geom1);
-		geomCollection.push(new OG.geometry.Line([30, 30], [70, 30]));
-		geomCollection.push(new OG.geometry.Line([30, 45], [70, 45]));
-		geomCollection.push(new OG.geometry.Line([30, 60], [70, 60]));
-		geomCollection.push(new OG.geometry.Line([30, 70], [70, 70]));
-
-		this.geom = new OG.geometry.GeometryCollection(geomCollection);
-		this.geom.style = new OG.geometry.Style({
-			'label-position': 'bottom'
-		});
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.bpmn.E_Intermediate_Rule(this.label);
-	};
 };
 OG.shape.bpmn.E_Intermediate_Rule.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.E_Intermediate_Rule.superclass = OG.shape.GeomShape;
 OG.shape.bpmn.E_Intermediate_Rule.prototype.constructor = OG.shape.bpmn.E_Intermediate_Rule;
 OG.E_Intermediate_Rule = OG.shape.bpmn.E_Intermediate_Rule;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.E_Intermediate_Rule.prototype.createShape = function () {
+	var geom1, geomCollection = [];
+	if (this.geom) {
+		return this.geom;
+	}
+
+	geom1 = new OG.geometry.Rectangle([25, 20], 50, 60);
+
+	geomCollection.push(new OG.geometry.Circle([50, 50], 50));
+	geomCollection.push(new OG.geometry.Circle([50, 50], 42));
+	geomCollection.push(geom1);
+	geomCollection.push(new OG.geometry.Line([30, 30], [70, 30]));
+	geomCollection.push(new OG.geometry.Line([30, 45], [70, 45]));
+	geomCollection.push(new OG.geometry.Line([30, 60], [70, 60]));
+	geomCollection.push(new OG.geometry.Line([30, 70], [70, 70]));
+
+	this.geom = new OG.geometry.GeometryCollection(geomCollection);
+	this.geom.style = new OG.geometry.Style({
+		'label-position': 'bottom'
+	});
+
+	return this.geom;
+};
 /**
  * BPMN : Timer Intermediate Event Shape
  *
@@ -5872,61 +5583,54 @@ OG.E_Intermediate_Rule = OG.shape.bpmn.E_Intermediate_Rule;
  * @extends OG.shape.GeomShape
  * @requires OG.common.*, OG.geometry.*
  *
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.E_Intermediate_Timer = function (label) {
-
 	this.SHAPE_ID = 'OG.shape.bpmn.E_Intermediate_Timer';
-
 	this.label = label;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		var geom1, geom2, geomCollection = [];
-		if (this.geom) {
-			return this.geom;
-		}
-
-		geom1 = new OG.geometry.Circle([50, 50], 32);
-
-		geom2 = new OG.geometry.PolyLine([[50, 30], [50, 50], [70, 50]]);
-
-		geomCollection.push(new OG.geometry.Circle([50, 50], 50));
-		geomCollection.push(new OG.geometry.Circle([50, 50], 42));
-		geomCollection.push(geom1);
-		geomCollection.push(new OG.geometry.Line([50, 18], [50, 25]));
-		geomCollection.push(new OG.geometry.Line([50, 82], [50, 75]));
-		geomCollection.push(new OG.geometry.Line([18, 50], [25, 50]));
-		geomCollection.push(new OG.geometry.Line([82, 50], [75, 50]));
-		geomCollection.push(geom2);
-
-		this.geom = new OG.geometry.GeometryCollection(geomCollection);
-		this.geom.style = new OG.geometry.Style({
-			'label-position': 'bottom'
-		});
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.bpmn.E_Intermediate_Timer(this.label);
-	};
 };
 OG.shape.bpmn.E_Intermediate_Timer.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.E_Intermediate_Timer.superclass = OG.shape.GeomShape;
 OG.shape.bpmn.E_Intermediate_Timer.prototype.constructor = OG.shape.bpmn.E_Intermediate_Timer;
 OG.E_Intermediate_Timer = OG.shape.bpmn.E_Intermediate_Timer;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.E_Intermediate_Timer.prototype.createShape = function () {
+	var geom1, geom2, geomCollection = [];
+	if (this.geom) {
+		return this.geom;
+	}
+
+	geom1 = new OG.geometry.Circle([50, 50], 32);
+
+	geom2 = new OG.geometry.PolyLine([
+		[50, 30],
+		[50, 50],
+		[70, 50]
+	]);
+
+	geomCollection.push(new OG.geometry.Circle([50, 50], 50));
+	geomCollection.push(new OG.geometry.Circle([50, 50], 42));
+	geomCollection.push(geom1);
+	geomCollection.push(new OG.geometry.Line([50, 18], [50, 25]));
+	geomCollection.push(new OG.geometry.Line([50, 82], [50, 75]));
+	geomCollection.push(new OG.geometry.Line([18, 50], [25, 50]));
+	geomCollection.push(new OG.geometry.Line([82, 50], [75, 50]));
+	geomCollection.push(geom2);
+
+	this.geom = new OG.geometry.GeometryCollection(geomCollection);
+	this.geom.style = new OG.geometry.Style({
+		'label-position': 'bottom'
+	});
+
+	return this.geom;
+};
 /**
  * BPMN : Start Event Shape
  *
@@ -5934,69 +5638,58 @@ OG.E_Intermediate_Timer = OG.shape.bpmn.E_Intermediate_Timer;
  * @extends OG.shape.GeomShape
  * @requires OG.common.*, OG.geometry.*
  *
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.E_Start = function (label) {
-
 	this.SHAPE_ID = 'OG.shape.bpmn.E_Start';
-
 	this.label = label;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		if (this.geom) {
-			return this.geom;
-		}
-
-		this.geom = new OG.geometry.Circle([50, 50], 50);
-		this.geom.style = new OG.geometry.Style({
-			'label-position': 'bottom'
-		});
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 간의 연결을 위한 Terminal 을 반환한다.
-	 *
-	 * @return {OG.Terminal[]} Terminal
-	 * @override
-	 */
-	this.createTerminal = function () {
-		if (!this.geom) {
-			return [];
-		}
-
-		var envelope = this.geom.getBoundary();
-
-		return [
-			new OG.Terminal(envelope.getCentroid(), OG.Constants.TERMINAL_TYPE.C, OG.Constants.TERMINAL_TYPE.OUT),
-			new OG.Terminal(envelope.getRightCenter(), OG.Constants.TERMINAL_TYPE.E, OG.Constants.TERMINAL_TYPE.OUT),
-			new OG.Terminal(envelope.getLeftCenter(), OG.Constants.TERMINAL_TYPE.W, OG.Constants.TERMINAL_TYPE.OUT),
-			new OG.Terminal(envelope.getLowerCenter(), OG.Constants.TERMINAL_TYPE.S, OG.Constants.TERMINAL_TYPE.OUT),
-			new OG.Terminal(envelope.getUpperCenter(), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.OUT)
-		];
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.bpmn.E_Start(this.label);
-	};
 };
 OG.shape.bpmn.E_Start.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.E_Start.superclass = OG.shape.GeomShape;
 OG.shape.bpmn.E_Start.prototype.constructor = OG.shape.bpmn.E_Start;
 OG.E_Start = OG.shape.bpmn.E_Start;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.E_Start.prototype.createShape = function () {
+	if (this.geom) {
+		return this.geom;
+	}
+
+	this.geom = new OG.geometry.Circle([50, 50], 50);
+	this.geom.style = new OG.geometry.Style({
+		'label-position': 'bottom'
+	});
+
+	return this.geom;
+};
+
+/**
+ * Shape 간의 연결을 위한 Terminal 을 반환한다.
+ *
+ * @return {OG.Terminal[]} Terminal
+ * @override
+ */
+OG.shape.bpmn.E_Start.prototype.createTerminal = function () {
+	if (!this.geom) {
+		return [];
+	}
+
+	var envelope = this.geom.getBoundary();
+
+	return [
+		new OG.Terminal(envelope.getCentroid(), OG.Constants.TERMINAL_TYPE.C, OG.Constants.TERMINAL_TYPE.OUT),
+		new OG.Terminal(envelope.getRightCenter(), OG.Constants.TERMINAL_TYPE.E, OG.Constants.TERMINAL_TYPE.OUT),
+		new OG.Terminal(envelope.getLeftCenter(), OG.Constants.TERMINAL_TYPE.W, OG.Constants.TERMINAL_TYPE.OUT),
+		new OG.Terminal(envelope.getLowerCenter(), OG.Constants.TERMINAL_TYPE.S, OG.Constants.TERMINAL_TYPE.OUT),
+		new OG.Terminal(envelope.getUpperCenter(), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.OUT)
+	];
+};
 /**
  * BPMN : Link Start Event Shape
  *
@@ -6004,66 +5697,55 @@ OG.E_Start = OG.shape.bpmn.E_Start;
  * @extends OG.shape.GeomShape
  * @requires OG.common.*, OG.geometry.*
  *
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.E_Start_Link = function (label) {
-
 	this.SHAPE_ID = 'OG.shape.bpmn.E_Start_Link';
-
 	this.label = label;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		var geom1, geom2, geomCollection = [];
-		if (this.geom) {
-			return this.geom;
-		}
-
-		geom1 = new OG.geometry.Circle([50, 50], 50);
-		geom1.style = new OG.geometry.Style({
-			"stroke-width": 1
-		});
-
-		geom2 = new OG.geometry.Polygon([
-			[20, 40],
-			[20, 60],
-			[60, 60],
-			[60, 80],
-			[85, 50],
-			[60, 20],
-			[60, 40]
-		]);
-
-		geomCollection.push(geom1);
-		geomCollection.push(geom2);
-
-		this.geom = new OG.geometry.GeometryCollection(geomCollection);
-		this.geom.style = new OG.geometry.Style({
-			'label-position': 'bottom'
-		});
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.bpmn.E_Start_Link(this.label);
-	};
 };
 OG.shape.bpmn.E_Start_Link.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.E_Start_Link.superclass = OG.shape.GeomShape;
 OG.shape.bpmn.E_Start_Link.prototype.constructor = OG.shape.bpmn.E_Start_Link;
 OG.E_Start_Link = OG.shape.bpmn.E_Start_Link;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.E_Start_Link.prototype.createShape = function () {
+	var geom1, geom2, geomCollection = [];
+	if (this.geom) {
+		return this.geom;
+	}
+
+	geom1 = new OG.geometry.Circle([50, 50], 50);
+	geom1.style = new OG.geometry.Style({
+		"stroke-width": 1
+	});
+
+	geom2 = new OG.geometry.Polygon([
+		[20, 40],
+		[20, 60],
+		[60, 60],
+		[60, 80],
+		[85, 50],
+		[60, 20],
+		[60, 40]
+	]);
+
+	geomCollection.push(geom1);
+	geomCollection.push(geom2);
+
+	this.geom = new OG.geometry.GeometryCollection(geomCollection);
+	this.geom.style = new OG.geometry.Style({
+		'label-position': 'bottom'
+	});
+
+	return this.geom;
+};
 /**
  * BPMN : Message Start Event Shape
  *
@@ -6071,63 +5753,52 @@ OG.E_Start_Link = OG.shape.bpmn.E_Start_Link;
  * @extends OG.shape.GeomShape
  * @requires OG.common.*, OG.geometry.*
  *
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.E_Start_Message = function (label) {
-
 	this.SHAPE_ID = 'OG.shape.bpmn.E_Start_Message';
-
 	this.label = label;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		var geom1, geom2, geomCollection = [];
-		if (this.geom) {
-			return this.geom;
-		}
-
-		geom1 = new OG.geometry.Circle([50, 50], 50);
-
-		geom2 = new OG.geometry.PolyLine([
-			[20, 30],
-			[20, 70],
-			[80, 70],
-			[80, 30],
-			[20, 30],
-			[50, 50],
-			[80, 30]
-		]);
-
-		geomCollection.push(geom1);
-		geomCollection.push(geom2);
-
-		this.geom = new OG.geometry.GeometryCollection(geomCollection);
-		this.geom.style = new OG.geometry.Style({
-			'label-position': 'bottom'
-		});
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.bpmn.E_Start_Message(this.label);
-	};
 };
 OG.shape.bpmn.E_Start_Message.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.E_Start_Message.superclass = OG.shape.GeomShape;
 OG.shape.bpmn.E_Start_Message.prototype.constructor = OG.shape.bpmn.E_Start_Message;
 OG.E_Start_Message = OG.shape.bpmn.E_Start_Message;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.E_Start_Message.prototype.createShape = function () {
+	var geom1, geom2, geomCollection = [];
+	if (this.geom) {
+		return this.geom;
+	}
+
+	geom1 = new OG.geometry.Circle([50, 50], 50);
+
+	geom2 = new OG.geometry.PolyLine([
+		[20, 30],
+		[20, 70],
+		[80, 70],
+		[80, 30],
+		[20, 30],
+		[50, 50],
+		[80, 30]
+	]);
+
+	geomCollection.push(geom1);
+	geomCollection.push(geom2);
+
+	this.geom = new OG.geometry.GeometryCollection(geomCollection);
+	this.geom.style = new OG.geometry.Style({
+		'label-position': 'bottom'
+	});
+
+	return this.geom;
+};
 /**
  * BPMN : Multiple Start Event Shape
  *
@@ -6135,68 +5806,57 @@ OG.E_Start_Message = OG.shape.bpmn.E_Start_Message;
  * @extends OG.shape.GeomShape
  * @requires OG.common.*, OG.geometry.*
  *
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.E_Start_Multiple = function (label) {
-
 	this.SHAPE_ID = 'OG.shape.bpmn.E_Start_Multiple';
-
 	this.label = label;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		var geom1, geom2, geomCollection = [];
-		if (this.geom) {
-			return this.geom;
-		}
-
-		geom1 = new OG.geometry.Circle([50, 50], 50);
-
-		geom2 = new OG.geometry.Polygon([
-			[50, 15],
-			[39, 33],
-			[20, 33],
-			[29, 50],
-			[19, 67],
-			[40, 67],
-			[50, 85],
-			[60, 68],
-			[80, 68],
-			[70, 50],
-			[79, 33],
-			[60, 33]
-		]);
-
-		geomCollection.push(geom1);
-		geomCollection.push(geom2);
-
-		this.geom = new OG.geometry.GeometryCollection(geomCollection);
-		this.geom.style = new OG.geometry.Style({
-			'label-position': 'bottom'
-		});
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.bpmn.E_Start_Multiple(this.label);
-	};
 };
 OG.shape.bpmn.E_Start_Multiple.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.E_Start_Multiple.superclass = OG.shape.GeomShape;
 OG.shape.bpmn.E_Start_Multiple.prototype.constructor = OG.shape.bpmn.E_Start_Multiple;
 OG.E_Start_Multiple = OG.shape.bpmn.E_Start_Multiple;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.E_Start_Multiple.prototype.createShape = function () {
+	var geom1, geom2, geomCollection = [];
+	if (this.geom) {
+		return this.geom;
+	}
+
+	geom1 = new OG.geometry.Circle([50, 50], 50);
+
+	geom2 = new OG.geometry.Polygon([
+		[50, 15],
+		[39, 33],
+		[20, 33],
+		[29, 50],
+		[19, 67],
+		[40, 67],
+		[50, 85],
+		[60, 68],
+		[80, 68],
+		[70, 50],
+		[79, 33],
+		[60, 33]
+	]);
+
+	geomCollection.push(geom1);
+	geomCollection.push(geom2);
+
+	this.geom = new OG.geometry.GeometryCollection(geomCollection);
+	this.geom.style = new OG.geometry.Style({
+		'label-position': 'bottom'
+	});
+
+	return this.geom;
+};
 /**
  * BPMN : Rule Start Event Shape
  *
@@ -6204,62 +5864,51 @@ OG.E_Start_Multiple = OG.shape.bpmn.E_Start_Multiple;
  * @extends OG.shape.GeomShape
  * @requires OG.common.*, OG.geometry.*
  *
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.E_Start_Rule = function (label) {
-
 	this.SHAPE_ID = 'OG.shape.bpmn.E_Start_Rule';
-
 	this.label = label;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		var geom1, geom2, geomCollection = [];
-		if (this.geom) {
-			return this.geom;
-		}
-
-		geom1 = new OG.geometry.Circle([50, 50], 50);
-		geom1.style = new OG.geometry.Style({
-			"stroke-width": 1
-		});
-
-		geom2 = new OG.geometry.Rectangle([25, 20], 50, 60);
-
-		geomCollection.push(geom1);
-		geomCollection.push(geom2);
-		geomCollection.push(new OG.geometry.Line([30, 30], [70, 30]));
-		geomCollection.push(new OG.geometry.Line([30, 45], [70, 45]));
-		geomCollection.push(new OG.geometry.Line([30, 60], [70, 60]));
-		geomCollection.push(new OG.geometry.Line([30, 70], [70, 70]));
-
-		this.geom = new OG.geometry.GeometryCollection(geomCollection);
-		this.geom.style = new OG.geometry.Style({
-			'label-position': 'bottom'
-		});
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.bpmn.E_Start_Rule(this.label);
-	};
 };
 OG.shape.bpmn.E_Start_Rule.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.E_Start_Rule.superclass = OG.shape.GeomShape;
 OG.shape.bpmn.E_Start_Rule.prototype.constructor = OG.shape.bpmn.E_Start_Rule;
 OG.E_Start_Rule = OG.shape.bpmn.E_Start_Rule;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.E_Start_Rule.prototype.createShape = function () {
+	var geom1, geom2, geomCollection = [];
+	if (this.geom) {
+		return this.geom;
+	}
+
+	geom1 = new OG.geometry.Circle([50, 50], 50);
+	geom1.style = new OG.geometry.Style({
+		"stroke-width": 1
+	});
+
+	geom2 = new OG.geometry.Rectangle([25, 20], 50, 60);
+
+	geomCollection.push(geom1);
+	geomCollection.push(geom2);
+	geomCollection.push(new OG.geometry.Line([30, 30], [70, 30]));
+	geomCollection.push(new OG.geometry.Line([30, 45], [70, 45]));
+	geomCollection.push(new OG.geometry.Line([30, 60], [70, 60]));
+	geomCollection.push(new OG.geometry.Line([30, 70], [70, 70]));
+
+	this.geom = new OG.geometry.GeometryCollection(geomCollection);
+	this.geom.style = new OG.geometry.Style({
+		'label-position': 'bottom'
+	});
+
+	return this.geom;
+};
 /**
  * BPMN : Timer Start Event Shape
  *
@@ -6267,65 +5916,58 @@ OG.E_Start_Rule = OG.shape.bpmn.E_Start_Rule;
  * @extends OG.shape.GeomShape
  * @requires OG.common.*, OG.geometry.*
  *
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.E_Start_Timer = function (label) {
-
 	this.SHAPE_ID = 'OG.shape.bpmn.E_Start_Timer';
-
 	this.label = label;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		var geom1, geom2, geom3, geomCollection = [];
-		if (this.geom) {
-			return this.geom;
-		}
-
-		geom1 = new OG.geometry.Circle([50, 50], 50);
-		geom1.style = new OG.geometry.Style({
-			"stroke-width": 1
-		});
-
-		geom2 = new OG.geometry.Circle([50, 50], 32);
-
-		geom3 = new OG.geometry.PolyLine([[50, 30], [50, 50], [70, 50]]);
-
-		geomCollection.push(geom1);
-		geomCollection.push(geom2);
-		geomCollection.push(new OG.geometry.Line([50, 18], [50, 25]));
-		geomCollection.push(new OG.geometry.Line([50, 82], [50, 75]));
-		geomCollection.push(new OG.geometry.Line([18, 50], [25, 50]));
-		geomCollection.push(new OG.geometry.Line([82, 50], [75, 50]));
-		geomCollection.push(geom3);
-
-		this.geom = new OG.geometry.GeometryCollection(geomCollection);
-		this.geom.style = new OG.geometry.Style({
-			'label-position': 'bottom'
-		});
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.bpmn.E_Start_Timer(this.label);
-	};
 };
 OG.shape.bpmn.E_Start_Timer.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.E_Start_Timer.superclass = OG.shape.GeomShape;
 OG.shape.bpmn.E_Start_Timer.prototype.constructor = OG.shape.bpmn.E_Start_Timer;
 OG.E_Start_Timer = OG.shape.bpmn.E_Start_Timer;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.E_Start_Timer.prototype.createShape = function () {
+	var geom1, geom2, geom3, geomCollection = [];
+	if (this.geom) {
+		return this.geom;
+	}
+
+	geom1 = new OG.geometry.Circle([50, 50], 50);
+	geom1.style = new OG.geometry.Style({
+		"stroke-width": 1
+	});
+
+	geom2 = new OG.geometry.Circle([50, 50], 32);
+
+	geom3 = new OG.geometry.PolyLine([
+		[50, 30],
+		[50, 50],
+		[70, 50]
+	]);
+
+	geomCollection.push(geom1);
+	geomCollection.push(geom2);
+	geomCollection.push(new OG.geometry.Line([50, 18], [50, 25]));
+	geomCollection.push(new OG.geometry.Line([50, 82], [50, 75]));
+	geomCollection.push(new OG.geometry.Line([18, 50], [25, 50]));
+	geomCollection.push(new OG.geometry.Line([82, 50], [75, 50]));
+	geomCollection.push(geom3);
+
+	this.geom = new OG.geometry.GeometryCollection(geomCollection);
+	this.geom.style = new OG.geometry.Style({
+		'label-position': 'bottom'
+	});
+
+	return this.geom;
+};
 /**
  * BPMN : Terminate Event Shape
  *
@@ -6333,62 +5975,51 @@ OG.E_Start_Timer = OG.shape.bpmn.E_Start_Timer;
  * @extends OG.shape.bpmn.E_End
  * @requires OG.common.*, OG.geometry.*
  *
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.E_Terminate = function (label) {
-
 	this.SHAPE_ID = 'OG.shape.bpmn.E_Terminate';
-
 	this.label = label;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		var geom1, geom2, geomCollection = [];
-		if (this.geom) {
-			return this.geom;
-		}
-
-		geom1 = new OG.geometry.Circle([50, 50], 50);
-		geom1.style = new OG.geometry.Style({
-			"stroke-width": 3
-		});
-
-		geom2 = new OG.geometry.Circle([50, 50], 30);
-		geom2.style = new OG.geometry.Style({
-			"fill"        : "black",
-			"fill-opacity": 1
-		});
-
-		geomCollection.push(geom1);
-		geomCollection.push(geom2);
-
-		this.geom = new OG.geometry.GeometryCollection(geomCollection);
-		this.geom.style = new OG.geometry.Style({
-			'label-position': 'bottom'
-		});
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.bpmn.E_Terminate(this.label);
-	};
 };
 OG.shape.bpmn.E_Terminate.prototype = new OG.shape.bpmn.E_End();
+OG.shape.bpmn.E_Terminate.superclass = OG.shape.bpmn.E_End;
 OG.shape.bpmn.E_Terminate.prototype.constructor = OG.shape.bpmn.E_Terminate;
 OG.E_Terminate = OG.shape.bpmn.E_Terminate;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.E_Terminate.prototype.createShape = function () {
+	var geom1, geom2, geomCollection = [];
+	if (this.geom) {
+		return this.geom;
+	}
+
+	geom1 = new OG.geometry.Circle([50, 50], 50);
+	geom1.style = new OG.geometry.Style({
+		"stroke-width": 3
+	});
+
+	geom2 = new OG.geometry.Circle([50, 50], 30);
+	geom2.style = new OG.geometry.Style({
+		"fill"        : "black",
+		"fill-opacity": 1
+	});
+
+	geomCollection.push(geom1);
+	geomCollection.push(geom2);
+
+	this.geom = new OG.geometry.GeometryCollection(geomCollection);
+	this.geom.style = new OG.geometry.Style({
+		'label-position': 'bottom'
+	});
+
+	return this.geom;
+};
 /**
  * BPMN : Complex Gateway Shape
  *
@@ -6396,78 +6027,67 @@ OG.E_Terminate = OG.shape.bpmn.E_Terminate;
  * @extends OG.shape.GeomShape
  * @requires OG.common.*, OG.geometry.*
  *
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.G_Complex = function (label) {
-
 	this.SHAPE_ID = 'OG.shape.bpmn.G_Complex';
-
 	this.label = label;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		var geom1, geom2, geom3, geom4, geom5, geomCollection = [];
-		if (this.geom) {
-			return this.geom;
-		}
-
-		geom1 = new OG.geometry.Polygon([
-			[0, 50],
-			[50, 100],
-			[100, 50],
-			[50, 0]
-		]);
-
-		geom2 = new OG.geometry.Line([30, 30], [70, 70]);
-		geom2.style = new OG.geometry.Style({
-			"stroke-width": 3
-		});
-
-		geom3 = new OG.geometry.Line([30, 70], [70, 30]);
-		geom3.style = new OG.geometry.Style({
-			"stroke-width": 3
-		});
-
-		geom4 = new OG.geometry.Line([20, 50], [80, 50]);
-		geom4.style = new OG.geometry.Style({
-			"stroke-width": 3
-		});
-
-		geom5 = new OG.geometry.Line([50, 20], [50, 80]);
-		geom5.style = new OG.geometry.Style({
-			"stroke-width": 3
-		});
-
-		geomCollection.push(geom1);
-		geomCollection.push(geom2);
-		geomCollection.push(geom3);
-		geomCollection.push(geom4);
-		geomCollection.push(geom5);
-
-		this.geom = new OG.geometry.GeometryCollection(geomCollection);
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.bpmn.G_Complex(this.label);
-	};
 };
 OG.shape.bpmn.G_Complex.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.G_Complex.superclass = OG.shape.GeomShape;
 OG.shape.bpmn.G_Complex.prototype.constructor = OG.shape.bpmn.G_Complex;
 OG.G_Complex = OG.shape.bpmn.G_Complex;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.G_Complex.prototype.createShape = function () {
+	var geom1, geom2, geom3, geom4, geom5, geomCollection = [];
+	if (this.geom) {
+		return this.geom;
+	}
+
+	geom1 = new OG.geometry.Polygon([
+		[0, 50],
+		[50, 100],
+		[100, 50],
+		[50, 0]
+	]);
+
+	geom2 = new OG.geometry.Line([30, 30], [70, 70]);
+	geom2.style = new OG.geometry.Style({
+		"stroke-width": 3
+	});
+
+	geom3 = new OG.geometry.Line([30, 70], [70, 30]);
+	geom3.style = new OG.geometry.Style({
+		"stroke-width": 3
+	});
+
+	geom4 = new OG.geometry.Line([20, 50], [80, 50]);
+	geom4.style = new OG.geometry.Style({
+		"stroke-width": 3
+	});
+
+	geom5 = new OG.geometry.Line([50, 20], [50, 80]);
+	geom5.style = new OG.geometry.Style({
+		"stroke-width": 3
+	});
+
+	geomCollection.push(geom1);
+	geomCollection.push(geom2);
+	geomCollection.push(geom3);
+	geomCollection.push(geom4);
+	geomCollection.push(geom5);
+
+	this.geom = new OG.geometry.GeometryCollection(geomCollection);
+
+	return this.geom;
+};
 /**
  * BPMN : Exclusive Gateway Shape
  *
@@ -6475,66 +6095,55 @@ OG.G_Complex = OG.shape.bpmn.G_Complex;
  * @extends OG.shape.GeomShape
  * @requires OG.common.*, OG.geometry.*
  *
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.G_Exclusive = function (label) {
-
 	this.SHAPE_ID = 'OG.shape.bpmn.G_Exclusive';
-
 	this.label = label;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		var geom1, geom2, geom3, geomCollection = [];
-		if (this.geom) {
-			return this.geom;
-		}
-
-		geom1 = new OG.geometry.Polygon([
-			[0, 50],
-			[50, 100],
-			[100, 50],
-			[50, 0]
-		]);
-
-		geom2 = new OG.geometry.Line([30, 30], [70, 70]);
-		geom2.style = new OG.geometry.Style({
-			"stroke-width": 5
-		});
-
-		geom3 = new OG.geometry.Line([30, 70], [70, 30]);
-		geom3.style = new OG.geometry.Style({
-			"stroke-width": 5
-		});
-
-		geomCollection.push(geom1);
-		geomCollection.push(geom2);
-		geomCollection.push(geom3);
-
-		this.geom = new OG.geometry.GeometryCollection(geomCollection);
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.bpmn.G_Exclusive(this.label);
-	};
 };
 OG.shape.bpmn.G_Exclusive.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.G_Exclusive.superclass = OG.shape.GeomShape;
 OG.shape.bpmn.G_Exclusive.prototype.constructor = OG.shape.bpmn.G_Exclusive;
 OG.G_Exclusive = OG.shape.bpmn.G_Exclusive;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.G_Exclusive.prototype.createShape = function () {
+	var geom1, geom2, geom3, geomCollection = [];
+	if (this.geom) {
+		return this.geom;
+	}
+
+	geom1 = new OG.geometry.Polygon([
+		[0, 50],
+		[50, 100],
+		[100, 50],
+		[50, 0]
+	]);
+
+	geom2 = new OG.geometry.Line([30, 30], [70, 70]);
+	geom2.style = new OG.geometry.Style({
+		"stroke-width": 5
+	});
+
+	geom3 = new OG.geometry.Line([30, 70], [70, 30]);
+	geom3.style = new OG.geometry.Style({
+		"stroke-width": 5
+	});
+
+	geomCollection.push(geom1);
+	geomCollection.push(geom2);
+	geomCollection.push(geom3);
+
+	this.geom = new OG.geometry.GeometryCollection(geomCollection);
+
+	return this.geom;
+};
 /**
  * BPMN : Gateway Shape
  *
@@ -6542,49 +6151,38 @@ OG.G_Exclusive = OG.shape.bpmn.G_Exclusive;
  * @extends OG.shape.GeomShape
  * @requires OG.common.*, OG.geometry.*
  *
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.G_Gateway = function (label) {
-
 	this.SHAPE_ID = 'OG.shape.bpmn.G_Gateway';
-
 	this.label = label;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		if (this.geom) {
-			return this.geom;
-		}
-
-		this.geom = new OG.geometry.Polygon([
-			[0, 50],
-			[50, 100],
-			[100, 50],
-			[50, 0]
-		]);
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.bpmn.G_Gateway(this.label);
-	};
 };
 OG.shape.bpmn.G_Gateway.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.G_Gateway.superclass = OG.shape.GeomShape;
 OG.shape.bpmn.G_Gateway.prototype.constructor = OG.shape.bpmn.G_Gateway;
 OG.G_Gateway = OG.shape.bpmn.G_Gateway;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.G_Gateway.prototype.createShape = function () {
+	if (this.geom) {
+		return this.geom;
+	}
+
+	this.geom = new OG.geometry.Polygon([
+		[0, 50],
+		[50, 100],
+		[100, 50],
+		[50, 0]
+	]);
+
+	return this.geom;
+};
 /**
  * BPMN : Inclusive Gateway Shape
  *
@@ -6592,60 +6190,49 @@ OG.G_Gateway = OG.shape.bpmn.G_Gateway;
  * @extends OG.shape.GeomShape
  * @requires OG.common.*, OG.geometry.*
  *
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.G_Inclusive = function (label) {
-
 	this.SHAPE_ID = 'OG.shape.bpmn.G_Inclusive';
-
 	this.label = label;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		var geom1, geom2, geomCollection = [];
-		if (this.geom) {
-			return this.geom;
-		}
-
-		geom1 = new OG.geometry.Polygon([
-			[0, 50],
-			[50, 100],
-			[100, 50],
-			[50, 0]
-		]);
-
-		geom2 = new OG.geometry.Circle([50, 50], 25);
-		geom2.style = new OG.geometry.Style({
-			"stroke-width": 3
-		});
-
-		geomCollection.push(geom1);
-		geomCollection.push(geom2);
-
-		this.geom = new OG.geometry.GeometryCollection(geomCollection);
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.bpmn.G_Inclusive(this.label);
-	};
 };
 OG.shape.bpmn.G_Inclusive.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.G_Inclusive.superclass = OG.shape.GeomShape;
 OG.shape.bpmn.G_Inclusive.prototype.constructor = OG.shape.bpmn.G_Inclusive;
 OG.G_Inclusive = OG.shape.bpmn.G_Inclusive;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.G_Inclusive.prototype.createShape = function () {
+	var geom1, geom2, geomCollection = [];
+	if (this.geom) {
+		return this.geom;
+	}
+
+	geom1 = new OG.geometry.Polygon([
+		[0, 50],
+		[50, 100],
+		[100, 50],
+		[50, 0]
+	]);
+
+	geom2 = new OG.geometry.Circle([50, 50], 25);
+	geom2.style = new OG.geometry.Style({
+		"stroke-width": 3
+	});
+
+	geomCollection.push(geom1);
+	geomCollection.push(geom2);
+
+	this.geom = new OG.geometry.GeometryCollection(geomCollection);
+
+	return this.geom;
+};
 /**
  * BPMN : Parallel Gateway Shape
  *
@@ -6653,66 +6240,55 @@ OG.G_Inclusive = OG.shape.bpmn.G_Inclusive;
  * @extends OG.shape.GeomShape
  * @requires OG.common.*, OG.geometry.*
  *
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.G_Parallel = function (label) {
-
 	this.SHAPE_ID = 'OG.shape.bpmn.G_Parallel';
-
 	this.label = label;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		var geom1, geom2, geom3, geomCollection = [];
-		if (this.geom) {
-			return this.geom;
-		}
-
-		geom1 = new OG.geometry.Polygon([
-			[0, 50],
-			[50, 100],
-			[100, 50],
-			[50, 0]
-		]);
-
-		geom2 = new OG.geometry.Line([20, 50], [80, 50]);
-		geom2.style = new OG.geometry.Style({
-			"stroke-width": 5
-		});
-
-		geom3 = new OG.geometry.Line([50, 20], [50, 80]);
-		geom3.style = new OG.geometry.Style({
-			"stroke-width": 5
-		});
-
-		geomCollection.push(geom1);
-		geomCollection.push(geom2);
-		geomCollection.push(geom3);
-
-		this.geom = new OG.geometry.GeometryCollection(geomCollection);
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.bpmn.G_Parallel(this.label);
-	};
 };
 OG.shape.bpmn.G_Parallel.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.G_Parallel.superclass = OG.shape.GeomShape;
 OG.shape.bpmn.G_Parallel.prototype.constructor = OG.shape.bpmn.G_Parallel;
 OG.G_Parallel = OG.shape.bpmn.G_Parallel;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.G_Parallel.prototype.createShape = function () {
+	var geom1, geom2, geom3, geomCollection = [];
+	if (this.geom) {
+		return this.geom;
+	}
+
+	geom1 = new OG.geometry.Polygon([
+		[0, 50],
+		[50, 100],
+		[100, 50],
+		[50, 0]
+	]);
+
+	geom2 = new OG.geometry.Line([20, 50], [80, 50]);
+	geom2.style = new OG.geometry.Style({
+		"stroke-width": 5
+	});
+
+	geom3 = new OG.geometry.Line([50, 20], [50, 80]);
+	geom3.style = new OG.geometry.Style({
+		"stroke-width": 5
+	});
+
+	geomCollection.push(geom1);
+	geomCollection.push(geom2);
+	geomCollection.push(geom3);
+
+	this.geom = new OG.geometry.GeometryCollection(geomCollection);
+
+	return this.geom;
+};
 /**
  * BPMN : Annotation Shape
  *
@@ -6720,64 +6296,58 @@ OG.G_Parallel = OG.shape.bpmn.G_Parallel;
  * @extends OG.shape.GeomShape
  * @requires OG.common.*, OG.geometry.*
  *
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.M_Annotation = function (label) {
-
 	this.SHAPE_ID = 'OG.shape.bpmn.M_Annotation';
-
 	this.label = label || 'Annotation';
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		if (this.geom) {
-			return this.geom;
-		}
-
-		var geom1, geom2, geomCollection = [];
-		if (this.geom) {
-			return this.geom;
-		}
-
-		geom1 = new OG.geometry.Rectangle([0, 0], 100, 100);
-		geom1.style = new OG.geometry.Style({
-			"stroke": 'none'
-		});
-
-		geom2 = new OG.geometry.PolyLine([[10, 0], [0, 0], [0, 100], [10, 100]]);
-		geom2.style = new OG.geometry.Style({
-			"stroke": 'black'
-		});
-
-		geomCollection.push(geom1);
-		geomCollection.push(geom2);
-
-		this.geom = new OG.geometry.GeometryCollection(geomCollection);
-		this.geom.style = new OG.geometry.Style({
-		});
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.bpmn.M_Annotation(this.label);
-	};
 };
 OG.shape.bpmn.M_Annotation.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.M_Annotation.superclass = OG.shape.GeomShape;
 OG.shape.bpmn.M_Annotation.prototype.constructor = OG.shape.bpmn.M_Annotation;
 OG.M_Annotation = OG.shape.bpmn.M_Annotation;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.M_Annotation.prototype.createShape = function () {
+	if (this.geom) {
+		return this.geom;
+	}
+
+	var geom1, geom2, geomCollection = [];
+	if (this.geom) {
+		return this.geom;
+	}
+
+	geom1 = new OG.geometry.Rectangle([0, 0], 100, 100);
+	geom1.style = new OG.geometry.Style({
+		"stroke": 'none'
+	});
+
+	geom2 = new OG.geometry.PolyLine([
+		[10, 0],
+		[0, 0],
+		[0, 100],
+		[10, 100]
+	]);
+	geom2.style = new OG.geometry.Style({
+		"stroke": 'black'
+	});
+
+	geomCollection.push(geom1);
+	geomCollection.push(geom2);
+
+	this.geom = new OG.geometry.GeometryCollection(geomCollection);
+	this.geom.style = new OG.geometry.Style({
+	});
+
+	return this.geom;
+};
 /**
  * BPMN : Group Shape
  *
@@ -6785,48 +6355,37 @@ OG.M_Annotation = OG.shape.bpmn.M_Annotation;
  * @extends OG.shape.GeomShape
  * @requires OG.common.*, OG.geometry.*
  *
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.M_Group = function (label) {
-
 	this.SHAPE_ID = 'OG.shape.bpmn.M_Group';
-
 	this.label = label;
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		if (this.geom) {
-			return this.geom;
-		}
-
-		this.geom = new OG.geometry.Rectangle([0, 0], 100, 100);
-		this.geom.style = new OG.geometry.Style({
-			'stroke-dasharray': '-',
-			"r"               : 6
-		});
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.bpmn.M_Group(this.label);
-	};
 };
 OG.shape.bpmn.M_Group.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.M_Group.superclass = OG.shape.GeomShape;
 OG.shape.bpmn.M_Group.prototype.constructor = OG.shape.bpmn.M_Group;
 OG.M_Group = OG.shape.bpmn.M_Group;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.M_Group.prototype.createShape = function () {
+	if (this.geom) {
+		return this.geom;
+	}
+
+	this.geom = new OG.geometry.Rectangle([0, 0], 100, 100);
+	this.geom.style = new OG.geometry.Style({
+		'stroke-dasharray': '-',
+		"r"               : 6
+	});
+
+	return this.geom;
+};
 /**
  * BPMN : Text Shape
  *
@@ -6834,47 +6393,36 @@ OG.M_Group = OG.shape.bpmn.M_Group;
  * @extends OG.shape.GeomShape
  * @requires OG.common.*, OG.geometry.*
  *
- * @param {String} label 라벨
+ * @param {String} label 라벨 [Optional]
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.M_Text = function (label) {
-
 	this.SHAPE_ID = 'OG.shape.bpmn.M_Text';
-
 	this.label = label || 'Text';
-
-	/**
-	 * 드로잉할 Shape 을 생성하여 반환한다.
-	 *
-	 * @return {OG.geometry.Geometry} Shape 정보
-	 * @override
-	 */
-	this.createShape = function () {
-		if (this.geom) {
-			return this.geom;
-		}
-
-		this.geom = new OG.geometry.Rectangle([0, 0], 100, 100);
-		this.geom.style = new OG.geometry.Style({
-			stroke: "none"
-		});
-
-		return this.geom;
-	};
-
-	/**
-	 * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	 *
-	 * @return {OG.shape.IShape} 복사된 인스턴스
-	 * @override
-	 */
-	this.clone = function () {
-		return new OG.shape.bpmn.M_Text(this.label);
-	};
 };
 OG.shape.bpmn.M_Text.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.M_Text.superclass = OG.shape.GeomShape;
 OG.shape.bpmn.M_Text.prototype.constructor = OG.shape.bpmn.M_Text;
 OG.M_Text = OG.shape.bpmn.M_Text;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.M_Text.prototype.createShape = function () {
+	if (this.geom) {
+		return this.geom;
+	}
+
+	this.geom = new OG.geometry.Rectangle([0, 0], 100, 100);
+	this.geom.style = new OG.geometry.Style({
+		stroke: "none"
+	});
+
+	return this.geom;
+};
 /**
  * 도형의 Style 과 Shape 정보를 통해 캔버스에 렌더링 기능을 정의한 인터페이스
  *

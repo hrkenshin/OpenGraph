@@ -2,9 +2,9 @@
  * 2차원 좌표계에서의 좌표값
  *
  * @example
- * var coordinate1 = new OG.Coordinate(10, 10);
+ * var coordinate1 = new OG.geometry.Coordinate(10, 10);
  * or
- * var coordinate2 = new OG.Coordinate([20, 20]);
+ * var coordinate2 = new OG.geometry.Coordinate([20, 20]);
  *
  * @class
  *
@@ -15,12 +15,14 @@
 OG.geometry.Coordinate = function (x, y) {
 
 	/**
-	 * {Number} x좌표
+	 * x좌표
+	 * @type Number
 	 */
 	this.x = undefined;
 
 	/**
-	 * {Number} y좌표
+	 * y좌표
+	 * @type Number
 	 */
 	this.y = undefined;
 
@@ -34,6 +36,8 @@ OG.geometry.Coordinate = function (x, y) {
 	} else if (arguments.length !== 0) {
 		throw new OG.ParamError();
 	}
+};
+OG.geometry.Coordinate.prototype = {
 
 	/**
 	 * 주어진 좌표와의 거리를 계산한다.
@@ -47,14 +51,14 @@ OG.geometry.Coordinate = function (x, y) {
 	 * @param {OG.geometry.Coordinate,Number[]} coordinate 좌표값
 	 * @return {Number} 좌표간의 거리값
 	 */
-	this.distance = function (coordinate) {
+	distance: function (coordinate) {
 		if (coordinate.constructor === Array) {
 			coordinate = new OG.geometry.Coordinate(coordinate[0], coordinate[1]);
 		}
 
 		var dx = this.x - coordinate.x, dy = this.y - coordinate.y;
 		return OG.Util.round(Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2)));
-	};
+	},
 
 	/**
 	 * 가로, 세로 Offset 만큼 좌표를 이동한다.
@@ -63,12 +67,12 @@ OG.geometry.Coordinate = function (x, y) {
 	 * @param {Number} offsetY 세로 Offset
 	 * @return {OG.geometry.Coordinate} 이동된 좌표
 	 */
-	this.move = function (offsetX, offsetY) {
+	move: function (offsetX, offsetY) {
 		this.x += offsetX;
 		this.y += offsetY;
 
 		return this;
-	};
+	},
 
 	/**
 	 * 기준 좌표를 기준으로 주어진 각도 만큼 회전한다.
@@ -82,7 +86,7 @@ OG.geometry.Coordinate = function (x, y) {
 	 * @param {OG.geometry.Coordinate,Number[]} origin 기준 좌표
 	 * @return {OG.geometry.Coordinate} 회전된 좌표
 	 */
-	this.rotate = function (angle, origin) {
+	rotate: function (angle, origin) {
 		if (origin.constructor === Array) {
 			origin = new OG.geometry.Coordinate(origin[0], origin[1]);
 		}
@@ -94,7 +98,7 @@ OG.geometry.Coordinate = function (x, y) {
 		this.y = OG.Util.round(origin.y + (radius * Math.sin(theta)));
 
 		return this;
-	};
+	},
 
 	/**
 	 * 주어진 좌표값과 같은지 비교한다.
@@ -107,7 +111,7 @@ OG.geometry.Coordinate = function (x, y) {
 	 * @param {OG.geometry.Coordinate,Number[]} coordinate 좌표값
 	 * @return {Boolean} true:같음, false:다름
 	 */
-	this.isEquals = function (coordinate) {
+	isEquals: function (coordinate) {
 		if (coordinate.constructor === Array) {
 			coordinate = new OG.geometry.Coordinate(coordinate[0], coordinate[1]);
 		}
@@ -119,7 +123,7 @@ OG.geometry.Coordinate = function (x, y) {
 		}
 
 		return false;
-	};
+	},
 
 	/**
 	 * 객체 프라퍼티 정보를 JSON 스트링으로 반환한다.
@@ -127,14 +131,13 @@ OG.geometry.Coordinate = function (x, y) {
 	 * @return {String} 프라퍼티 정보
 	 * @override
 	 */
-	this.toString = function () {
+	toString: function () {
 		var s = [];
 		s.push(this.x);
 		s.push(this.y);
 
 		return "[" + s.join() + "]";
-	};
+	}
 };
-OG.geometry.Coordinate.prototype = new OG.geometry.Coordinate();
 OG.geometry.Coordinate.prototype.constructor = OG.geometry.Coordinate;
 OG.Coordinate = OG.geometry.Coordinate;
