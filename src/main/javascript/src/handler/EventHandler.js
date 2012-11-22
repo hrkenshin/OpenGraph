@@ -2165,69 +2165,72 @@ OG.handler.EventHandler = function (renderer) {
 		if (isEnableHotKey) {
 			// delete, ctrl+A
 			$(_RENDERER.getContainer()).bind("keydown", function (event) {
-				// Delete : 삭제
-				if (OG.Constants.ENABLE_HOTKEY_DELETE && event.keyCode === KeyEvent.DOM_VK_DELETE) {
-					deleteSelectedShape();
-				}
-
-				// Ctrl+A : 전체선택
-				if (OG.Constants.ENABLE_HOTKEY_CTRL_A && OG.Constants.SELECTABLE && event.ctrlKey && event.keyCode === KeyEvent.DOM_VK_A) {
-					selectAll();
-				}
-
-				// Ctrl+C : 복사
-				if (OG.Constants.ENABLE_HOTKEY_CTRL_C && event.ctrlKey && event.keyCode === KeyEvent.DOM_VK_C) {
-					copySelectedShape();
-				}
-
-				// Ctrl+V: 붙여넣기
-				if (OG.Constants.ENABLE_HOTKEY_CTRL_V && event.ctrlKey && event.keyCode === KeyEvent.DOM_VK_V) {
-					pasteSelectedShape();
-				}
-
-				// Ctrl+D: 복제하기
-				if (OG.Constants.ENABLE_HOTKEY_CTRL_D && event.ctrlKey && event.keyCode === KeyEvent.DOM_VK_D) {
-					duplicateSelectedShape();
-				}
-
-				// Ctrl+G : 그룹
-				if (OG.Constants.ENABLE_HOTKEY_CTRL_G && event.ctrlKey && event.keyCode === KeyEvent.DOM_VK_G) {
-					groupSelectedShape();
-				}
-
-				// Ctrl+U : 언그룹
-				if (OG.Constants.ENABLE_HOTKEY_CTRL_U && event.ctrlKey && event.keyCode === KeyEvent.DOM_VK_U) {
-					ungroupSelectedShape();
-				}
-
-				if (OG.Constants.ENABLE_HOTKEY_SHIFT_ARROW) {
-					// Shift+화살표 : 이동
-					if (event.shiftKey && event.keyCode === KeyEvent.DOM_VK_LEFT) {
-						moveElements(getMoveTargets(), -1 * (OG.Constants.DRAG_GRIDABLE ? OG.Constants.MOVE_SNAP_SIZE : 1), 0);
+				// 라벨수정중엔 keydown 이벤트무시
+				if (!/^textarea$/i.test(event.srcElement.tagName) && !/^input$/i.test(event.srcElement.tagName)) {
+					// Delete : 삭제
+					if (OG.Constants.ENABLE_HOTKEY_DELETE && event.keyCode === KeyEvent.DOM_VK_DELETE) {
+						deleteSelectedShape();
 					}
-					if (event.shiftKey && event.keyCode === KeyEvent.DOM_VK_RIGHT) {
-						moveElements(getMoveTargets(), (OG.Constants.DRAG_GRIDABLE ? OG.Constants.MOVE_SNAP_SIZE : 1), 0);
+
+					// Ctrl+A : 전체선택
+					if (OG.Constants.ENABLE_HOTKEY_CTRL_A && OG.Constants.SELECTABLE && event.ctrlKey && event.keyCode === KeyEvent.DOM_VK_A) {
+						selectAll();
 					}
-					if (event.shiftKey && event.keyCode === KeyEvent.DOM_VK_UP) {
-						moveElements(getMoveTargets(), 0, -1 * (OG.Constants.DRAG_GRIDABLE ? OG.Constants.MOVE_SNAP_SIZE : 1));
+
+					// Ctrl+C : 복사
+					if (OG.Constants.ENABLE_HOTKEY_CTRL_C && event.ctrlKey && event.keyCode === KeyEvent.DOM_VK_C) {
+						copySelectedShape();
 					}
-					if (event.shiftKey && event.keyCode === KeyEvent.DOM_VK_DOWN) {
-						moveElements(getMoveTargets(), 0, (OG.Constants.DRAG_GRIDABLE ? OG.Constants.MOVE_SNAP_SIZE : 1));
+
+					// Ctrl+V: 붙여넣기
+					if (OG.Constants.ENABLE_HOTKEY_CTRL_V && event.ctrlKey && event.keyCode === KeyEvent.DOM_VK_V) {
+						pasteSelectedShape();
 					}
-				}
-				if (OG.Constants.ENABLE_HOTKEY_ARROW) {
-					// 화살표 : 이동
-					if (!event.shiftKey && event.keyCode === KeyEvent.DOM_VK_LEFT) {
-						moveElements(getMoveTargets(), -1 * OG.Constants.MOVE_SNAP_SIZE, 0);
+
+					// Ctrl+D: 복제하기
+					if (OG.Constants.ENABLE_HOTKEY_CTRL_D && event.ctrlKey && event.keyCode === KeyEvent.DOM_VK_D) {
+						duplicateSelectedShape();
 					}
-					if (!event.shiftKey && event.keyCode === KeyEvent.DOM_VK_RIGHT) {
-						moveElements(getMoveTargets(), OG.Constants.MOVE_SNAP_SIZE, 0);
+
+					// Ctrl+G : 그룹
+					if (OG.Constants.ENABLE_HOTKEY_CTRL_G && event.ctrlKey && event.keyCode === KeyEvent.DOM_VK_G) {
+						groupSelectedShape();
 					}
-					if (!event.shiftKey && event.keyCode === KeyEvent.DOM_VK_UP) {
-						moveElements(getMoveTargets(), 0, -1 * OG.Constants.MOVE_SNAP_SIZE);
+
+					// Ctrl+U : 언그룹
+					if (OG.Constants.ENABLE_HOTKEY_CTRL_U && event.ctrlKey && event.keyCode === KeyEvent.DOM_VK_U) {
+						ungroupSelectedShape();
 					}
-					if (!event.shiftKey && event.keyCode === KeyEvent.DOM_VK_DOWN) {
-						moveElements(getMoveTargets(), 0, OG.Constants.MOVE_SNAP_SIZE);
+
+					if (OG.Constants.ENABLE_HOTKEY_SHIFT_ARROW) {
+						// Shift+화살표 : 이동
+						if (event.shiftKey && event.keyCode === KeyEvent.DOM_VK_LEFT) {
+							moveElements(getMoveTargets(), -1 * (OG.Constants.DRAG_GRIDABLE ? OG.Constants.MOVE_SNAP_SIZE : 1), 0);
+						}
+						if (event.shiftKey && event.keyCode === KeyEvent.DOM_VK_RIGHT) {
+							moveElements(getMoveTargets(), (OG.Constants.DRAG_GRIDABLE ? OG.Constants.MOVE_SNAP_SIZE : 1), 0);
+						}
+						if (event.shiftKey && event.keyCode === KeyEvent.DOM_VK_UP) {
+							moveElements(getMoveTargets(), 0, -1 * (OG.Constants.DRAG_GRIDABLE ? OG.Constants.MOVE_SNAP_SIZE : 1));
+						}
+						if (event.shiftKey && event.keyCode === KeyEvent.DOM_VK_DOWN) {
+							moveElements(getMoveTargets(), 0, (OG.Constants.DRAG_GRIDABLE ? OG.Constants.MOVE_SNAP_SIZE : 1));
+						}
+					}
+					if (OG.Constants.ENABLE_HOTKEY_ARROW) {
+						// 화살표 : 이동
+						if (!event.shiftKey && event.keyCode === KeyEvent.DOM_VK_LEFT) {
+							moveElements(getMoveTargets(), -1 * OG.Constants.MOVE_SNAP_SIZE, 0);
+						}
+						if (!event.shiftKey && event.keyCode === KeyEvent.DOM_VK_RIGHT) {
+							moveElements(getMoveTargets(), OG.Constants.MOVE_SNAP_SIZE, 0);
+						}
+						if (!event.shiftKey && event.keyCode === KeyEvent.DOM_VK_UP) {
+							moveElements(getMoveTargets(), 0, -1 * OG.Constants.MOVE_SNAP_SIZE);
+						}
+						if (!event.shiftKey && event.keyCode === KeyEvent.DOM_VK_DOWN) {
+							moveElements(getMoveTargets(), 0, OG.Constants.MOVE_SNAP_SIZE);
+						}
 					}
 				}
 			});
