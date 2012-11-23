@@ -1837,7 +1837,7 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 	 */
 	this.drawLabel = function (shapeElement, text, style) {
 		var rElement = getREleById(OG.Util.isElement(shapeElement) ? shapeElement.id : shapeElement),
-			element, labelElement, envelope, _style = {}, position, size, beforeText,
+			element, labelElement, envelope, _style = {}, position, size, beforeText, beforeEvent,
 			/**
 			 * 라인(꺽은선)의 중심위치를 반환한다.
 			 *
@@ -1871,8 +1871,17 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 		if (rElement && rElement.node.shape) {
 			element = rElement.node;
 			envelope = element.shape.geom.getBoundary();
-
 			beforeText = element.shape.label;
+
+			// beforeLabelChange event fire
+			if (text !== beforeText) {
+				beforeEvent = jQuery.Event("beforeLabelChange", {element: element, afterText: text, beforeText: beforeText});
+				$(_PAPER.canvas).trigger(beforeEvent);
+				if (beforeEvent.isPropagationStopped()) {
+					return false;
+				}
+			}
+
 			OG.Util.apply(element.shape.geom.style.map, _style);
 			element.shape.label = text === undefined ? element.shape.label : text;
 
@@ -1917,7 +1926,7 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 				$(_PAPER.canvas).trigger('drawLabel', [element, text]);
 
 				if (text !== beforeText) {
-					// labelChanged event file
+					// labelChanged event fire
 					$(_PAPER.canvas).trigger('labelChanged', [element, text, beforeText]);
 				}
 			}

@@ -1089,6 +1089,19 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroun
 	};
 
 	/**
+	 * 라벨이 Change 되기전 이벤트 리스너
+	 *
+	 * @param {Function} callbackFunc 콜백함수(event, shapeElement, afterText, beforeText)
+	 */
+	this.onBeforeLabelChange = function (callbackFunc) {
+		$(this.getRootElement()).bind('beforeLabelChange', function (event) {
+			if (callbackFunc(event, event.element, event.afterText, event.beforeText) === false) {
+				event.stopPropagation();
+			}
+		});
+	};
+
+	/**
 	 * Shape 이 Redraw 되었을 때의 이벤트 리스너
 	 *
 	 * @param {Function} callbackFunc 콜백함수(event, shapeElement)
