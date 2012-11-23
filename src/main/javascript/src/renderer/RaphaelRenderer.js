@@ -1869,12 +1869,13 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 		OG.Util.apply(_style, (style instanceof OG.geometry.Style) ? style.map : style || {});
 
 		if (rElement && rElement.node.shape) {
+			text = OG.Util.trim(text);
 			element = rElement.node;
 			envelope = element.shape.geom.getBoundary();
 			beforeText = element.shape.label;
 
 			// beforeLabelChange event fire
-			if (text !== beforeText) {
+			if (text !== undefined && text !== beforeText) {
 				beforeEvent = jQuery.Event("beforeLabelChange", {element: element, afterText: text, beforeText: beforeText});
 				$(_PAPER.canvas).trigger(beforeEvent);
 				if (beforeEvent.isPropagationStopped()) {
@@ -1923,9 +1924,11 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 				element.appendChild(labelElement);
 
 				// drawLabel event fire
-				$(_PAPER.canvas).trigger('drawLabel', [element, text]);
+				if (text !== undefined) {
+					$(_PAPER.canvas).trigger('drawLabel', [element, text]);
+				}
 
-				if (text !== beforeText) {
+				if (text !== undefined && text !== beforeText) {
 					// labelChanged event fire
 					$(_PAPER.canvas).trigger('labelChanged', [element, text, beforeText]);
 				}
@@ -1949,6 +1952,7 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 			element, vertices, labelElement, position, edgeLabel, suffix;
 
 		if (rElement && rElement.node.shape) {
+			text = OG.Util.trim(text);
 			element = rElement.node;
 
 			if (element.shape instanceof OG.shape.EdgeShape) {
