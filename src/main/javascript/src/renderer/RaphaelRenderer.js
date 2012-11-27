@@ -1881,6 +1881,7 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 				if (beforeEvent.isPropagationStopped()) {
 					return false;
 				}
+				text = beforeEvent.afterText;
 			}
 
 			OG.Util.apply(element.shape.geom.style.map, _style);

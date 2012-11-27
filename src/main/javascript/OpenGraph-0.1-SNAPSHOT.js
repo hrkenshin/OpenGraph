@@ -9111,6 +9111,7 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 				if (beforeEvent.isPropagationStopped()) {
 					return false;
 				}
+				text = beforeEvent.afterText;
 			}
 
 			OG.Util.apply(element.shape.geom.style.map, _style);
@@ -15257,6 +15258,37 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroun
 	this.getElementsByShapeId = function (shapeId) {
 		var root = this.getRootGroup();
 		return $(root).find("[_type=SHAPE][_shape_id='" + shapeId + "']");
+	};
+
+	/**
+	 * Edge 엘리먼트와 연결된 fromShape, toShape 엘리먼트를 반환한다.
+	 *
+	 * @param {Element,String} edgeElement Element 또는 ID
+	 * @return {Object}
+	 */
+	this.getRelatedElementsFromEdge = function (edgeElement) {
+		var edge = OG.Util.isElement(edgeElement) ? edgeElement : this.getElementById(edgeElement),
+			getShapeFromTerminal = function (terminal) {
+				var terminalId = OG.Util.isElement(terminal) ? terminal.id : terminal;
+				if (terminalId) {
+					return _RENDERER.getElementById(terminalId.substring(0, terminalId.indexOf(OG.Constants.TERMINAL_SUFFIX.GROUP)));
+				} else {
+					return null;
+				}
+			};
+
+
+		if ($(edge).attr('_shape') === OG.Constants.SHAPE_TYPE.EDGE) {
+			return {
+				from: getShapeFromTerminal($(edgeElement).attr('_from')),
+				to  : getShapeFromTerminal($(edgeElement).attr('_to'))
+			};
+		} else {
+			return {
+				from: null,
+				to  : null
+			};
+		}
 	};
 
 	/**
