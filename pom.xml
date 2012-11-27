@@ -18,6 +18,7 @@
 		<maven.build.lastUpdate>${maven.build.timestamp}</maven.build.lastUpdate>
 		<jdk.version>1.5</jdk.version>
 		<javascript.src.dir>${basedir}/src/main/javascript/src</javascript.src.dir>
+		<javascript.lib.dir>${basedir}/src/main/javascript/lib</javascript.lib.dir>
 
 		<!-- You might need to adjust this depending on your OS. -->
 		<JsTestDriver.browser.command>/Applications/Firefox.app/Contents/MacOS/firefox</JsTestDriver.browser.command>
@@ -43,25 +44,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
-				<version>2.1.1</version>
-				<configuration>
-					<webResources>
-						<resource>
-							<directory>${basedir}/src/main/examples/mxgraph</directory>
-							<targetPath>/mxgraph</targetPath>
-							<includes>
-								<include>**/*.*</include>
-							</includes>
-						</resource>
-						<resource>
-							<directory>${basedir}/src/main/javascript</directory>
-							<targetPath>/opengraph</targetPath>
-							<includes>
-								<include>**/*.*</include>
-							</includes>
-						</resource>
-					</webResources>
-				</configuration>
+				<version>2.2</version>
 			</plugin>
 
 			<!-- JsLint Maven Plugin : JavaScript code quality control tool -->
@@ -80,6 +63,7 @@
 						<include>**/*.js</include>
 					</includes>
 					<excludes>
+						<exclude>raphael-2.1.0-custom.js</exclude>
 						<exclude>common/JSON.js</exclude>
 						<exclude>common/Util.js</exclude>
 					</excludes>
@@ -142,6 +126,9 @@
 				<version>1.3.0</version>
 				<configuration>
 					<force>true</force>
+					<excludeWarSourceDirectory>true</excludeWarSourceDirectory>
+					<excludeResources>true</excludeResources>
+					<jswarn>false</jswarn>
 					<linebreakpos>100000</linebreakpos>
 					<sourceDirectory>${javascript.src.dir}</sourceDirectory>
 					<includes>
@@ -152,12 +139,11 @@
 					<aggregations>
 						<aggregation>
 							<insertNewLine>true</insertNewLine>
-							<output>
-								${basedir}/src/main/javascript/${project.build.finalName}.js
-							</output>
+							<output>${basedir}/src/main/webapp/resources/opengraph/${project.build.finalName}.js</output>
 							<inputDir>${javascript.src.dir}</inputDir>
 							<includes>
 								<include>${project.build.directory}/yuicompress/LICENSE.txt</include>
+								<include>raphael-2.1.0-custom.js</include>
 								<include>common/Constants.js</include>
 								<include>common/Util.js</include>
 								<include>common/*.js</include>
@@ -185,12 +171,46 @@
 						</aggregation>
 						<aggregation>
 							<insertNewLine>false</insertNewLine>
-							<output>
-								${basedir}/src/main/javascript/${project.build.finalName}-min.js
-							</output>
+							<output>${basedir}/src/main/webapp/resources/opengraph/${project.build.finalName}-min.js</output>
 							<inputDir>${project.build.directory}/yuicompress</inputDir>
 							<includes>
 								<include>${project.build.directory}/yuicompress/LICENSE.txt</include>
+								<include>raphael-2.1.0-custom*.js</include>
+								<include>common/Constants*.js</include>
+								<include>common/Util*.js</include>
+								<include>common/*.js</include>
+								<include>geometry/Style*.js</include>
+								<include>geometry/Coordinate*.js</include>
+								<include>geometry/Envelope*.js</include>
+								<include>geometry/Geometry*.js</include>
+								<include>geometry/PolyLine*.js</include>
+								<include>geometry/Curve*.js</include>
+								<include>geometry/Ellipse*.js</include>
+								<include>geometry/*.js</include>
+								<include>shape/IShape*.js</include>
+								<include>shape/Terminal*.js</include>
+								<include>shape/GeomShape*.js</include>
+								<include>shape/TextShape*.js</include>
+								<include>shape/ImageShape*.js</include>
+								<include>shape/EdgeShape*.js</include>
+								<include>shape/*.js</include>
+								<include>shape/bpmn/*.js</include>
+								<include>renderer/IRenderer*.js</include>
+								<include>renderer/*.js</include>
+								<include>handler/EventHandler*.js</include>
+								<include>graph/Canvas*.js</include>
+							</includes>
+						</aggregation>
+						<aggregation>
+							<insertNewLine>false</insertNewLine>
+							<output>${basedir}/src/main/webapp/resources/opengraph/${project.build.finalName}-All.js</output>
+							<inputDir>${project.build.directory}/yuicompress</inputDir>
+							<includes>
+								<include>${project.build.directory}/yuicompress/LICENSE.txt</include>
+								<include>${javascript.lib.dir}/jquery-1.7.2/jquery-1.7.2.min.js</include>
+								<include>${javascript.lib.dir}/jquery-1.7.2/ui-lightness/jquery-ui-1.8.19.custom.min.js</include>
+								<include>${javascript.lib.dir}/jquery-1.7.2/contextmenu/jquery.contextMenu-min.js</include>
+								<include>raphael-2.1.0-custom*.js</include>
 								<include>common/Constants*.js</include>
 								<include>common/Util*.js</include>
 								<include>common/*.js</include>

@@ -1,0 +1,272 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko" lang="ko">
+<head>
+    <title>OpenGraph BPMN Modeler Example</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8">
+    <link rel="stylesheet" type="text/css" href="../../resources/opengraph/lib/contextmenu/jquery.contextMenu.css"/>
+    <script type="text/javascript" src="../../resources/opengraph/OpenGraph-0.1-SNAPSHOT-All.js"></script>
+    <link rel="stylesheet" type="text/css" href="./css/layout-default.css"/>
+    <link rel="stylesheet" type="text/css" href="./css/jquery-ui-1.8.19.custom.css"/>
+    <script type="text/javascript" src="./js/jquery.layout.min-1.2.0.js"></script>
+    <style type="text/css">
+        .ui-layout-center {
+            padding: 0;
+            overflow: scroll;
+        }
+
+        .ui-layout-west {
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .ui-accordion .ui-accordion-content {
+            padding: 2px;
+            top: 0;
+            border-top: 0;
+            margin-top: 2px;
+            margin-bottom: -2px;
+            position: relative;
+        }
+
+        .icon_shape {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .ui-accordion-content img {
+            border: none;
+            overflow: hidden;
+        }
+
+        .ui-accordion-content img:hover {
+            border: 2px solid blue;
+            margin: -2px;
+        }
+    </style>
+
+    <script type="text/javascript">
+        var canvas = null, opengraphJSON, ele1;
+        $(document).ready(function () {
+            // layout
+            $('body').layout({
+                west__size        : 160,
+                enableCursorHotkey: false
+            });
+            $("#accordion").accordion({
+                fillSpace : false,
+                autoHeight: false
+            });
+
+            // Canvas
+            canvas = new OG.Canvas('canvas', [1000, 800], 'white', 'url(./images/grid.gif)');
+
+            canvas.initConfig({
+                selectable      : true,
+                dragSelectable  : true,
+                movable         : true,
+                resizable       : true,
+                connectable     : true,
+                selfConnectable : true,
+                connectCloneable: true,
+                connectRequired : true,
+                labelEditable   : true,
+                groupDropable   : true,
+                collapsible     : true,
+                enableHotKey    : true
+            });
+
+            // Shape drag & drop
+            $(".icon_shape").draggable({
+                start   : function () {
+                    $('#canvas').data('DRAG_SHAPE', {
+                        '_shape_type': $(this).attr('_shape_type'),
+                        '_shape_id'  : $(this).attr('_shape_id'),
+                        '_width'     : $(this).attr('_width'),
+                        '_height'    : $(this).attr('_height')
+                    });
+                },
+                helper  : 'clone',
+                appendTo: "#canvas"
+            });
+            $("#canvas").droppable({
+                drop: function (event, ui) {
+                    var shapeInfo = $('#canvas').data('DRAG_SHAPE'), shape, element;
+                    if (shapeInfo) {
+                        shape = eval('new ' + shapeInfo._shape_id + '()');
+                        element = canvas.drawShape([
+                            event.pageX - $('#canvas')[0].offsetLeft + $('#canvas')[0].scrollLeft,
+                            event.pageY - $('#canvas')[0].offsetTop + $('#canvas')[0].scrollTop],
+                                shape, [parseInt(shapeInfo._width, 10), parseInt(shapeInfo._height, 10)]);
+                        $('#canvas').removeData('DRAG_SHAPE');
+                    }
+                }
+            });
+
+            // Shape 이 처음 Draw 되었을 때의 이벤트 리스너
+            canvas.onDrawShape(function (event, shapeElement) {
+//            console.log('onDrawShape', shapeElement);
+            });
+
+            // Shape 이 Redraw 되었을 때의 이벤트 리스너
+            canvas.onRedrawShape(function (event, shapeElement) {
+//            console.log('onRedrawShape', shapeElement);
+            });
+
+            // Shape 이 Remove 될 때의 이벤트 리스너
+            canvas.onRemoveShape(function (event, shapeElement) {
+//            console.log('onRemoveShape', shapeElement);
+            });
+
+            // Shape 이 Move 되었을 때의 이벤트 리스너
+            canvas.onMoveShape(function (event, shapeElement, offset) {
+//            console.log('onMoveShape', shapeElement, offset);
+            });
+
+            // Shape 이 Resize 되었을 때의 이벤트 리스너
+            canvas.onResizeShape(function (event, shapeElement, offset) {
+//            console.log('onResizeShape', shapeElement, offset);
+            });
+
+            // Shape 이 Connect 되었을 때의 이벤트 리스너
+            canvas.onConnectShape(function (event, edgeElement, fromElement, toElement) {
+//            console.log('onConnectShape', edgeElement, fromElement, toElement);
+            });
+
+            // Shape 이 Disconnect 되었을 때의 이벤트 리스너
+            canvas.onDisconnectShape(function (event, edgeElement, fromElement, toElement) {
+//            console.log('onDisconnectShape', edgeElement, fromElement, toElement);
+            });
+
+            // examples
+            var circleShape = canvas.drawShape([100, 100], new OG.CircleShape(), [100, 100]);
+            var ellipseShape = canvas.drawShape([300, 200], new OG.EllipseShape('label'), [100, 50]);
+
+            // connect
+            var edge = canvas.connect(circleShape, ellipseShape);
+
+            // draw label
+//            canvas.drawLabel(circleShape, '라벨');
+//            $(circleShape).children('[id$=_LABEL]').hide();
+//
+//            // 라벨 show & hide
+//            $(circleShape).on('mouseover', function (event) {
+//                $(circleShape).children('[id$=_LABEL]').show();
+//                // 아래 방식도 동작
+////                canvas.show($(circleShape).children('[id$=_LABEL]')[0]);
+//            });
+//            $(circleShape).on('mouseout', function (event) {
+//                $(circleShape).children('[id$=_LABEL]').hide();
+//                // // 아래 방식도 동작
+////                canvas.hide($(circleShape).children('[id$=_LABEL]')[0]);
+//            });
+        });
+
+        function save() {
+            opengraphJSON = canvas.toJSON();
+        }
+    </script>
+</head>
+<body oncontextmenu="return false;">
+<div class="ui-layout-north">
+    <input type="button" value="printXML" onclick="console.log($.parseXML(canvas.toXML()));"/>
+    <input type="button" value="printJSON" onclick="console.log(canvas.toJSON());"/>
+    <input type="button" value="clear" onclick="canvas.clear();"/>
+    <input type="button" value="saveJSON" onclick="save();"/>
+    <input type="button" value="loadJSON" onclick="canvas.loadJSON(opengraphJSON);"/>
+</div>
+<div class="ui-layout-west">
+    <div id="accordion">
+        <h3><a href="#">BPMN</a></h3>
+
+        <div>
+            <img src="images/event_start.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_Start"
+                 _width="30" _height="30"/>
+            <img src="images/event_intermediate.png" class="icon_shape" _shape_type="GEOM"
+                 _shape_id="OG.shape.bpmn.E_Intermediate" _width="30" _height="30"/>
+            <img src="images/event_end.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_End"
+                 _width="30" _height="30"/>
+            <img src="images/message_start.png" class="icon_shape" _shape_type="GEOM"
+                 _shape_id="OG.shape.bpmn.E_Start_Message" _width="30" _height="30"/>
+            <img src="images/message_intermediate.png" class="icon_shape" _shape_type="GEOM"
+                 _shape_id="OG.shape.bpmn.E_Intermediate_Message" _width="30" _height="30"/>
+            <img src="images/message_end.png" class="icon_shape" _shape_type="GEOM"
+                 _shape_id="OG.shape.bpmn.E_End_Message" _width="30" _height="30"/><br/>
+            <img src="images/link_start.png" class="icon_shape" _shape_type="GEOM"
+                 _shape_id="OG.shape.bpmn.E_Start_Link" _width="30" _height="30"/>
+            <img src="images/link_intermediate.png" class="icon_shape" _shape_type="GEOM"
+                 _shape_id="OG.shape.bpmn.E_Intermediate_Link" _width="30" _height="30"/>
+            <img src="images/link_end.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_End_Link"
+                 _width="30" _height="30"/>
+            <img src="images/multiple_start.png" class="icon_shape" _shape_type="GEOM"
+                 _shape_id="OG.shape.bpmn.E_Start_Multiple" _width="30" _height="30"/>
+            <img src="images/multiple_intermediate.png" class="icon_shape" _shape_type="GEOM"
+                 _shape_id="OG.shape.bpmn.E_Intermediate_Multiple" _width="30" _height="30"/>
+            <img src="images/multiple_end.png" class="icon_shape" _shape_type="GEOM"
+                 _shape_id="OG.shape.bpmn.E_End_Multiple" _width="30" _height="30"/><br/>
+            <img src="images/timer_start.png" class="icon_shape" _shape_type="GEOM"
+                 _shape_id="OG.shape.bpmn.E_Start_Timer" _width="30" _height="30"/>
+            <img src="images/timer_intermediate.png" class="icon_shape" _shape_type="GEOM"
+                 _shape_id="OG.shape.bpmn.E_Intermediate_Timer" _width="30" _height="30"/>
+            <img src="images/rule_start.png" class="icon_shape" _shape_type="GEOM"
+                 _shape_id="OG.shape.bpmn.E_Start_Rule" _width="30" _height="30"/>
+            <img src="images/rule_intermediate.png" class="icon_shape" _shape_type="GEOM"
+                 _shape_id="OG.shape.bpmn.E_Intermediate_Rule" _width="30" _height="30"/>
+            <img src="images/compensation_intermediate.png" class="icon_shape" _shape_type="GEOM"
+                 _shape_id="OG.shape.bpmn.E_Intermediate_Compensation" _width="30" _height="30"/>
+            <img src="images/compensation_end.png" class="icon_shape" _shape_type="GEOM"
+                 _shape_id="OG.shape.bpmn.E_End_Compensation" _width="30" _height="30"/><br/>
+            <img src="images/error_intermediate.png" class="icon_shape" _shape_type="GEOM"
+                 _shape_id="OG.shape.bpmn.E_Intermediate_Error" _width="30" _height="30"/>
+            <img src="images/error_end.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_End_Error"
+                 _width="30" _height="30"/>
+            <img src="images/cancel_end.png" class="icon_shape" _shape_type="GEOM"
+                 _shape_id="OG.shape.bpmn.E_End_Cancel" _width="30" _height="30"/>
+            <img src="images/event_terminate.png" class="icon_shape" _shape_type="GEOM"
+                 _shape_id="OG.shape.bpmn.E_Terminate" _width="30" _height="30"/><br/>
+            <img src="images/gateway.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.G_Gateway"
+                 _width="40" _height="40"/>
+            <img src="images/gateway_exclusive.png" class="icon_shape" _shape_type="GEOM"
+                 _shape_id="OG.shape.bpmn.G_Exclusive" _width="40" _height="40"/>
+            <img src="images/gateway_parallel.png" class="icon_shape" _shape_type="GEOM"
+                 _shape_id="OG.shape.bpmn.G_Parallel" _width="40" _height="40"/>
+            <img src="images/gateway_complex.png" class="icon_shape" _shape_type="GEOM"
+                 _shape_id="OG.shape.bpmn.G_Complex" _width="40" _height="40"/>
+            <img src="images/gateway_inclusive.png" class="icon_shape" _shape_type="GEOM"
+                 _shape_id="OG.shape.bpmn.G_Inclusive" _width="40" _height="40"/><br/>
+            <img src="images/task.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.A_Task"
+                 _width="70" _height="50"/>
+            <img src="images/subprocess.png" class="icon_shape" _shape_type="GROUP"
+                 _shape_id="OG.shape.bpmn.A_Subprocess" _width="200" _height="150"/>
+            <img src="images/data_object.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.D_Data"
+                 _width="50" _height="50"/>
+            <img src="images/data_store.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.D_Store"
+                 _width="50" _height="50"/>
+            <img src="images/group.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.M_Group"
+                 _width="50" _height="50"/><br/>
+            <img src="images/connector_sequence.png" class="icon_shape" _shape_type="EDGE"
+                 _shape_id="OG.shape.bpmn.C_Sequence" _width="200" _height="150"/>
+            <img src="images/connector_message.png" class="icon_shape" _shape_type="EDGE"
+                 _shape_id="OG.shape.bpmn.C_Message" _width="200" _height="150"/>
+            <img src="images/connector_conditional.png" class="icon_shape" _shape_type="EDGE"
+                 _shape_id="OG.shape.bpmn.C_Conditional" _width="200" _height="150"/>
+            <img src="images/connector_dataassociation.png" class="icon_shape" _shape_type="EDGE"
+                 _shape_id="OG.shape.bpmn.C_DataAssociation" _width="200" _height="150"/>
+            <img src="images/connector_association.png" class="icon_shape" _shape_type="EDGE"
+                 _shape_id="OG.shape.bpmn.C_Association" _width="200" _height="150"/><br/>
+            <img src="images/annotation.png" class="icon_shape" _shape_type="GEOM"
+                 _shape_id="OG.shape.bpmn.M_Annotation" _width="70" _height="30"/>
+            <img src="images/text.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.M_Text"
+                 _width="50" _height="30"/>
+            <img src="images/horizontal_lane.png" class="icon_shape" _shape_type="GROUP"
+                 _shape_id="OG.shape.HorizontalLaneShape" _width="200" _height="100"/>
+            <img src="images/vertical_lane.png" class="icon_shape" _shape_type="GROUP"
+                 _shape_id="OG.shape.VerticalLaneShape" _width="100" _height="200"/>
+        </div>
+    </div>
+</div>
+<div class="ui-layout-center" id="canvas" style="cursor: default;"/>
+</body>
+</html>
