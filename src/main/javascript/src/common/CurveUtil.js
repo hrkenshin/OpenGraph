@@ -138,7 +138,7 @@ OG.common.CurveUtil = {
 		return {
 			getX: makeFct(0),
 			getY: makeFct(1),
-			maxT: Math.floor(points.length / 3) + 1
+			maxT: Math.floor(points.length / 3) + 0.01
 		};
 	},
 

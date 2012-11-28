@@ -1,5 +1,6 @@
 /**
  * Catmull-Rom Spline Curve 공간 기하 객체(Spatial Geometry Object)
+ * 모든 콘트롤포인트를 지나는 곡선을 나타낸다.
  *
  * @class
  * @extends OG.geometry.PolyLine

@@ -475,11 +475,16 @@ OG.handler.EventHandler = function (renderer) {
 					// resize handle
 					$(guide.from).draggable({
 						start: function (event) {
-							var vertices = element.shape.geom.getVertices(), _style = {},
-								toTerminalId = $(element).attr("_to"), toShape,
-								toTerminal = [vertices[vertices.length - 1].x, vertices[vertices.length - 1].y],
-								edge = _RENDERER.drawEdge(new OG.PolyLine(vertices),
-									OG.Util.apply(_style, OG.Constants.DEFAULT_STYLE.EDGE_SHADOW, element.shape.geom.style.map));
+							var isBezier, vertices, _style = {},
+								toTerminalId = $(element).attr("_to"), toShape, toTerminal, edge;
+
+							_style = OG.Util.apply(_style, OG.Constants.DEFAULT_STYLE.EDGE_SHADOW, element.shape.geom.style.map);
+							isBezier = _style["edge-type"].toLowerCase() === OG.Constants.EDGE_TYPE.BEZIER;
+
+							vertices = isBezier ? element.shape.geom.getControlPoints() : element.shape.geom.getVertices();
+							edge = _RENDERER.drawEdge(isBezier ? new OG.BezierCurve(vertices) : new OG.PolyLine(vertices), _style);
+
+							toTerminal = [vertices[vertices.length - 1].x, vertices[vertices.length - 1].y];
 
 							if (toTerminalId) {
 								toShape = getShapeFromTerminal(toTerminalId);
@@ -584,11 +589,16 @@ OG.handler.EventHandler = function (renderer) {
 
 					$(guide.to).draggable({
 						start: function (event) {
-							var vertices = element.shape.geom.getVertices(), _style = {},
-								fromTerminalId = $(element).attr("_from"), fromShape,
-								fromTerminal = [vertices[0].x, vertices[0].y],
-								edge = _RENDERER.drawEdge(new OG.PolyLine(vertices),
-									OG.Util.apply(_style, OG.Constants.DEFAULT_STYLE.EDGE_SHADOW, element.shape.geom.style.map));
+							var isBezier, vertices, _style = {},
+								fromTerminalId = $(element).attr("_from"), fromShape, fromTerminal, edge;
+
+							_style = OG.Util.apply(_style, OG.Constants.DEFAULT_STYLE.EDGE_SHADOW, element.shape.geom.style.map);
+							isBezier = _style["edge-type"].toLowerCase() === OG.Constants.EDGE_TYPE.BEZIER;
+
+							vertices = isBezier ? element.shape.geom.getControlPoints() : element.shape.geom.getVertices();
+							edge = _RENDERER.drawEdge(isBezier ? new OG.BezierCurve(vertices) : new OG.PolyLine(vertices), _style);
+
+							fromTerminal = [vertices[0].x, vertices[0].y];
 
 							if (fromTerminalId) {
 								fromShape = getShapeFromTerminal(fromTerminalId);
@@ -2458,6 +2468,17 @@ OG.handler.EventHandler = function (renderer) {
 											type  : 'radio',
 											radio : 'lineType',
 											value : 'plain',
+											events: {
+												change: function (e) {
+													setLineTypeSelectedShape(e.target.value);
+												}
+											}
+										},
+										'lineType_bezier'  : {
+											name  : 'Curve',
+											type  : 'radio',
+											radio : 'lineType',
+											value : 'bezier',
 											events: {
 												change: function (e) {
 													setLineTypeSelectedShape(e.target.value);

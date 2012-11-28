@@ -28,6 +28,7 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 		removeChild,
 		getREleById,
 		drawGeometry,
+		bezierCurve,
 		adjustEdgeDirection,
 		findFromTerminal,
 		findToTerminal,
@@ -263,6 +264,22 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 			element.attr(_style);
 			break;
 
+		case OG.Constants.GEOM_TYPE.BEZIER_CURVE:
+			pathStr = "";
+			vertices = geometry.getControlPoints();
+			for (i = 0; i < vertices.length; i++) {
+				if (i === 0) {
+					pathStr = "M" + vertices[i].x + " " + vertices[i].y;
+				} else if (i === 1) {
+					pathStr += "C" + vertices[i].x + " " + vertices[i].y;
+				} else {
+					pathStr += " " + vertices[i].x + " " + vertices[i].y;
+				}
+			}
+			element = _PAPER.path(pathStr);
+			element.attr(_style);
+			break;
+
 		case OG.Constants.GEOM_TYPE.COLLECTION:
 			for (i = 0; i < geometry.geometries.length; i++) {
 				// recursive call
@@ -421,6 +438,73 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 		}
 
 		return fromTerminal;
+	};
+
+	/**
+	 * 시작좌표, 끝좌표를 연결하는 베지어 곡선의 콘트롤 포인트를 반환한다.
+	 *
+	 * @param {Number[]} from 시작좌표
+	 * @param {Number[]} to 끝좌표
+	 * @param {String} fromDirection 방향(E,W,S,N)
+	 * @param {String} toDirection 방향(E,W,S,N)
+	 * @return {Number[][]} [시작좌표, 콘트롤포인트1, 콘트롤포인트2, 끝좌표]
+	 */
+	bezierCurve = function (from, to, fromDirection, toDirection) {
+		var coefficient = 100, direction1 = [1, 0], direction2 = [-1, 0],
+			distance, d1, d2, bezierPoints = [];
+
+		distance = Math.sqrt(Math.pow(from[0] - to[0], 2) + Math.pow(from[1] - to[1], 2));
+		if (distance < coefficient) {
+			coefficient = distance / 2;
+		}
+
+		switch (fromDirection.toLowerCase()) {
+		case "e":
+			direction1 = [1, 0];
+			break;
+		case "w":
+			direction1 = [-1, 0];
+			break;
+		case "s":
+			direction1 = [0, 1];
+			break;
+		case "n":
+			direction1 = [0, -1];
+			break;
+		default:
+			direction1 = [1, 0];
+			break;
+		}
+
+		switch (toDirection.toLowerCase()) {
+		case "e":
+			direction2 = [1, 0];
+			break;
+		case "w":
+			direction2 = [-1, 0];
+			break;
+		case "s":
+			direction2 = [0, 1];
+			break;
+		case "n":
+			direction2 = [0, -1];
+			break;
+		default:
+			direction2 = [-1, 0];
+			break;
+		}
+
+		// Calculating the direction vectors d1 and d2
+		d1 = [direction1[0] * coefficient, direction1[1] * coefficient];
+		d2 = [direction2[0] * coefficient, direction2[1] * coefficient];
+
+		// Bezier Curve Poinsts(from, control_point1, control_point2, to)
+		bezierPoints[0] = from;
+		bezierPoints[1] = [from[0] + d1[0], from[1] + d1[1]];
+		bezierPoints[2] = [to[0] + d2[0], to[1] + d2[1]];
+		bezierPoints[3] = to;
+
+		return bezierPoints;
 	};
 
 	/**
@@ -1706,10 +1790,19 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 				}
 				break;
 			case OG.Constants.EDGE_TYPE.BEZIER:
-				// TODO : 베지어곡선
+				edge_direction = _style["edge-direction"].toLowerCase().split(" ");
+
+				// 'c' 인 경우 위치 보정
+				if (edge_direction[0] === "c" || edge_direction[1] === "c") {
+					edge_direction = adjustEdgeDirection(edge_direction[0], edge_direction[1], [from.x, from.y], [to.x, to.y]).split(" ");
+				}
+
+				points = bezierCurve([from.x, from.y], [to.x, to.y], edge_direction[0], edge_direction[1]);
 				break;
 			}
 		} else if (line instanceof OG.geometry.Curve) {
+			points = line.getControlPoints();
+		} else if (line instanceof OG.geometry.BezierCurve) {
 			points = line.getControlPoints();
 		} else {
 			points = vertices;
@@ -1720,8 +1813,14 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 			edge = new OG.Curve(points);
 		} else if (line instanceof OG.geometry.Curve) {
 			edge = new OG.Curve(points);
+		} else if (line instanceof OG.geometry.BezierCurve) {
+			edge = new OG.BezierCurve(points);
 		} else {
-			edge = new OG.PolyLine(points);
+			if (_style["edge-type"].toLowerCase() === OG.Constants.EDGE_TYPE.BEZIER) {
+				edge = new OG.BezierCurve(points);
+			} else {
+				edge = new OG.PolyLine(points);
+			}
 		}
 
 		// draw hidden edge
@@ -2702,11 +2801,13 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 			vertices, isSelf,
 			group, guide, pathStr,
 			_bBoxLine, _fromRect, _toRect, _controlRect, controlNode = [],
-			_size = OG.Constants.GUIDE_RECT_SIZE, _hSize = OG.Util.round(_size / 2),
+			_size = OG.Constants.GUIDE_RECT_SIZE, _hSize = OG.Util.round(_size / 2), _style = {},
 			i;
 
 		if (rElement && geometry) {
-			vertices = geometry.getVertices();
+			OG.Util.apply(_style, geometry.style.map, OG.Constants.DEFAULT_STYLE.EDGE);
+
+			vertices = _style["edge-type"] === OG.Constants.EDGE_TYPE.BEZIER ? geometry.getControlPoints() : geometry.getVertices();
 
 			isSelf = $(element).attr("_from") && $(element).attr("_to") && $(element).attr("_from") === $(element).attr("_to");
 
@@ -2715,13 +2816,26 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 				// bBoxLine remove -> redraw
 				remove(getREleById(rElement.id + OG.Constants.GUIDE_SUFFIX.BBOX));
 				pathStr = "";
-				for (i = 0; i < vertices.length; i++) {
-					if (i === 0) {
-						pathStr = "M" + vertices[i].x + " " + vertices[i].y;
-					} else {
-						pathStr += "L" + vertices[i].x + " " + vertices[i].y;
+				if (_style["edge-type"] === OG.Constants.EDGE_TYPE.BEZIER) {
+					for (i = 0; i < vertices.length; i++) {
+						if (i === 0) {
+							pathStr = "M" + vertices[i].x + " " + vertices[i].y;
+						} else if (i === 1) {
+							pathStr += "C" + vertices[i].x + " " + vertices[i].y;
+						} else {
+							pathStr += " " + vertices[i].x + " " + vertices[i].y;
+						}
+					}
+				} else {
+					for (i = 0; i < vertices.length; i++) {
+						if (i === 0) {
+							pathStr = "M" + vertices[i].x + " " + vertices[i].y;
+						} else {
+							pathStr += "L" + vertices[i].x + " " + vertices[i].y;
+						}
 					}
 				}
+
 				_bBoxLine = _PAPER.path(pathStr);
 				_bBoxLine.attr(OG.Constants.DEFAULT_STYLE.GUIDE_BBOX);
 				add(_bBoxLine, rElement.id + OG.Constants.GUIDE_SUFFIX.BBOX);
@@ -2736,7 +2850,7 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 				_toRect.attr({x: vertices[vertices.length - 1].x - _hSize, y: vertices[vertices.length - 1].y - _hSize});
 
 				// 콘트롤 가이드 Update
-				if (!isSelf) {
+				if (!isSelf && _style["edge-type"] !== OG.Constants.EDGE_TYPE.BEZIER) {
 					for (i = 1; i < vertices.length - 2; i++) {
 						if (vertices[i].x === vertices[i + 1].x) {
 							_controlRect = getREleById(rElement.id + OG.Constants.GUIDE_SUFFIX.CTL_H + i);
@@ -2771,11 +2885,23 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 
 			// 쉐도우 가이드
 			pathStr = "";
-			for (i = 0; i < vertices.length; i++) {
-				if (i === 0) {
-					pathStr = "M" + vertices[i].x + " " + vertices[i].y;
-				} else {
-					pathStr += "L" + vertices[i].x + " " + vertices[i].y;
+			if (_style["edge-type"] === OG.Constants.EDGE_TYPE.BEZIER) {
+				for (i = 0; i < vertices.length; i++) {
+					if (i === 0) {
+						pathStr = "M" + vertices[i].x + " " + vertices[i].y;
+					} else if (i === 1) {
+						pathStr += "C" + vertices[i].x + " " + vertices[i].y;
+					} else {
+						pathStr += " " + vertices[i].x + " " + vertices[i].y;
+					}
+				}
+			} else {
+				for (i = 0; i < vertices.length; i++) {
+					if (i === 0) {
+						pathStr = "M" + vertices[i].x + " " + vertices[i].y;
+					} else {
+						pathStr += "L" + vertices[i].x + " " + vertices[i].y;
+					}
 				}
 			}
 			_bBoxLine = _PAPER.path(pathStr);
@@ -2794,7 +2920,7 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 			add(_toRect, rElement.id + OG.Constants.GUIDE_SUFFIX.TO);
 
 			// 콘트롤 가이드
-			if (!isSelf) {
+			if (!isSelf && _style["edge-type"] !== OG.Constants.EDGE_TYPE.BEZIER) {
 				for (i = 1; i < vertices.length - 2; i++) {
 					if (vertices[i].x === vertices[i + 1].x) {
 						_controlRect = _PAPER.rect(vertices[i].x - _hSize,
@@ -3920,6 +4046,7 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 
 		switch (edgeType) {
 		case OG.Constants.EDGE_TYPE.PLAIN:
+		case OG.Constants.EDGE_TYPE.BEZIER:
 			terminal = isFrom ? findFromTerminal(element, from, to) : findToTerminal(element, from, to);
 			position = [terminal.terminal.position.x, terminal.terminal.position.y];
 			direction = terminal.terminal.direction.toLowerCase();

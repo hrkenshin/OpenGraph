@@ -590,6 +590,5 @@ OG.geometry.Geometry.prototype = {
 	reset: function () {
 		this.boundary = null;
 	}
-}
-;
+};
 OG.geometry.Geometry.prototype.constructor = OG.geometry.Geometry;
