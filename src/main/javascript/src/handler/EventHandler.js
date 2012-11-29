@@ -1400,24 +1400,32 @@ OG.handler.EventHandler = function (renderer) {
 						 * @return {OG.Coordinate}
 						 */
 							getCenterOfEdge = function (element) {
-							var vertices, lineLength, distance = 0, i, intersectArray;
+							var vertices, from, to, lineLength, distance = 0, i, intersectArray;
 
-							// Edge Shape 인 경우 라인의 중간 지점 찾기
-							vertices = element.shape.geom.getVertices();
-							lineLength = element.shape.geom.getLength();
+							if (element.shape.geom.style.get("edge-type") === OG.Constants.EDGE_TYPE.BEZIER) {
+								vertices = element.shape.geom.getControlPoints();
+								from = vertices[0];
+								to = vertices[vertices.length - 1];
+								return new OG.geometry.Coordinate(OG.Util.round((from.x + to.x) / 2), OG.Util.round((from.y + to.y) / 2));
+							} else {
 
-							for (i = 0; i < vertices.length - 1; i++) {
-								distance += vertices[i].distance(vertices[i + 1]);
-								if (distance > lineLength / 2) {
-									intersectArray = element.shape.geom.intersectCircleToLine(
-										vertices[i + 1], distance - lineLength / 2, vertices[i + 1], vertices[i]
-									);
+								// Edge Shape 인 경우 라인의 중간 지점 찾기
+								vertices = element.shape.geom.getVertices();
+								lineLength = element.shape.geom.getLength();
 
-									break;
+								for (i = 0; i < vertices.length - 1; i++) {
+									distance += vertices[i].distance(vertices[i + 1]);
+									if (distance > lineLength / 2) {
+										intersectArray = element.shape.geom.intersectCircleToLine(
+											vertices[i + 1], distance - lineLength / 2, vertices[i + 1], vertices[i]
+										);
+
+										break;
+									}
 								}
-							}
 
-							return intersectArray[0];
+								return intersectArray[0];
+							}
 						},
 						centerOfEdge;
 
