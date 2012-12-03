@@ -78,7 +78,6 @@ OG.shape.IShape.prototype = {
 	clone: function () {
 		throw new OG.NotImplementedException("OG.shape.IShape.clone");
 	}
-}
-;
+};
 OG.shape.IShape.prototype.constructor = OG.shape.IShape;
 OG.IShape = OG.shape.IShape;

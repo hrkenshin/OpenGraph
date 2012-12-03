@@ -4,9 +4,303 @@
  * @class
  * @requires OG.common.*, OG.geometry.*, OG.shape.*
  *
+ * @param {HTMLElement,String} container 컨테이너 DOM element or ID
+ * @param {Number[]} containerSize 컨테이너 Width, Height
+ * @param {String} backgroundColor 캔버스 배경색
+ * @param {String} backgroundImage 캔버스 배경이미지
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
-OG.renderer.IRenderer = function () {
+OG.renderer.IRenderer = function (container, containerSize, backgroundColor, backgroundImage) {
+	this._PAPER = null;
+	this._ROOT_GROUP = null;
+	this._ETC_GROUP = null;
+	this._ID_PREFIX = Math.round(Math.random() * 10000);
+	this._LAST_ID = 0;
+	this._ELE_MAP = new OG.HashMap();
+	this._CANVAS_COLOR = backgroundColor || OG.Constants.CANVAS_BACKGROUND;
+};
+
+OG.renderer.IRenderer.prototype = {
+
+	/**
+	 * ID를 generate 한다.
+	 *
+	 * @return {String} ID
+	 * @private
+	 */
+	_genId: function () {
+		var id = "OG_" + this._ID_PREFIX + "_" + this._LAST_ID;
+		this._LAST_ID++;
+		return id;
+	},
+
+	/**
+	 * 시작좌표, 끝좌표를 연결하는 베지어 곡선의 콘트롤 포인트를 반환한다.
+	 *
+	 * @param {Number[]} from 시작좌표
+	 * @param {Number[]} to 끝좌표
+	 * @param {String} fromDirection 방향(E,W,S,N)
+	 * @param {String} toDirection 방향(E,W,S,N)
+	 * @return {Number[][]} [시작좌표, 콘트롤포인트1, 콘트롤포인트2, 끝좌표]
+	 * @private
+	 */
+	_bezierCurve: function (from, to, fromDirection, toDirection) {
+		var coefficient = 100, direction1 = [1, 0], direction2 = [-1, 0],
+			distance, d1, d2, bezierPoints = [];
+
+		distance = Math.sqrt(Math.pow(from[0] - to[0], 2) + Math.pow(from[1] - to[1], 2));
+		if (distance < coefficient) {
+			coefficient = distance / 2;
+		}
+
+		switch (fromDirection.toLowerCase()) {
+		case "e":
+			direction1 = [1, 0];
+			break;
+		case "w":
+			direction1 = [-1, 0];
+			break;
+		case "s":
+			direction1 = [0, 1];
+			break;
+		case "n":
+			direction1 = [0, -1];
+			break;
+		default:
+			direction1 = [1, 0];
+			break;
+		}
+
+		switch (toDirection.toLowerCase()) {
+		case "e":
+			direction2 = [1, 0];
+			break;
+		case "w":
+			direction2 = [-1, 0];
+			break;
+		case "s":
+			direction2 = [0, 1];
+			break;
+		case "n":
+			direction2 = [0, -1];
+			break;
+		default:
+			direction2 = [-1, 0];
+			break;
+		}
+
+		// Calculating the direction vectors d1 and d2
+		d1 = [direction1[0] * coefficient, direction1[1] * coefficient];
+		d2 = [direction2[0] * coefficient, direction2[1] * coefficient];
+
+		// Bezier Curve Poinsts(from, control_point1, control_point2, to)
+		bezierPoints[0] = from;
+		bezierPoints[1] = [from[0] + d1[0], from[1] + d1[1]];
+		bezierPoints[2] = [to[0] + d2[0], to[1] + d2[1]];
+		bezierPoints[3] = to;
+
+		return bezierPoints;
+	},
+
+	/**
+	 * 한쪽이상 끊긴 경우 Edge Direction 을 보정한다.
+	 *
+	 * @param {String} fromDrct 시작방향
+	 * @param {String} toDrct 끝방향
+	 * @param {Number[]} from 시작위치
+	 * @param {Number[]} to 끝위치
+	 * @return {String} edge-direction 보정된 edge-direction
+	 * @private
+	 */
+	_adjustEdgeDirection: function (fromDrct, toDrct, from, to) {
+		var fromXY = {x: from[0], y: from[1]}, toXY = {x: to[0], y: to[1]};
+		// 한쪽이 끊긴 경우 방향 보정
+		if (fromDrct === "c" && toDrct === "c") {
+			if (fromXY.x <= toXY.x && fromXY.y <= toXY.y) {
+				if (Math.abs(toXY.x - fromXY.x) > Math.abs(toXY.y - fromXY.y)) {
+					fromDrct = "e";
+					toDrct = "w";
+				} else {
+					fromDrct = "s";
+					toDrct = "n";
+				}
+			} else if (fromXY.x <= toXY.x && fromXY.y > toXY.y) {
+				if (Math.abs(toXY.x - fromXY.x) > Math.abs(toXY.y - fromXY.y)) {
+					fromDrct = "e";
+					toDrct = "w";
+				} else {
+					fromDrct = "n";
+					toDrct = "s";
+				}
+			} else if (fromXY.x > toXY.x && fromXY.y <= toXY.y) {
+				if (Math.abs(toXY.x - fromXY.x) > Math.abs(toXY.y - fromXY.y)) {
+					fromDrct = "w";
+					toDrct = "e";
+				} else {
+					fromDrct = "s";
+					toDrct = "n";
+				}
+			} else if (fromXY.x > toXY.x && fromXY.y > toXY.y) {
+				if (Math.abs(toXY.x - fromXY.x) > Math.abs(toXY.y - fromXY.y)) {
+					fromDrct = "w";
+					toDrct = "e";
+				} else {
+					fromDrct = "n";
+					toDrct = "s";
+				}
+			}
+		} else if (fromDrct === "c" && toDrct !== "c") {
+			if (fromXY.x <= toXY.x && fromXY.y <= toXY.y) {
+				if (Math.abs(toXY.x - fromXY.x) > Math.abs(toXY.y - fromXY.y)) {
+					fromDrct = "e";
+				} else {
+					fromDrct = "s";
+				}
+			} else if (fromXY.x <= toXY.x && fromXY.y > toXY.y) {
+				if (Math.abs(toXY.x - fromXY.x) > Math.abs(toXY.y - fromXY.y)) {
+					fromDrct = "e";
+				} else {
+					fromDrct = "n";
+				}
+			} else if (fromXY.x > toXY.x && fromXY.y <= toXY.y) {
+				if (Math.abs(toXY.x - fromXY.x) > Math.abs(toXY.y - fromXY.y)) {
+					fromDrct = "w";
+				} else {
+					fromDrct = "s";
+				}
+			} else if (fromXY.x > toXY.x && fromXY.y > toXY.y) {
+				if (Math.abs(toXY.x - fromXY.x) > Math.abs(toXY.y - fromXY.y)) {
+					fromDrct = "w";
+				} else {
+					fromDrct = "n";
+				}
+			}
+		} else if (fromDrct !== "c" && toDrct === "c") {
+			if (fromXY.x <= toXY.x && fromXY.y <= toXY.y) {
+				if (Math.abs(toXY.x - fromXY.x) > Math.abs(toXY.y - fromXY.y)) {
+					toDrct = "w";
+				} else {
+					toDrct = "n";
+				}
+			} else if (fromXY.x <= toXY.x && fromXY.y > toXY.y) {
+				if (Math.abs(toXY.x - fromXY.x) > Math.abs(toXY.y - fromXY.y)) {
+					toDrct = "w";
+				} else {
+					toDrct = "s";
+				}
+			} else if (fromXY.x > toXY.x && fromXY.y <= toXY.y) {
+				if (Math.abs(toXY.x - fromXY.x) > Math.abs(toXY.y - fromXY.y)) {
+					toDrct = "e";
+				} else {
+					toDrct = "n";
+				}
+			} else if (fromXY.x > toXY.x && fromXY.y > toXY.y) {
+				if (Math.abs(toXY.x - fromXY.x) > Math.abs(toXY.y - fromXY.y)) {
+					toDrct = "e";
+				} else {
+					toDrct = "s";
+				}
+			}
+		}
+
+		return fromDrct + " " + toDrct;
+	},
+
+
+	/**
+	 * 시작, 끝 좌표에 따라 적절한 시작 터미널을 찾아 반환한다.
+	 *
+	 * @param {Element} element Shape 엘리먼트
+	 * @param {Number[]} from 시작자표
+	 * @param {Number[]} to 끝자표
+	 * @return {Element} 터미널 엘리먼트
+	 * @private
+	 */
+	_findFromTerminal: function (element, from, to) {
+		// 적절한 연결 터미널 찾기
+		var fromXY = {x: from[0], y: from[1]}, toXY = {x: to[0], y: to[1]},
+			terminalGroup = this.drawTerminal(element),
+			childTerminals = terminalGroup.terminal.childNodes, fromDrct, fromTerminal, i;
+		if (Math.abs(toXY.x - fromXY.x) > Math.abs(toXY.y - fromXY.y)) {
+			if (toXY.x > fromXY.x) {
+				fromDrct = "e";
+			} else {
+				fromDrct = "w";
+			}
+		} else {
+			if (toXY.y > fromXY.y) {
+				fromDrct = "s";
+			} else {
+				fromDrct = "n";
+			}
+		}
+
+		fromTerminal = childTerminals[0];
+		for (i = 0; i < childTerminals.length; i++) {
+			if (childTerminals[i].terminal && childTerminals[i].terminal.direction.toLowerCase() === fromDrct) {
+				fromTerminal = childTerminals[i];
+				break;
+			}
+		}
+
+		return fromTerminal;
+	},
+
+	/**
+	 * 시작, 끝 좌표에 따라 적절한 끝 터미널을 찾아 반환한다.
+	 *
+	 * @param {Element} element Shape 엘리먼트
+	 * @param {Number[]} from 시작자표
+	 * @param {Number[]} to 끝자표
+	 * @return {Element} 터미널 엘리먼트
+	 * @private
+	 */
+	_findToTerminal: function (element, from, to) {
+		// 적절한 연결 터미널 찾기
+		var fromXY = {x: from[0], y: from[1]}, toXY = {x: to[0], y: to[1]},
+			terminalGroup = this.drawTerminal(element),
+			childTerminals = terminalGroup.terminal.childNodes, toDrct, toTerminal, i;
+		if (Math.abs(toXY.x - fromXY.x) > Math.abs(toXY.y - fromXY.y)) {
+			if (toXY.x > fromXY.x) {
+				toDrct = "w";
+			} else {
+				toDrct = "e";
+			}
+		} else {
+			if (toXY.y > fromXY.y) {
+				toDrct = "n";
+			} else {
+				toDrct = "s";
+			}
+		}
+
+		toTerminal = childTerminals[0];
+		for (i = 0; i < childTerminals.length; i++) {
+			if (childTerminals[i].terminal && childTerminals[i].terminal.direction.toLowerCase() === toDrct) {
+				toTerminal = childTerminals[i];
+				break;
+			}
+		}
+
+		return toTerminal;
+	},
+
+	/**
+	 * 터미널로부터 부모 Shape element 를 찾아 반환한다.
+	 *
+	 * @param {Element,String} terminal 터미널 Element or ID
+	 * @return {Element} Shape element
+	 * @private
+	 */
+	_getShapeFromTerminal: function (terminal) {
+		var terminalId = OG.Util.isElement(terminal) ? terminal.id : terminal;
+		if (terminalId) {
+			return this.getElementById(terminalId.substring(0, terminalId.indexOf(OG.Constants.TERMINAL_SUFFIX.GROUP)));
+		} else {
+			return null;
+		}
+	},
+
 	/**
 	 * Shape 을 캔버스에 위치 및 사이즈 지정하여 드로잉한다.
 	 *
@@ -20,9 +314,9 @@ OG.renderer.IRenderer = function () {
 	 * @param {String} id Element ID 지정
 	 * @return {Element} Group DOM Element with geometry
 	 */
-	this.drawShape = function (position, shape, size, style, id) {
+	drawShape: function (position, shape, size, style, id) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * Geometry 를 캔버스에 드로잉한다.
@@ -31,9 +325,9 @@ OG.renderer.IRenderer = function () {
 	 * @param {OG.geometry.Style,Object} style 스타일
 	 * @return {Element} Group DOM Element with geometry
 	 */
-	this.drawGeom = function (geometry, style, id) {
+	drawGeom: function (geometry, style, id) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * Text 를 캔버스에 위치 및 사이즈 지정하여 드로잉한다.
@@ -49,9 +343,9 @@ OG.renderer.IRenderer = function () {
 	 * @param {String} id Element ID 지정
 	 * @return {Element} DOM Element
 	 */
-	this.drawText = function (position, text, size, style, id) {
+	drawText: function (position, text, size, style, id) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * Image 를 캔버스에 위치 및 사이즈 지정하여 드로잉한다.
@@ -66,9 +360,9 @@ OG.renderer.IRenderer = function () {
 	 * @param {String} id Element ID 지정
 	 * @return {Element} DOM Element
 	 */
-	this.drawImage = function (position, imgSrc, size, style, id) {
+	drawImage: function (position, imgSrc, size, style, id) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * 라인을 캔버스에 드로잉한다.
@@ -79,9 +373,9 @@ OG.renderer.IRenderer = function () {
 	 * @param {Boolean} isSelf 셀프 연결 여부
 	 * @return {Element} Group DOM Element with geometry
 	 */
-	this.drawEdge = function (line, style, id, isSelf) {
+	drawEdge: function (line, style, id, isSelf) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * Shape 의 Label 을 캔버스에 위치 및 사이즈 지정하여 드로잉한다.
@@ -91,9 +385,9 @@ OG.renderer.IRenderer = function () {
 	 * @param {Object} style 스타일
 	 * @return {Element} DOM Element
 	 */
-	this.drawLabel = function (shapeElement, text, style) {
+	drawLabel: function (shapeElement, text, style) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * Edge 의 from, to Label 을 캔버스에 위치 및 사이즈 지정하여 드로잉한다.
@@ -103,9 +397,9 @@ OG.renderer.IRenderer = function () {
 	 * @param {String} type 유형(FROM or TO)
 	 * @return {Element} DOM Element
 	 */
-	this.drawEdgeLabel = function (shapeElement, text, type) {
+	drawEdgeLabel: function (shapeElement, text, type) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * Element 에 저장된 geom, angle, image, text 정보로 shape 을 redraw 한다.
@@ -113,9 +407,9 @@ OG.renderer.IRenderer = function () {
 	 * @param {Element} element Shape 엘리먼트
 	 * @param {String[]} excludeEdgeId redraw 제외할 Edge ID
 	 */
-	this.redrawShape = function (element, excludeEdgeId) {
+	redrawShape: function (element, excludeEdgeId) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * Edge Element 에 저장된 geom, style 정보로 Edge 를 redraw 한다.
@@ -123,9 +417,9 @@ OG.renderer.IRenderer = function () {
 	 *
 	 * @param {Element} edgeElement Edge Shape 엘리먼트
 	 */
-	this.redrawEdge = function (edgeElement) {
+	redrawEdge: function (edgeElement) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * Shape 의 연결된 Edge 를 redraw 한다.(이동 또는 리사이즈시)
@@ -133,9 +427,9 @@ OG.renderer.IRenderer = function () {
 	 * @param {Element} element
 	 * @param {String[]} excludeEdgeId redraw 제외할 Edge ID
 	 */
-	this.redrawConnectedEdge = function (element, excludeEdgeId) {
+	redrawConnectedEdge: function (element, excludeEdgeId) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * 두개의 터미널을 연결하고, 속성정보에 추가한다.
@@ -147,27 +441,27 @@ OG.renderer.IRenderer = function () {
 	 * @param {String} label Label
 	 * @return {Element} 연결된 Edge 엘리먼트
 	 */
-	this.connect = function (from, to, edge, style, label) {
+	connect: function (from, to, edge, style, label) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * 연결속성정보를 삭제한다. Edge 인 경우는 라인만 삭제하고, 일반 Shape 인 경우는 연결된 모든 Edge 를 삭제한다.
 	 *
 	 * @param {Element} element
 	 */
-	this.disconnect = function (element) {
+	disconnect: function (element) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * ID에 해당하는 Element 의 Edge 연결시 Drop Over 가이드를 드로잉한다.
 	 *
 	 * @param {Element,String} element Element 또는 ID
 	 */
-	this.drawDropOverGuide = function (element) {
+	drawDropOverGuide: function (element) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * ID에 해당하는 Element 의 Move & Resize 용 가이드를 드로잉한다.
@@ -175,25 +469,25 @@ OG.renderer.IRenderer = function () {
 	 * @param {Element,String} element Element 또는 ID
 	 * @return {Object}
 	 */
-	this.drawGuide = function (element) {
+	drawGuide: function (element) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * ID에 해당하는 Element 의 Move & Resize 용 가이드를 제거한다.
 	 *
 	 * @param {Element,String} element Element 또는 ID
 	 */
-	this.removeGuide = function (element) {
+	removeGuide: function (element) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * 모든 Move & Resize 용 가이드를 제거한다.
 	 */
-	this.removeAllGuide = function () {
+	removeAllGuide: function () {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * ID에 해당하는 Edge Element 의 Move & Resize 용 가이드를 드로잉한다.
@@ -201,9 +495,9 @@ OG.renderer.IRenderer = function () {
 	 * @param {Element,String} element Element 또는 ID
 	 * @return {Object}
 	 */
-	this.drawEdgeGuide = function (element) {
+	drawEdgeGuide: function (element) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * Rectangle 모양의 마우스 드래그 선택 박스 영역을 드로잉한다.
@@ -213,18 +507,18 @@ OG.renderer.IRenderer = function () {
 	 * @param {OG.geometry.Style,Object} style 스타일
 	 * @return {Element} DOM Element
 	 */
-	this.drawRubberBand = function (position, size, style) {
+	drawRubberBand: function (position, size, style) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * Rectangle 모양의 마우스 드래그 선택 박스 영역을 제거한다.
 	 *
 	 * @param {Element} root first, rubberBand 정보를 저장한 엘리먼트
 	 */
-	this.removeRubberBand = function (root) {
+	removeRubberBand: function (root) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * Edge 연결용 터미널을 드로잉한다.
@@ -233,25 +527,25 @@ OG.renderer.IRenderer = function () {
 	 * @param {String} terminalType 터미널 연결 유형(IN or OUT or INOUT)
 	 * @return {Element} terminal group element
 	 */
-	this.drawTerminal = function (element, terminalType) {
+	drawTerminal: function (element, terminalType) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 *  Edge 연결용 터미널을 remove 한다.
 	 *
 	 * @param {Element} element DOM Element
 	 */
-	this.removeTerminal = function (element) {
+	removeTerminal: function (element) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 *  모든 Edge 연결용 터미널을 remove 한다.
 	 */
-	this.removeAllTerminal = function () {
+	removeAllTerminal: function () {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * ID에 해당하는 Element 의 Collapse 가이드를 드로잉한다.
@@ -259,18 +553,18 @@ OG.renderer.IRenderer = function () {
 	 * @param {Element,String} element Element 또는 ID
 	 * @return {Element}
 	 */
-	this.drawCollapseGuide = function (element) {
+	drawCollapseGuide: function (element) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * ID에 해당하는 Element 의 Collapse 가이드를 제거한다.
 	 *
 	 * @param {Element} element
 	 */
-	this.removeCollapseGuide = function (element) {
+	removeCollapseGuide: function (element) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * 주어진 Shape 들을 그룹핑한다.
@@ -278,9 +572,9 @@ OG.renderer.IRenderer = function () {
 	 * @param {Element[]} elements
 	 * @return {Element} Group Shape Element
 	 */
-	this.group = function (elements) {
+	group: function (elements) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * 주어진 그룹들을 그룹해제한다.
@@ -288,9 +582,9 @@ OG.renderer.IRenderer = function () {
 	 * @param {Element[]} groupElements
 	 * @return {Element[]} ungrouped Elements
 	 */
-	this.ungroup = function (groupElements) {
+	ungroup: function (groupElements) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * 주어진 Shape 들을 그룹에 추가한다.
@@ -298,79 +592,79 @@ OG.renderer.IRenderer = function () {
 	 * @param {Element} groupElement
 	 * @param {Element[]} elements
 	 */
-	this.addToGroup = function (groupElement, elements) {
+	addToGroup: function (groupElement, elements) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * 주어진 Shape 이 그룹인 경우 collapse 한다.
 	 *
 	 * @param {Element} element
 	 */
-	this.collapse = function (element) {
+	collapse: function (element) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * 주어진 Shape 이 그룹인 경우 expand 한다.
 	 *
 	 * @param {Element} element
 	 */
-	this.expand = function (element) {
+	expand: function (element) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * 드로잉된 모든 오브젝트를 클리어한다.
 	 */
-	this.clear = function () {
+	clear: function () {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * Shape 을 캔버스에서 관련된 모두를 삭제한다.
 	 *
 	 * @param {Element,String} element Element 또는 ID
 	 */
-	this.removeShape = function (element) {
+	removeShape: function (element) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * ID에 해당하는 Element 를 캔버스에서 제거한다.
 	 *
 	 * @param {Element,String} element Element 또는 ID
 	 */
-	this.remove = function (element) {
+	remove: function (element) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * 하위 엘리먼트만 제거한다.
 	 *
 	 * @param {Element,String} element Element 또는 ID
 	 */
-	this.removeChild = function (element) {
+	removeChild: function (element) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * 랜더러 캔버스 Root Element 를 반환한다.
 	 *
 	 * @return {Element} Element
 	 */
-	this.getRootElement = function () {
+	getRootElement: function () {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * 랜더러 캔버스 Root Group Element 를 반환한다.
 	 *
 	 * @return {Element} Element
 	 */
-	this.getRootGroup = function () {
-		throw new OG.NotImplementedException();
-	};
+	getRootGroup: function () {
+		return this._ROOT_GROUP.node;
+	},
 
 	/**
 	 * 주어진 지점을 포함하는 Top Element 를 반환한다.
@@ -378,9 +672,9 @@ OG.renderer.IRenderer = function () {
 	 * @param {Number[]} position 위치 좌표
 	 * @return {Element} Element
 	 */
-	this.getElementByPoint = function (position) {
+	getElementByPoint: function (position) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * 주어진 Boundary Box 영역에 포함되는 Shape(GEOM, TEXT, IMAGE) Element 를 반환한다.
@@ -388,9 +682,16 @@ OG.renderer.IRenderer = function () {
 	 * @param {OG.geometry.Envelope} envelope Boundary Box 영역
 	 * @return {Element[]} Element
 	 */
-	this.getElementsByBBox = function (envelope) {
-		throw new OG.NotImplementedException();
-	};
+	getElementsByBBox: function (envelope) {
+		var elements = [];
+		$(this.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "]").each(function (index, element) {
+			if (element.shape.geom && envelope.isContainsAll(element.shape.geom.getVertices())) {
+				elements.push(element);
+			}
+		});
+
+		return elements;
+	},
 
 	/**
 	 * 엘리먼트에 속성값을 설정한다.
@@ -398,9 +699,9 @@ OG.renderer.IRenderer = function () {
 	 * @param {Element,String} element Element 또는 ID
 	 * @param {Object} attribute 속성값
 	 */
-	this.setAttr = function (element, attribute) {
+	setAttr: function (element, attribute) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * 엘리먼트 속성값을 반환한다.
@@ -409,9 +710,9 @@ OG.renderer.IRenderer = function () {
 	 * @param {String} attrName 속성이름
 	 * @return {Object} attribute 속성값
 	 */
-	this.getAttr = function (element, attrName) {
+	getAttr: function (element, attrName) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * Shape 의 스타일을 변경한다.
@@ -419,45 +720,45 @@ OG.renderer.IRenderer = function () {
 	 * @param {Element,String} element Element 또는 ID
 	 * @param {Object} style 스타일
 	 */
-	this.setShapeStyle = function (element, style) {
+	setShapeStyle: function (element, style) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * ID에 해당하는 Element 를 최상단 레이어로 이동한다.
 	 *
 	 * @param {Element,String} element Element 또는 ID
 	 */
-	this.toFront = function (element) {
+	toFront: function (element) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * ID에 해당하는 Element 를 최하단 레이어로 이동한다.
 	 *
 	 * @param {Element,String} element Element 또는 ID
 	 */
-	this.toBack = function (element) {
+	toBack: function (element) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * 랜더러 캔버스의 사이즈(Width, Height)를 반환한다.
 	 *
 	 * @return {Number[]} Canvas Width, Height
 	 */
-	this.getCanvasSize = function () {
+	getCanvasSize: function () {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * 랜더러 캔버스의 사이즈(Width, Height)를 변경한다.
 	 *
 	 * @param {Number[]} size Canvas Width, Height
 	 */
-	this.setCanvasSize = function (size) {
+	setCanvasSize: function (size) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * 랜더러 캔버스의 사이즈(Width, Height)를 실제 존재하는 Shape 의 영역에 맞게 변경한다.
@@ -465,9 +766,9 @@ OG.renderer.IRenderer = function () {
 	 * @param {Number[]} minSize Canvas 최소 Width, Height
 	 * @param {Boolean} fitScale 주어진 minSize 에 맞게 fit 여부(Default:false)
 	 */
-	this.fitCanvasSize = function (minSize, fitScale) {
+	fitCanvasSize: function (minSize, fitScale) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * 새로운 View Box 영역을 설정한다. (ZoomIn & ZoomOut 가능)
@@ -476,45 +777,45 @@ OG.renderer.IRenderer = function () {
 	 * @param {Number[]} size Canvas Width, Height
 	 * @param {Boolean} isFit Fit 여부
 	 */
-	this.setViewBox = function (position, size, isFit) {
+	setViewBox: function (position, size, isFit) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * Scale 을 반환한다. (리얼 사이즈 : Scale = 1)
 	 *
 	 * @param {Number} scale 스케일값
 	 */
-	this.getScale = function (scale) {
+	getScale: function (scale) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * Scale 을 설정한다. (리얼 사이즈 : Scale = 1)
 	 *
 	 * @param {Number} scale 스케일값
 	 */
-	this.setScale = function (scale) {
+	setScale: function (scale) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * ID에 해당하는 Element 를 캔버스에서 show 한다.
 	 *
 	 * @param {Element,String} element Element 또는 ID
 	 */
-	this.show = function (element) {
+	show: function (element) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * ID에 해당하는 Element 를 캔버스에서 hide 한다.
 	 *
 	 * @param {Element,String} element Element 또는 ID
 	 */
-	this.hide = function (element) {
+	hide: function (element) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * Source Element 를 Target Element 아래에 append 한다.
@@ -523,9 +824,9 @@ OG.renderer.IRenderer = function () {
 	 * @param {Element,String} targetElement Element 또는 ID
 	 * @return {Element} Source Element
 	 */
-	this.appendChild = function (srcElement, targetElement) {
+	appendChild: function (srcElement, targetElement) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * Source Element 를 Target Element 이후에 insert 한다.
@@ -534,9 +835,9 @@ OG.renderer.IRenderer = function () {
 	 * @param {Element,String} targetElement Element 또는 ID
 	 * @return {Element} Source Element
 	 */
-	this.insertAfter = function (srcElement, targetElement) {
+	insertAfter: function (srcElement, targetElement) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * Source Element 를 Target Element 이전에 insert 한다.
@@ -545,9 +846,9 @@ OG.renderer.IRenderer = function () {
 	 * @param {Element,String} targetElement Element 또는 ID
 	 * @return {Element} Source Element
 	 */
-	this.insertBefore = function (srcElement, targetElement) {
+	insertBefore: function (srcElement, targetElement) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * 해당 Element 를 가로, 세로 Offset 만큼 이동한다.
@@ -556,9 +857,9 @@ OG.renderer.IRenderer = function () {
 	 * @param {Number[]} offset [가로, 세로]
 	 * @return {Element} Element
 	 */
-	this.move = function (element, offset) {
+	move: function (element, offset) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * 주어진 중심좌표로 해당 Element 를 이동한다.
@@ -567,9 +868,9 @@ OG.renderer.IRenderer = function () {
 	 * @param {Number[]} position [x, y]
 	 * @return {Element} Element
 	 */
-	this.moveCentroid = function (element, position) {
+	moveCentroid: function (element, position) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * 중심 좌표를 기준으로 주어진 각도 만큼 회전한다.
@@ -578,9 +879,9 @@ OG.renderer.IRenderer = function () {
 	 * @param {Number} angle 각도
 	 * @return {Element} Element
 	 */
-	this.rotate = function (element, angle) {
+	rotate: function (element, angle) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * 상, 하, 좌, 우 외곽선을 이동한 만큼 리사이즈 한다.
@@ -589,9 +890,9 @@ OG.renderer.IRenderer = function () {
 	 * @param {Number[]} offset [상, 하, 좌, 우] 각 방향으로 + 값
 	 * @return {Element} Element
 	 */
-	this.resize = function (element, offset) {
+	resize: function (element, offset) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * 중심좌표는 고정한 채 Bounding Box 의 width, height 를 리사이즈 한다.
@@ -600,9 +901,9 @@ OG.renderer.IRenderer = function () {
 	 * @param {Number[]} size [Width, Height]
 	 * @return {Element} Element
 	 */
-	this.resizeBox = function (element, size) {
+	resizeBox: function (element, size) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * Edge 유형에 따라 Shape 과의 연결 지점을 찾아 반환한다.
@@ -614,9 +915,82 @@ OG.renderer.IRenderer = function () {
 	 * @param {Boolean} 시작 연결지점 여부
 	 * @return {Object} {position, direction}
 	 */
-	this.intersectionEdge = function (edgeType, element, from, to, isFrom) {
-		throw new OG.NotImplementedException();
-	};
+	intersectionEdge: function (edgeType, element, from, to, isFrom) {
+		var terminal, position, direction, intersectPoints, i, minDistance = Number.MAX_VALUE, distance,
+			collapsedParents, collapsedEnvelope, collapsedUpperLeft, collapsedGeom, collapsedPosition;
+
+		// element 가 collapsed 인지 체크
+		if (element) {
+			collapsedParents = $(element).parents("[_collapsed=true]");
+			if (collapsedParents.length !== 0) {
+				// collapsed 인 경우
+				collapsedEnvelope = collapsedParents[collapsedParents.length - 1].shape.geom.getBoundary();
+				collapsedUpperLeft = collapsedEnvelope.getUpperLeft();
+				collapsedGeom = new OG.geometry.Rectangle(
+					collapsedUpperLeft, OG.Constants.COLLAPSE_SIZE * 3, OG.Constants.COLLAPSE_SIZE * 2);
+			}
+		}
+
+		switch (edgeType) {
+		case OG.Constants.EDGE_TYPE.PLAIN:
+		case OG.Constants.EDGE_TYPE.BEZIER:
+			terminal = isFrom ? this._findFromTerminal(element, from, to) : this._findToTerminal(element, from, to);
+			position = [terminal.terminal.position.x, terminal.terminal.position.y];
+			direction = terminal.terminal.direction.toLowerCase();
+
+			if (collapsedGeom) {
+				switch (terminal.terminal.direction) {
+				case OG.Constants.TERMINAL_TYPE.E:
+					collapsedPosition = collapsedGeom.getBoundary().getRightCenter();
+					break;
+				case OG.Constants.TERMINAL_TYPE.W:
+					collapsedPosition = collapsedGeom.getBoundary().getLeftCenter();
+					break;
+				case OG.Constants.TERMINAL_TYPE.S:
+					collapsedPosition = collapsedGeom.getBoundary().getLowerCenter();
+					break;
+				case OG.Constants.TERMINAL_TYPE.N:
+					collapsedPosition = collapsedGeom.getBoundary().getUpperCenter();
+					break;
+				}
+				if (collapsedPosition) {
+					position = [collapsedPosition.x, collapsedPosition.y];
+				}
+			}
+
+			break;
+		case OG.Constants.EDGE_TYPE.STRAIGHT:
+			if (collapsedGeom) {
+				collapsedPosition = collapsedGeom.getBoundary().getCentroid();
+				if (isFrom === true) {
+					from = [collapsedPosition.x, collapsedPosition.y];
+				} else {
+					to = [collapsedPosition.x, collapsedPosition.y];
+				}
+				intersectPoints = collapsedGeom.intersectToLine([from, to]);
+			} else {
+				intersectPoints = element.shape.geom.intersectToLine([from, to]);
+			}
+			position = isFrom ? from : to;
+			direction = "c";
+			for (i = 0; i < intersectPoints.length; i++) {
+				distance = intersectPoints[i].distance(isFrom ? to : from);
+				if (distance < minDistance) {
+					minDistance = distance;
+					position = [intersectPoints[i].x, intersectPoints[i].y];
+					direction = "c";
+				}
+			}
+			break;
+		default:
+			break;
+		}
+
+		return {
+			position : position,
+			direction: direction
+		};
+	},
 
 	/**
 	 * 노드 Element 를 복사한다.
@@ -624,9 +998,9 @@ OG.renderer.IRenderer = function () {
 	 * @param {Element,String} element Element 또는 ID
 	 * @return {Element} Element
 	 */
-	this.clone = function (element) {
+	clone: function (element) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * ID로 Node Element 를 반환한다.
@@ -634,9 +1008,9 @@ OG.renderer.IRenderer = function () {
 	 * @param {String} id
 	 * @return {Element} Element
 	 */
-	this.getElementById = function (id) {
+	getElementById: function (id) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * Shape 타입에 해당하는 Node Element 들을 반환한다.
@@ -645,9 +1019,18 @@ OG.renderer.IRenderer = function () {
 	 * @param {String} excludeType 제외 할 타입
 	 * @return {Element[]} Element's Array
 	 */
-	this.getElementsByType = function (shapeType, excludeType) {
-		throw new OG.NotImplementedException();
-	};
+	getElementsByType: function (shapeType, excludeType) {
+		var root = this.getRootGroup();
+		if (shapeType && excludeType) {
+			return $(root).find("[_type=SHAPE][_shape=" + shapeType + "][_shape!=" + excludeType + "]");
+		} else if (shapeType) {
+			return $(root).find("[_type=SHAPE][_shape=" + shapeType + "]");
+		} else if (excludeType) {
+			return $(root).find("[_type=SHAPE][_shape!=" + excludeType + "]");
+		} else {
+			return $(root).find("[_type=SHAPE]");
+		}
+	},
 
 	/**
 	 * 해당 엘리먼트의 BoundingBox 영역 정보를 반환한다.
@@ -655,36 +1038,70 @@ OG.renderer.IRenderer = function () {
 	 * @param {Element,String} element
 	 * @return {Object} {width, height, x, y, x2, y2}
 	 */
-	this.getBBox = function (element) {
+	getBBox: function (element) {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * 부모노드기준으로 캔버스 루트 엘리먼트의 BoundingBox 영역 정보를 반환한다.
 	 *
 	 * @return {Object} {width, height, x, y, x2, y2}
 	 */
-	this.getRootBBox = function () {
+	getRootBBox: function () {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * 부모노드기준으로 캔버스 루트 엘리먼트의 실제 Shape 이 차지하는 BoundingBox 영역 정보를 반환한다.
 	 *
 	 * @return {Object} {width, height, x, y, x2, y2}
 	 */
-	this.getRealRootBBox = function () {
-		throw new OG.NotImplementedException();
-	};
+	getRealRootBBox: function () {
+		var minX = Number.MAX_VALUE, minY = Number.MAX_VALUE, maxX = Number.MIN_VALUE, maxY = Number.MIN_VALUE,
+			shapeElements = this.getElementsByType(), shape, envelope, upperLeft, lowerRight, i,
+			rootBBox = {
+				width : 0,
+				height: 0,
+				x     : 0,
+				y     : 0,
+				x2    : 0,
+				y2    : 0
+			};
+
+		for (i = 0; i < shapeElements.length; i++) {
+			shape = shapeElements[i].shape;
+			if (shape && shape.geom) {
+				envelope = shape.geom.getBoundary();
+				upperLeft = envelope.getUpperLeft();
+				lowerRight = envelope.getLowerRight();
+
+				minX = minX > upperLeft.x ? upperLeft.x : minX;
+				minY = minY > upperLeft.y ? upperLeft.y : minY;
+				maxX = maxX < lowerRight.x ? lowerRight.x : maxX;
+				maxY = maxY < lowerRight.y ? lowerRight.y : maxY;
+
+				rootBBox = {
+					width : maxX - minX,
+					height: maxY - minY,
+					x     : minX,
+					y     : minY,
+					x2    : maxX,
+					y2    : maxY
+				};
+			}
+		}
+
+		return rootBBox;
+	},
 
 	/**
 	 * 캔버스의 컨테이너 DOM element 를 반환한다.
 	 *
 	 * @return {Element} 컨테이너
 	 */
-	this.getContainer = function () {
+	getContainer: function () {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 
 	/**
@@ -692,18 +1109,18 @@ OG.renderer.IRenderer = function () {
 	 *
 	 * @return {Boolean} svg 여부
 	 */
-	this.isSVG = function () {
+	isSVG: function () {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * VML 인지 여부를 반환한다.
 	 *
 	 * @return {Boolean} vml 여부
 	 */
-	this.isVML = function () {
+	isVML: function () {
 		throw new OG.NotImplementedException();
-	};
+	},
 
 	/**
 	 * 연결된 이전 Edge Element 들을 반환한다.
@@ -711,9 +1128,23 @@ OG.renderer.IRenderer = function () {
 	 * @param {Element,String} element Element 또는 ID
 	 * @return {Element[]} Previous Element's Array
 	 */
-	this.getPrevEdges = function (element) {
-		throw new OG.NotImplementedException();
-	};
+	getPrevEdges: function (element) {
+		var prevEdgeIds = $(element).attr('_fromedge'),
+			edgeArray = [],
+			edgeIds, edge, i;
+
+		if (prevEdgeIds) {
+			edgeIds = prevEdgeIds.split(',');
+			for (i = 0; i < edgeIds.length; i++) {
+				edge = this.getElementById(edgeIds[i]);
+				if (edge) {
+					edgeArray.push(edge);
+				}
+			}
+		}
+
+		return edgeArray;
+	},
 
 	/**
 	 * 연결된 이후 Edge Element 들을 반환한다.
@@ -721,9 +1152,23 @@ OG.renderer.IRenderer = function () {
 	 * @param {Element,String} element Element 또는 ID
 	 * @return {Element[]} Previous Element's Array
 	 */
-	this.getNextEdges = function (element) {
-		throw new OG.NotImplementedException();
-	};
+	getNextEdges: function (element) {
+		var nextEdgeIds = $(element).attr('_toedge'),
+			edgeArray = [],
+			edgeIds, edge, i;
+
+		if (nextEdgeIds) {
+			edgeIds = nextEdgeIds.split(',');
+			for (i = 0; i < edgeIds.length; i++) {
+				edge = this.getElementById(edgeIds[i]);
+				if (edge) {
+					edgeArray.push(edge);
+				}
+			}
+		}
+
+		return edgeArray;
+	},
 
 	/**
 	 * 연결된 이전 노드 Element 들을 반환한다.
@@ -731,9 +1176,24 @@ OG.renderer.IRenderer = function () {
 	 * @param {Element,String} element Element 또는 ID
 	 * @return {Element[]} Previous Element's Array
 	 */
-	this.getPrevShapes = function (element) {
-		throw new OG.NotImplementedException();
-	};
+	getPrevShapes: function (element) {
+		var prevEdges = this.getPrevEdges(element),
+			shapeArray = [],
+			prevShapeId, shape, i;
+
+		for (i = 0; i < prevEdges.length; i++) {
+			prevShapeId = $(prevEdges[i]).attr('_from');
+			if (prevShapeId) {
+				prevShapeId = prevShapeId.substring(0, prevShapeId.indexOf(OG.Constants.TERMINAL_SUFFIX.GROUP));
+				shape = this.getElementById(prevShapeId);
+				if (shape) {
+					shapeArray.push(shape);
+				}
+			}
+		}
+
+		return shapeArray;
+	},
 
 	/**
 	 * 연결된 이전 노드 Element ID들을 반환한다.
@@ -741,9 +1201,21 @@ OG.renderer.IRenderer = function () {
 	 * @param {Element,String} element Element 또는 ID
 	 * @return {String[]} Previous Element Id's Array
 	 */
-	this.getPrevShapeIds = function (element) {
-		throw new OG.NotImplementedException();
-	};
+	getPrevShapeIds: function (element) {
+		var prevEdges = this.getPrevEdges(element),
+			shapeArray = [],
+			prevShapeId, i;
+
+		for (i = 0; i < prevEdges.length; i++) {
+			prevShapeId = $(prevEdges[i]).attr('_from');
+			if (prevShapeId) {
+				prevShapeId = prevShapeId.substring(0, prevShapeId.indexOf(OG.Constants.TERMINAL_SUFFIX.GROUP));
+				shapeArray.push(prevShapeId);
+			}
+		}
+
+		return shapeArray;
+	},
 
 	/**
 	 * 연결된 이후 노드 Element 들을 반환한다.
@@ -751,9 +1223,24 @@ OG.renderer.IRenderer = function () {
 	 * @param {Element,String} element Element 또는 ID
 	 * @return {Element[]} Previous Element's Array
 	 */
-	this.getNextShapes = function (element) {
-		throw new OG.NotImplementedException();
-	};
+	getNextShapes: function (element) {
+		var nextEdges = this.getNextEdges(element),
+			shapeArray = [],
+			nextShapeId, shape, i;
+
+		for (i = 0; i < nextEdges.length; i++) {
+			nextShapeId = $(nextEdges[i]).attr('_to');
+			if (nextShapeId) {
+				nextShapeId = nextShapeId.substring(0, nextShapeId.indexOf(OG.Constants.TERMINAL_SUFFIX.GROUP));
+				shape = this.getElementById(nextShapeId);
+				if (shape) {
+					shapeArray.push(shape);
+				}
+			}
+		}
+
+		return shapeArray;
+	},
 
 	/**
 	 * 연결된 이후 노드 Element ID들을 반환한다.
@@ -761,9 +1248,20 @@ OG.renderer.IRenderer = function () {
 	 * @param {Element,String} element Element 또는 ID
 	 * @return {String[]} Previous Element Id's Array
 	 */
-	this.getNextShapeIds = function (element) {
-		throw new OG.NotImplementedException();
-	};
+	getNextShapeIds: function (element) {
+		var nextEdges = this.getNextEdges(element),
+			shapeArray = [],
+			nextShapeId, i;
+
+		for (i = 0; i < nextEdges.length; i++) {
+			nextShapeId = $(nextEdges[i]).attr('_to');
+			if (nextShapeId) {
+				nextShapeId = nextShapeId.substring(0, nextShapeId.indexOf(OG.Constants.TERMINAL_SUFFIX.GROUP));
+				shapeArray.push(nextShapeId);
+			}
+		}
+
+		return shapeArray;
+	}
 };
-OG.renderer.IRenderer.prototype = new OG.renderer.IRenderer();
 OG.renderer.IRenderer.prototype.constructor = OG.renderer.IRenderer;
