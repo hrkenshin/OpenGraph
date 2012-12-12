@@ -2,14 +2,25 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko" lang="ko">
 <head>
-    <title>OpenGraph BPMN Modeler Example</title>
+    <title>BPMN Modeler Example</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8">
+
     <link rel="stylesheet" type="text/css" href="../../resources/opengraph/lib/contextmenu/jquery.contextMenu.css"/>
-    <script type="text/javascript" src="../../resources/opengraph/OpenGraph-0.1-SNAPSHOT-All.js"></script>
+
+    <!-- included jquery, jquery-ui, jquery.contextmenu, opengraph -->
+    <!--<script type="text/javascript" src="../resources/opengraph/OpenGraph-0.1-SNAPSHOT-All.js"></script>-->
+
+    <script type="text/javascript" src="../../resources/opengraph/lib/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="../../resources/opengraph/lib/ui-lightness/jquery-ui-1.8.19.custom.min.js"></script>
+    <script type="text/javascript" src="../../resources/opengraph/lib/contextmenu/jquery.contextMenu-min.js"></script>
+    <script type="text/javascript" src="../../resources/opengraph/OpenGraph-0.1-SNAPSHOT-min.js"></script>
+
+    <!-- jquery.layout -->
     <link rel="stylesheet" type="text/css" href="./css/layout-default.css"/>
     <link rel="stylesheet" type="text/css" href="./css/jquery-ui-1.8.19.custom.css"/>
     <script type="text/javascript" src="./js/jquery.layout.min-1.2.0.js"></script>
+
     <style type="text/css">
         .ui-layout-center {
             padding: 0;
@@ -49,6 +60,7 @@
 
     <script type="text/javascript">
         var canvas = null, opengraphJSON, ele1;
+        OG.Constants.DEFAULT_STYLE.EDGE["edge-type"] = "bezier";
         $(document).ready(function () {
             // layout
             $('body').layout({
