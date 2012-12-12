@@ -2503,9 +2503,10 @@ OG.renderer.RaphaelRenderer.prototype.removeGuide = function (element) {
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.removeAllGuide = function () {
-	$(this.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (index, item) {
+	var me = this;
+	$(me.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (index, item) {
 		if (OG.Util.isElement(item) && item.id) {
-			this.removeGuide(item);
+			me.removeGuide(item);
 		}
 	});
 };
