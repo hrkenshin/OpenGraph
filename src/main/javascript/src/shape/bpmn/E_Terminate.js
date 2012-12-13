@@ -9,8 +9,9 @@
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.E_Terminate = function (label) {
+	OG.shape.bpmn.E_Terminate.superclass.call(this, label);
+
 	this.SHAPE_ID = 'OG.shape.bpmn.E_Terminate';
-	this.label = label;
 };
 OG.shape.bpmn.E_Terminate.prototype = new OG.shape.bpmn.E_End();
 OG.shape.bpmn.E_Terminate.superclass = OG.shape.bpmn.E_End;

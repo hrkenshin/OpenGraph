@@ -9,6 +9,8 @@
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.G_Parallel = function (label) {
+	OG.shape.bpmn.G_Parallel.superclass.call(this);
+
 	this.SHAPE_ID = 'OG.shape.bpmn.G_Parallel';
 	this.label = label;
 };

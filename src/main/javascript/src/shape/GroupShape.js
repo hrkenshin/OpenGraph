@@ -9,9 +9,29 @@
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.GroupShape = function (label) {
+	OG.shape.GroupShape.superclass.call(this);
+
 	this.TYPE = OG.Constants.SHAPE_TYPE.GROUP;
 	this.SHAPE_ID = 'OG.shape.GroupShape';
 	this.label = label;
+
+	this.MOVABLE = OG.Constants.MOVABLE && OG.Constants.MOVABLE_GROUP;
+	this.RESIZABLE = OG.Constants.RESIZABLE && OG.Constants.RESIZABLE_GROUP;
+	this.LABEL_EDITABLE = OG.Constants.LABEL_EDITABLE && OG.Constants.LABEL_EDITABLE_GROUP;
+	this.CONNECTABLE = false;
+	this.SELF_CONNECTABLE = false;
+
+	/**
+	 * 그룹핑 가능여부
+	 * @type Boolean
+	 */
+	this.GROUP_DROPABLE = OG.Constants.GROUP_DROPABLE;
+
+	/**
+	 * 최소화 가능여부
+	 * @type Boolean
+	 */
+	this.GROUP_COLLAPSIBLE = OG.Constants.GROUP_COLLAPSIBLE;
 };
 OG.shape.GroupShape.prototype = new OG.shape.IShape();
 OG.shape.GroupShape.superclass = OG.shape.IShape;
@@ -35,16 +55,6 @@ OG.shape.GroupShape.prototype.createShape = function () {
 	});
 
 	return this.geom;
-};
-
-/**
- * Shape 간의 연결을 위한 Terminal 을 반환한다.
- *
- * @return {OG.Terminal[]} Terminal
- * @override
- */
-OG.shape.GroupShape.prototype.createTerminal = function () {
-	return [];
 };
 
 /**

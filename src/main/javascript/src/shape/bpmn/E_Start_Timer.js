@@ -9,6 +9,8 @@
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.E_Start_Timer = function (label) {
+	OG.shape.bpmn.E_Start_Timer.superclass.call(this);
+
 	this.SHAPE_ID = 'OG.shape.bpmn.E_Start_Timer';
 	this.label = label;
 };

@@ -11,10 +11,9 @@
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.C_Sequence = function (from, to, label) {
+	OG.shape.bpmn.C_Sequence.superclass.call(this, from, to, label);
+
 	this.SHAPE_ID = 'OG.shape.bpmn.C_Sequence';
-	this.label = label;
-	this.from = from;
-	this.to = to;
 };
 OG.shape.bpmn.C_Sequence.prototype = new OG.shape.EdgeShape();
 OG.shape.bpmn.C_Sequence.superclass = OG.shape.EdgeShape;

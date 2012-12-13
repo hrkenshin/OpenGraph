@@ -9,6 +9,8 @@
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.E_Start = function (label) {
+	OG.shape.bpmn.E_Start.superclass.call(this);
+
 	this.SHAPE_ID = 'OG.shape.bpmn.E_Start';
 	this.label = label;
 };

@@ -10,6 +10,8 @@
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.ImageShape = function (image, label) {
+	OG.shape.ImageShape.superclass.call(this);
+
 	this.TYPE = OG.Constants.SHAPE_TYPE.IMAGE;
 	this.SHAPE_ID = 'OG.shape.ImageShape';
 	this.label = label;
@@ -25,6 +27,10 @@ OG.shape.ImageShape = function (image, label) {
 	 * @type Number
 	 */
 	this.angle = 0;
+
+	this.MOVABLE = OG.Constants.MOVABLE && OG.Constants.MOVABLE_IMAGE;
+	this.RESIZABLE = OG.Constants.RESIZABLE && OG.Constants.RESIZABLE_IMAGE;
+	this.LABEL_EDITABLE = OG.Constants.LABEL_EDITABLE && OG.Constants.LABEL_EDITABLE_IMAGE;
 };
 OG.shape.ImageShape.prototype = new OG.shape.IShape();
 OG.shape.ImageShape.superclass = OG.shape.IShape;

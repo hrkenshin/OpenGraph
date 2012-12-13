@@ -9,6 +9,8 @@
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.RectangleShape = function (label) {
+	OG.shape.RectangleShape.superclass.call(this);
+
 	this.SHAPE_ID = 'OG.shape.RectangleShape';
 	this.label = label;
 };

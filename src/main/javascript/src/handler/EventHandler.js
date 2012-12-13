@@ -19,214 +19,207 @@ OG.handler.EventHandler.prototype = {
 	 */
 	enableEditLabel: function (element) {
 		var me = this;
-		if (($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.GEOM && OG.Constants.LABEL_EDITABLE_GEOM) ||
-			($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.TEXT && OG.Constants.LABEL_EDITABLE_TEXT) ||
-			($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.HTML && OG.Constants.LABEL_EDITABLE_HTML) ||
-			($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.IMAGE && OG.Constants.LABEL_EDITABLE_IMAGE) ||
-			($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.EDGE && OG.Constants.LABEL_EDITABLE_EDGE) ||
-			($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.GROUP && OG.Constants.LABEL_EDITABLE_GROUP)) {
 
-			$(element).bind({
-				dblclick: function (event) {
-					var container = me._RENDERER.getContainer(),
-						envelope = element.shape.geom.getBoundary(),
-						upperLeft = envelope.getUpperLeft(),
-						bBox,
-						left = (upperLeft.x - 1) * OG.Constants.SCALE,
-						top = (upperLeft.y - 1) * OG.Constants.SCALE,
-						width = envelope.getWidth() * OG.Constants.SCALE,
-						height = envelope.getHeight() * OG.Constants.SCALE,
-						editorId = element.id + OG.Constants.LABEL_EDITOR_SUFFIX,
-						labelEditor,
-						textAlign = "center",
-						fromLabel,
-						toLabel,
-						/**
-						 * 라인(꺽은선)의 중심위치를 반환한다.
-						 *
-						 * @param {Element} element Edge 엘리먼트
-						 * @return {OG.Coordinate}
-						 */
-							getCenterOfEdge = function (element) {
-							var vertices, from, to, lineLength, distance = 0, i, intersectArray;
+		$(element).bind({
+			dblclick: function (event) {
+				var container = me._RENDERER.getContainer(),
+					envelope = element.shape.geom.getBoundary(),
+					upperLeft = envelope.getUpperLeft(),
+					bBox,
+					left = (upperLeft.x - 1) * OG.Constants.SCALE,
+					top = (upperLeft.y - 1) * OG.Constants.SCALE,
+					width = envelope.getWidth() * OG.Constants.SCALE,
+					height = envelope.getHeight() * OG.Constants.SCALE,
+					editorId = element.id + OG.Constants.LABEL_EDITOR_SUFFIX,
+					labelEditor,
+					textAlign = "center",
+					fromLabel,
+					toLabel,
+					/**
+					 * 라인(꺽은선)의 중심위치를 반환한다.
+					 *
+					 * @param {Element} element Edge 엘리먼트
+					 * @return {OG.Coordinate}
+					 */
+						getCenterOfEdge = function (element) {
+						var vertices, from, to, lineLength, distance = 0, i, intersectArray;
 
-							if (element.shape.geom.style.get("edge-type") === OG.Constants.EDGE_TYPE.BEZIER) {
-								vertices = element.shape.geom.getControlPoints();
-								from = vertices[0];
-								to = vertices[vertices.length - 1];
-								return new OG.geometry.Coordinate(OG.Util.round((from.x + to.x) / 2), OG.Util.round((from.y + to.y) / 2));
+						if (element.shape.geom.style.get("edge-type") === OG.Constants.EDGE_TYPE.BEZIER) {
+							vertices = element.shape.geom.getControlPoints();
+							from = vertices[0];
+							to = vertices[vertices.length - 1];
+							return new OG.geometry.Coordinate(OG.Util.round((from.x + to.x) / 2), OG.Util.round((from.y + to.y) / 2));
+						} else {
+
+							// Edge Shape 인 경우 라인의 중간 지점 찾기
+							vertices = element.shape.geom.getVertices();
+							lineLength = element.shape.geom.getLength();
+
+							for (i = 0; i < vertices.length - 1; i++) {
+								distance += vertices[i].distance(vertices[i + 1]);
+								if (distance > lineLength / 2) {
+									intersectArray = element.shape.geom.intersectCircleToLine(
+										vertices[i + 1], distance - lineLength / 2, vertices[i + 1], vertices[i]
+									);
+
+									break;
+								}
+							}
+
+							return intersectArray[0];
+						}
+					},
+					centerOfEdge;
+
+				// textarea
+				$(container).append("<textarea id='" + element.id + OG.Constants.LABEL_EDITOR_SUFFIX + "'></textarea>");
+				labelEditor = $("#" + editorId);
+
+				// text-align 스타일 적용
+				switch (element.shape.geom.style.get("text-anchor")) {
+				case "start":
+					textAlign = "left";
+					break;
+				case "middle":
+					textAlign = "center";
+					break;
+				case "end":
+					textAlign = "right";
+					break;
+				default:
+					textAlign = "center";
+					break;
+				}
+
+				if ($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.HTML) {
+					// Html Shape
+					$(labelEditor).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR, {
+						left: left, top: top, width: width, height: height, "text-align": 'left', overflow: "hidden", resize: "none"
+					}));
+					$(labelEditor).focus();
+					$(labelEditor).val(element.shape.html);
+
+					$(labelEditor).bind({
+						focusout: function () {
+							element.shape.html = this.value;
+							if (element.shape.html) {
+								me._RENDERER.redrawShape(element);
+								this.parentNode.removeChild(this);
 							} else {
-
-								// Edge Shape 인 경우 라인의 중간 지점 찾기
-								vertices = element.shape.geom.getVertices();
-								lineLength = element.shape.geom.getLength();
-
-								for (i = 0; i < vertices.length - 1; i++) {
-									distance += vertices[i].distance(vertices[i + 1]);
-									if (distance > lineLength / 2) {
-										intersectArray = element.shape.geom.intersectCircleToLine(
-											vertices[i + 1], distance - lineLength / 2, vertices[i + 1], vertices[i]
-										);
-
-										break;
-									}
-								}
-
-								return intersectArray[0];
-							}
-						},
-						centerOfEdge;
-
-					// textarea
-					$(container).append("<textarea id='" + element.id + OG.Constants.LABEL_EDITOR_SUFFIX + "'></textarea>");
-					labelEditor = $("#" + editorId);
-
-					// text-align 스타일 적용
-					switch (element.shape.geom.style.get("text-anchor")) {
-					case "start":
-						textAlign = "left";
-						break;
-					case "middle":
-						textAlign = "center";
-						break;
-					case "end":
-						textAlign = "right";
-						break;
-					default:
-						textAlign = "center";
-						break;
-					}
-
-					if ($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.HTML) {
-						// Html Shape
-						$(labelEditor).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR, {
-							left: left, top: top, width: width, height: height, "text-align": 'left', overflow: "hidden", resize: "none"
-						}));
-						$(labelEditor).focus();
-						$(labelEditor).val(element.shape.html);
-
-						$(labelEditor).bind({
-							focusout: function () {
-								element.shape.html = this.value;
-								if (element.shape.html) {
-									me._RENDERER.redrawShape(element);
-									this.parentNode.removeChild(this);
-								} else {
-									me._RENDERER.removeShape(element);
-									this.parentNode.removeChild(this);
-								}
-							}
-						});
-					} else if ($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.TEXT) {
-						// Text Shape
-						$(labelEditor).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR, {
-							left: left, top: top, width: width, height: height, "text-align": textAlign, overflow: "hidden", resize: "none"
-						}));
-						$(labelEditor).focus();
-						$(labelEditor).val(element.shape.text);
-
-						$(labelEditor).bind({
-							focusout: function () {
-								element.shape.text = this.value;
-								if (element.shape.text) {
-									me._RENDERER.redrawShape(element);
-									this.parentNode.removeChild(this);
-								} else {
-									me._RENDERER.removeShape(element);
-									this.parentNode.removeChild(this);
-								}
-							}
-						});
-					} else if ($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.EDGE) {
-						// Edge Shape
-						if (element.shape.label && me._RENDERER.isSVG()) {
-							$(element).children('[id$=_LABEL]').each(function (idx, item) {
-								$(item).find("text").each(function (idx2, item2) {
-									bBox = me._RENDERER.getBBox(item2);
-									left = bBox.x - 10;
-									top = bBox.y;
-									width = bBox.width + 20;
-									height = bBox.height;
-								});
-							});
-						} else {
-							centerOfEdge = getCenterOfEdge(element);
-							left = centerOfEdge.x - OG.Constants.LABEL_EDITOR_WIDTH / 2;
-							top = centerOfEdge.y - OG.Constants.LABEL_EDITOR_HEIGHT / 2;
-							width = OG.Constants.LABEL_EDITOR_WIDTH;
-							height = OG.Constants.LABEL_EDITOR_HEIGHT;
-						}
-
-						// 시작점 라벨인 경우
-						$(event.srcElement).parents('[id$=_FROMLABEL]').each(function (idx, item) {
-							$(item).find("text").each(function (idx2, item2) {
-								bBox = me._RENDERER.getBBox(item2);
-								left = bBox.x - 10;
-								top = bBox.y;
-								width = bBox.width + 20;
-								height = bBox.height;
-								fromLabel = element.shape.fromLabel;
-							});
-						});
-
-						// 끝점 라벨인 경우
-						$(event.srcElement).parents('[id$=_TOLABEL]').each(function (idx, item) {
-							$(item).find("text").each(function (idx2, item2) {
-								bBox = me._RENDERER.getBBox(item2);
-								left = bBox.x - 10;
-								top = bBox.y;
-								width = bBox.width + 20;
-								height = bBox.height;
-								toLabel = element.shape.toLabel;
-							});
-						});
-
-						$(labelEditor).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR, {
-							left    : left * OG.Constants.SCALE,
-							top     : top * OG.Constants.SCALE,
-							width   : width * OG.Constants.SCALE,
-							height  : height * OG.Constants.SCALE,
-							overflow: "hidden",
-							resize  : "none"
-						}));
-						$(labelEditor).focus();
-
-						if (fromLabel || toLabel) {
-							$(labelEditor).val(fromLabel ? element.shape.fromLabel : element.shape.toLabel);
-						} else {
-							$(labelEditor).val(element.shape.label);
-						}
-
-						$(labelEditor).bind({
-							focusout: function () {
-								if (fromLabel) {
-									me._RENDERER.drawEdgeLabel(element, this.value, 'FROM');
-								} else if (toLabel) {
-									me._RENDERER.drawEdgeLabel(element, this.value, 'TO');
-								} else {
-									me._RENDERER.drawLabel(element, this.value);
-								}
-
+								me._RENDERER.removeShape(element);
 								this.parentNode.removeChild(this);
 							}
+						}
+					});
+				} else if ($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.TEXT) {
+					// Text Shape
+					$(labelEditor).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR, {
+						left: left, top: top, width: width, height: height, "text-align": textAlign, overflow: "hidden", resize: "none"
+					}));
+					$(labelEditor).focus();
+					$(labelEditor).val(element.shape.text);
+
+					$(labelEditor).bind({
+						focusout: function () {
+							element.shape.text = this.value;
+							if (element.shape.text) {
+								me._RENDERER.redrawShape(element);
+								this.parentNode.removeChild(this);
+							} else {
+								me._RENDERER.removeShape(element);
+								this.parentNode.removeChild(this);
+							}
+						}
+					});
+				} else if ($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.EDGE) {
+					// Edge Shape
+					if (element.shape.label && me._RENDERER.isSVG()) {
+						$(element).children('[id$=_LABEL]').each(function (idx, item) {
+							$(item).find("text").each(function (idx2, item2) {
+								bBox = me._RENDERER.getBBox(item2);
+								left = bBox.x - 10;
+								top = bBox.y;
+								width = bBox.width + 20;
+								height = bBox.height;
+							});
 						});
 					} else {
-						$(labelEditor).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR, {
-							left: left, top: top, width: width, height: height, "text-align": textAlign, overflow: "hidden", resize: "none"
-						}));
-						$(labelEditor).focus();
-						$(labelEditor).val(element.shape.label);
-
-						$(labelEditor).bind({
-							focusout: function () {
-								me._RENDERER.drawLabel(element, this.value);
-								this.parentNode.removeChild(this);
-							}
-						});
+						centerOfEdge = getCenterOfEdge(element);
+						left = centerOfEdge.x - OG.Constants.LABEL_EDITOR_WIDTH / 2;
+						top = centerOfEdge.y - OG.Constants.LABEL_EDITOR_HEIGHT / 2;
+						width = OG.Constants.LABEL_EDITOR_WIDTH;
+						height = OG.Constants.LABEL_EDITOR_HEIGHT;
 					}
+
+					// 시작점 라벨인 경우
+					$(event.srcElement).parents('[id$=_FROMLABEL]').each(function (idx, item) {
+						$(item).find("text").each(function (idx2, item2) {
+							bBox = me._RENDERER.getBBox(item2);
+							left = bBox.x - 10;
+							top = bBox.y;
+							width = bBox.width + 20;
+							height = bBox.height;
+							fromLabel = element.shape.fromLabel;
+						});
+					});
+
+					// 끝점 라벨인 경우
+					$(event.srcElement).parents('[id$=_TOLABEL]').each(function (idx, item) {
+						$(item).find("text").each(function (idx2, item2) {
+							bBox = me._RENDERER.getBBox(item2);
+							left = bBox.x - 10;
+							top = bBox.y;
+							width = bBox.width + 20;
+							height = bBox.height;
+							toLabel = element.shape.toLabel;
+						});
+					});
+
+					$(labelEditor).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR, {
+						left    : left * OG.Constants.SCALE,
+						top     : top * OG.Constants.SCALE,
+						width   : width * OG.Constants.SCALE,
+						height  : height * OG.Constants.SCALE,
+						overflow: "hidden",
+						resize  : "none"
+					}));
+					$(labelEditor).focus();
+
+					if (fromLabel || toLabel) {
+						$(labelEditor).val(fromLabel ? element.shape.fromLabel : element.shape.toLabel);
+					} else {
+						$(labelEditor).val(element.shape.label);
+					}
+
+					$(labelEditor).bind({
+						focusout: function () {
+							if (fromLabel) {
+								me._RENDERER.drawEdgeLabel(element, this.value, 'FROM');
+							} else if (toLabel) {
+								me._RENDERER.drawEdgeLabel(element, this.value, 'TO');
+							} else {
+								me._RENDERER.drawLabel(element, this.value);
+							}
+
+							this.parentNode.removeChild(this);
+						}
+					});
+				} else {
+					$(labelEditor).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR, {
+						left: left, top: top, width: width, height: height, "text-align": textAlign, overflow: "hidden", resize: "none"
+					}));
+					$(labelEditor).focus();
+					$(labelEditor).val(element.shape.label);
+
+					$(labelEditor).bind({
+						focusout: function () {
+							me._RENDERER.drawLabel(element, this.value);
+							this.parentNode.removeChild(this);
+						}
+					});
 				}
-			});
-		}
+			}
+		});
 	},
 
 	/**
@@ -236,221 +229,216 @@ OG.handler.EventHandler.prototype = {
 	 */
 	enableConnect: function (element) {
 		var me = this, terminalGroup, root = me._RENDERER.getRootGroup();
-		if (element && $(element).attr("_shape") !== OG.Constants.SHAPE_TYPE.GROUP) {
-			$(element).bind({
-				mouseover: function () {
-					terminalGroup = me._RENDERER.drawTerminal(element,
-						$(root).data("dragged_guide") === "to" ? OG.Constants.TERMINAL_TYPE.IN : OG.Constants.TERMINAL_TYPE.OUT);
 
-					if (terminalGroup && terminalGroup.terminal && terminalGroup.terminal.childNodes.length > 0) {
-						// 센터 연결 터미널 찾기
-						if ($(root).data("edge")) {
-							$.each(terminalGroup.terminal.childNodes, function (idx, item) {
-								var fromTerminal = $(root).data("from_terminal"),
-									fromShape = fromTerminal && OG.Util.isElement(fromTerminal) ? me._getShapeFromTerminal(fromTerminal) : null,
-									isSelf = element && fromShape && element.id === fromShape.id;
+		$(element).bind({
+			mouseover: function () {
+				terminalGroup = me._RENDERER.drawTerminal(element,
+					$(root).data("dragged_guide") === "to" ? OG.Constants.TERMINAL_TYPE.IN : OG.Constants.TERMINAL_TYPE.OUT);
 
-								if (item.terminal && item.terminal.direction.toLowerCase() === "c"
-									&& (($(root).data("dragged_guide") === "to" && item.terminal.inout.indexOf(OG.Constants.TERMINAL_TYPE.IN) >= 0) ||
-									($(root).data("dragged_guide") === "from" && item.terminal.inout.indexOf(OG.Constants.TERMINAL_TYPE.OUT) >= 0))
-									&& (!isSelf || OG.Constants.SELF_CONNECTABLE)) {
-									me._RENDERER.drawDropOverGuide(element);
-									$(root).data("edge_terminal", item);
-									return false;
+				if (terminalGroup && terminalGroup.terminal && terminalGroup.terminal.childNodes.length > 0) {
+					// 센터 연결 터미널 찾기
+					if ($(root).data("edge")) {
+						$.each(terminalGroup.terminal.childNodes, function (idx, item) {
+							var fromTerminal = $(root).data("from_terminal"),
+								fromShape = fromTerminal && OG.Util.isElement(fromTerminal) ? me._getShapeFromTerminal(fromTerminal) : null,
+								isSelf = element && fromShape && element.id === fromShape.id;
+
+							if (item.terminal && item.terminal.direction.toLowerCase() === "c"
+								&& (($(root).data("dragged_guide") === "to" && item.terminal.inout.indexOf(OG.Constants.TERMINAL_TYPE.IN) >= 0) ||
+								($(root).data("dragged_guide") === "from" && item.terminal.inout.indexOf(OG.Constants.TERMINAL_TYPE.OUT) >= 0))
+								&& (!isSelf || element.shape.SELF_CONNECTABLE)) {
+								me._RENDERER.drawDropOverGuide(element);
+								$(root).data("edge_terminal", item);
+								return false;
+							}
+						});
+					}
+
+					$(terminalGroup.bBox).bind({
+						mouseout: function () {
+							if (!$(root).data("edge")) {
+								me._RENDERER.removeTerminal(element);
+							}
+						}
+					});
+
+					$.each(terminalGroup.terminal.childNodes, function (idx, item) {
+						if (item.terminal) {
+							$(item).bind({
+								mouseover: function (event) {
+									var fromTerminal = $(root).data("from_terminal"),
+										fromShape = fromTerminal && OG.Util.isElement(fromTerminal) ? me._getShapeFromTerminal(fromTerminal) : null,
+										isSelf = element && fromShape && element.id === fromShape.id;
+
+									if ((($(root).data("dragged_guide") === "to" && item.terminal.inout.indexOf(OG.Constants.TERMINAL_TYPE.IN) >= 0) ||
+										($(root).data("dragged_guide") === "from" && item.terminal.inout.indexOf(OG.Constants.TERMINAL_TYPE.OUT) >= 0) ||
+										(!$(root).data("dragged_guide") && item.terminal.inout.indexOf(OG.Constants.TERMINAL_TYPE.OUT) >= 0))
+										&& (!isSelf || element.shape.SELF_CONNECTABLE)) {
+										me._RENDERER.setAttr(item, OG.Constants.DEFAULT_STYLE.TERMINAL_OVER);
+										$(root).data("edge_terminal", item);
+									}
+								},
+								mouseout : function () {
+									me._RENDERER.setAttr(item, OG.Constants.DEFAULT_STYLE.TERMINAL);
+									$(root).removeData("edge_terminal");
+								}
+							});
+
+							$(item).draggable({
+								start: function (event) {
+									var x = item.terminal.position.x, y = item.terminal.position.y,
+										edge = me._RENDERER.drawShape(null, new OG.EdgeShape([x, y], [x, y]), null,
+											OG.Constants.DEFAULT_STYLE.EDGE_SHADOW);
+
+									$(root).data("edge", edge);
+									$(root).data("from_terminal", item);
+									$(root).data("dragged_guide", "to");
+
+									me._RENDERER.removeRubberBand(me._RENDERER.getRootElement());
+									$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (n, selectedItem) {
+										if (selectedItem.id) {
+											me._RENDERER.removeGuide(selectedItem);
+										}
+									});
+								},
+								drag : function (event) {
+									var eventOffset = me._getOffset(event),
+										edge = $(root).data("edge"),
+										fromTerminal = $(root).data("from_terminal"),
+										toTerminal = $(root).data("edge_terminal"),
+										fromXY = [fromTerminal.terminal.position.x, fromTerminal.terminal.position.y],
+										toXY = toTerminal ?
+											[toTerminal.terminal.position.x, toTerminal.terminal.position.y] :
+											[eventOffset.x, eventOffset.y],
+										fromDrct = fromTerminal.terminal.direction.toLowerCase(),
+										toDrct = toTerminal ? toTerminal.terminal.direction.toLowerCase() : "c",
+										toShape = toTerminal ? me._getShapeFromTerminal(toTerminal) : null,
+										orgFromXY, orgToXY, intersectionInfo, isSelf;
+
+									$(this).css({"position": "", "left": "", "top": ""});
+
+									// backup edge-direction
+									orgFromXY = fromXY;
+									orgToXY = toXY;
+
+									// direction 이 c 인 경우에 대한 처리(센터 연결)
+									if (!element.shape.geom.getBoundary().isContains(toXY) && fromDrct === "c") {
+										intersectionInfo = me._RENDERER.intersectionEdge(
+											edge.shape.geom.style.get("edge-type"), element, [orgFromXY[0], orgFromXY[1]], [orgToXY[0], orgToXY[1]], true
+										);
+										fromXY = intersectionInfo.position;
+										fromDrct = intersectionInfo.direction;
+									}
+									if (toShape && toDrct === "c") {
+										intersectionInfo = me._RENDERER.intersectionEdge(
+											edge.shape.geom.style.get("edge-type"), toShape, [orgFromXY[0], orgFromXY[1]], [orgToXY[0], orgToXY[1]], false
+										);
+										toXY = intersectionInfo.position;
+										toDrct = intersectionInfo.direction;
+									}
+
+									isSelf = element && toShape && element.id === toShape.id;
+									if (isSelf) {
+										fromXY = toXY = element.shape.geom.getBoundary().getRightCenter();
+									}
+
+									if (!isSelf || element.shape.SELF_CONNECTABLE) {
+										me._RENDERER.drawEdge(new OG.Line(fromXY, toXY),
+											OG.Util.apply(edge.shape.geom.style.map, {"edge-direction": fromDrct + " " + toDrct}), edge.id, isSelf);
+									}
+								},
+								stop : function (event) {
+									var to = me._getOffset(event),
+										edge = $(root).data("edge"),
+										fromTerminal = $(root).data("from_terminal"),
+										toTerminal = $(root).data("edge_terminal") || [to.x, to.y],
+										toShape = OG.Util.isElement(toTerminal) ? me._getShapeFromTerminal(toTerminal) : null,
+										boundary, clonedElement, terminalGroup, childTerminals, guide, i, isSelf;
+
+									$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
+
+									// 연결대상이 없으면 복사후 연결
+									if (!$(root).data("edge_terminal") && element.shape.CONNECT_CLONEABLE) {
+										boundary = element.shape.geom.getBoundary();
+										clonedElement = me._RENDERER.drawShape([to.x, to.y], element.shape.clone(),
+											[boundary.getWidth(), boundary.getHeight()], element.shapeStyle);
+
+										// enable event
+										me.setClickSelectable(clonedElement, clonedElement.shape.SELECTABLE);
+										me.setMovable(clonedElement, clonedElement.shape.SELECTABLE && clonedElement.shape.MOVABLE);
+										if (clonedElement.shape.GROUP_DROPABLE) {
+											me.enableDragAndDropGroup(clonedElement);
+										}
+										if (clonedElement.shape.GROUP_COLLAPSIBLE) {
+											me.enableCollapse(clonedElement);
+										}
+										if (clonedElement.shape.CONNECTABLE) {
+											me.enableConnect(clonedElement);
+										}
+										if (clonedElement.shape.LABEL_EDITABLE) {
+											me.enableEditLabel(clonedElement);
+										}
+
+										// 센터 연결 터미널 찾기
+										terminalGroup = me._RENDERER.drawTerminal(clonedElement, OG.Constants.TERMINAL_TYPE.IN);
+										childTerminals = terminalGroup.terminal.childNodes;
+										toTerminal = childTerminals[0];
+										for (i = 0; i < childTerminals.length; i++) {
+											if (childTerminals[i].terminal && childTerminals[i].terminal.direction.toLowerCase() === "c") {
+												toTerminal = childTerminals[i];
+												break;
+											}
+										}
+									}
+
+									isSelf = element && toShape && element.id === toShape.id;
+
+									if (toTerminal && (OG.Util.isElement(toTerminal) || !element.shape.CONNECT_REQUIRED)
+										&& (!isSelf || element.shape.SELF_CONNECTABLE)) {
+										// connect
+										edge = me._RENDERER.connect(fromTerminal, toTerminal, edge);
+										if (edge) {
+											guide = me._RENDERER.drawGuide(edge);
+
+											if (edge && guide) {
+												// enable event
+												me.setClickSelectable(edge, edge.shape.SELECTABLE);
+												me.setMovable(edge, edge.shape.SELECTABLE && edge.shape.MOVABLE);
+												me.setResizable(edge, guide, edge.shape.SELECTABLE && edge.shape.RESIZABLE);
+												if (edge.shape.LABEL_EDITABLE) {
+													me.enableEditLabel(edge);
+												}
+
+												me._RENDERER.toFront(guide.group);
+											}
+										}
+									} else {
+										me._RENDERER.removeShape(edge);
+									}
+
+									// clear
+									$(root).removeData("edge");
+									$(root).removeData("from_terminal");
+									$(root).removeData("edge_terminal");
+									$(root).removeData("dragged_guide");
+									if (toShape) {
+										me._RENDERER.remove(toShape.id + OG.Constants.DROP_OVER_BBOX_SUFFIX);
+									}
 								}
 							});
 						}
-
-						$(terminalGroup.bBox).bind({
-							mouseout: function () {
-								if (!$(root).data("edge")) {
-									me._RENDERER.removeTerminal(element);
-								}
-							}
-						});
-
-						$.each(terminalGroup.terminal.childNodes, function (idx, item) {
-							if (item.terminal) {
-								$(item).bind({
-									mouseover: function (event) {
-										var fromTerminal = $(root).data("from_terminal"),
-											fromShape = fromTerminal && OG.Util.isElement(fromTerminal) ? me._getShapeFromTerminal(fromTerminal) : null,
-											isSelf = element && fromShape && element.id === fromShape.id;
-
-										if ((($(root).data("dragged_guide") === "to" && item.terminal.inout.indexOf(OG.Constants.TERMINAL_TYPE.IN) >= 0) ||
-											($(root).data("dragged_guide") === "from" && item.terminal.inout.indexOf(OG.Constants.TERMINAL_TYPE.OUT) >= 0) ||
-											(!$(root).data("dragged_guide") && item.terminal.inout.indexOf(OG.Constants.TERMINAL_TYPE.OUT) >= 0))
-											&& (!isSelf || OG.Constants.SELF_CONNECTABLE)) {
-											me._RENDERER.setAttr(item, OG.Constants.DEFAULT_STYLE.TERMINAL_OVER);
-											$(root).data("edge_terminal", item);
-										}
-									},
-									mouseout : function () {
-										me._RENDERER.setAttr(item, OG.Constants.DEFAULT_STYLE.TERMINAL);
-										$(root).removeData("edge_terminal");
-									}
-								});
-
-								$(item).draggable({
-									start: function (event) {
-										var x = item.terminal.position.x, y = item.terminal.position.y,
-											edge = me._RENDERER.drawShape(null, new OG.EdgeShape([x, y], [x, y]), null,
-												OG.Constants.DEFAULT_STYLE.EDGE_SHADOW);
-
-										$(root).data("edge", edge);
-										$(root).data("from_terminal", item);
-										$(root).data("dragged_guide", "to");
-
-										me._RENDERER.removeRubberBand(me._RENDERER.getRootElement());
-										$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (n, selectedItem) {
-											if (selectedItem.id) {
-												me._RENDERER.removeGuide(selectedItem);
-											}
-										});
-									},
-									drag : function (event) {
-										var eventOffset = me._getOffset(event),
-											edge = $(root).data("edge"),
-											fromTerminal = $(root).data("from_terminal"),
-											toTerminal = $(root).data("edge_terminal"),
-											fromXY = [fromTerminal.terminal.position.x, fromTerminal.terminal.position.y],
-											toXY = toTerminal ?
-												[toTerminal.terminal.position.x, toTerminal.terminal.position.y] :
-												[eventOffset.x, eventOffset.y],
-											fromDrct = fromTerminal.terminal.direction.toLowerCase(),
-											toDrct = toTerminal ? toTerminal.terminal.direction.toLowerCase() : "c",
-											toShape = toTerminal ? me._getShapeFromTerminal(toTerminal) : null,
-											orgFromXY, orgToXY, intersectionInfo, isSelf;
-
-										$(this).css({"position": "", "left": "", "top": ""});
-
-										// backup edge-direction
-										orgFromXY = fromXY;
-										orgToXY = toXY;
-
-										// direction 이 c 인 경우에 대한 처리(센터 연결)
-										if (!element.shape.geom.getBoundary().isContains(toXY) && fromDrct === "c") {
-											intersectionInfo = me._RENDERER.intersectionEdge(
-												edge.shape.geom.style.get("edge-type"), element, [orgFromXY[0], orgFromXY[1]], [orgToXY[0], orgToXY[1]], true
-											);
-											fromXY = intersectionInfo.position;
-											fromDrct = intersectionInfo.direction;
-										}
-										if (toShape && toDrct === "c") {
-											intersectionInfo = me._RENDERER.intersectionEdge(
-												edge.shape.geom.style.get("edge-type"), toShape, [orgFromXY[0], orgFromXY[1]], [orgToXY[0], orgToXY[1]], false
-											);
-											toXY = intersectionInfo.position;
-											toDrct = intersectionInfo.direction;
-										}
-
-										isSelf = element && toShape && element.id === toShape.id;
-										if (isSelf) {
-											fromXY = toXY = element.shape.geom.getBoundary().getRightCenter();
-										}
-
-										if (!isSelf || OG.Constants.SELF_CONNECTABLE) {
-											me._RENDERER.drawEdge(new OG.Line(fromXY, toXY),
-												OG.Util.apply(edge.shape.geom.style.map, {"edge-direction": fromDrct + " " + toDrct}), edge.id, isSelf);
-										}
-									},
-									stop : function (event) {
-										var to = me._getOffset(event),
-											edge = $(root).data("edge"),
-											fromTerminal = $(root).data("from_terminal"),
-											toTerminal = $(root).data("edge_terminal") || [to.x, to.y],
-											toShape = OG.Util.isElement(toTerminal) ? me._getShapeFromTerminal(toTerminal) : null,
-											boundary, clonedElement, terminalGroup, childTerminals, guide, i, isSelf;
-
-										$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
-
-										// 연결대상이 없으면 복사후 연결
-										if (!$(root).data("edge_terminal") && OG.Constants.CONNECT_CLONEABLE) {
-											boundary = element.shape.geom.getBoundary();
-											clonedElement = me._RENDERER.drawShape([to.x, to.y], element.shape.clone(),
-												[boundary.getWidth(), boundary.getHeight()], element.shapeStyle);
-
-											// enable event
-											me.setClickSelectable(clonedElement, OG.Constants.SELECTABLE);
-											me.setMovable(clonedElement, OG.Constants.SELECTABLE && OG.Constants.MOVABLE);
-											if (OG.Constants.GROUP_DROPABLE) {
-												me.enableDragAndDropGroup(clonedElement);
-											}
-											if (OG.Constants.GROUP_COLLAPSIBLE) {
-												me.enableCollapse(clonedElement);
-											}
-											if ($(clonedElement).attr("_shape") !== OG.Constants.SHAPE_TYPE.GROUP) {
-												if (OG.Constants.CONNECTABLE) {
-													me.enableConnect(clonedElement);
-												}
-												if (OG.Constants.LABEL_EDITABLE) {
-													me.enableEditLabel(clonedElement);
-												}
-											}
-
-											// 센터 연결 터미널 찾기
-											terminalGroup = me._RENDERER.drawTerminal(clonedElement, OG.Constants.TERMINAL_TYPE.IN);
-											childTerminals = terminalGroup.terminal.childNodes;
-											toTerminal = childTerminals[0];
-											for (i = 0; i < childTerminals.length; i++) {
-												if (childTerminals[i].terminal && childTerminals[i].terminal.direction.toLowerCase() === "c") {
-													toTerminal = childTerminals[i];
-													break;
-												}
-											}
-										}
-
-										isSelf = element && toShape && element.id === toShape.id;
-
-										if (toTerminal && (OG.Util.isElement(toTerminal) || !OG.Constants.CONNECT_REQUIRED)
-											&& (!isSelf || OG.Constants.SELF_CONNECTABLE)) {
-											// connect
-											edge = me._RENDERER.connect(fromTerminal, toTerminal, edge);
-											if (edge) {
-												guide = me._RENDERER.drawGuide(edge);
-
-												if (edge && guide) {
-													// enable event
-													me.setClickSelectable(edge, OG.Constants.SELECTABLE);
-													me.setMovable(edge, OG.Constants.SELECTABLE && OG.Constants.MOVABLE);
-													me.setResizable(edge, guide, OG.Constants.SELECTABLE && OG.Constants.RESIZABLE);
-													if ($(edge).attr("_shape") !== OG.Constants.SHAPE_TYPE.GROUP) {
-														if (OG.Constants.LABEL_EDITABLE) {
-															me.enableEditLabel(edge);
-														}
-													}
-
-													me._RENDERER.toFront(guide.group);
-												}
-											}
-										} else {
-											me._RENDERER.removeShape(edge);
-										}
-
-										// clear
-										$(root).removeData("edge");
-										$(root).removeData("from_terminal");
-										$(root).removeData("edge_terminal");
-										$(root).removeData("dragged_guide");
-										if (toShape) {
-											me._RENDERER.remove(toShape.id + OG.Constants.DROP_OVER_BBOX_SUFFIX);
-										}
-									}
-								});
-							}
-						});
-					} else {
-						me._RENDERER.removeTerminal(element);
-					}
-				},
-				mouseout : function (event) {
-					if ($(element).attr("_shape") !== OG.Constants.SHAPE_TYPE.EDGE && $(root).data("edge")) {
-						me._RENDERER.remove(element.id + OG.Constants.DROP_OVER_BBOX_SUFFIX);
-						$(root).removeData("edge_terminal");
-					}
+					});
+				} else {
+					me._RENDERER.removeTerminal(element);
 				}
-			});
-		}
+			},
+			mouseout : function (event) {
+				if ($(element).attr("_shape") !== OG.Constants.SHAPE_TYPE.EDGE && $(root).data("edge")) {
+					me._RENDERER.remove(element.id + OG.Constants.DROP_OVER_BBOX_SUFFIX);
+					$(root).removeData("edge_terminal");
+				}
+			}
+		});
 	},
 
 	/**
@@ -541,113 +529,105 @@ OG.handler.EventHandler.prototype = {
 			return;
 		}
 
-		if (isMovable) {
-			if (($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.GEOM && OG.Constants.MOVABLE_GEOM) ||
-				($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.TEXT && OG.Constants.MOVABLE_TEXT) ||
-				($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.HTML && OG.Constants.MOVABLE_HTML) ||
-				($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.IMAGE && OG.Constants.MOVABLE_IMAGE) ||
-				($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.EDGE && OG.Constants.MOVABLE_EDGE) ||
-				($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.GROUP && OG.Constants.MOVABLE_GROUP)) {
+		if (isMovable === true) {
+			// move handle
+			$(element).draggable({
+				start: function (event) {
+					var eventOffset = me._getOffset(event), guide;
 
-				// move handle
-				$(element).draggable({
-					start: function (event) {
-						var eventOffset = me._getOffset(event), guide;
-
-						// 선택되지 않은 Shape 을 drag 시 다른 모든 Shape 은 deselect 처리
-						if (me._RENDERER.getElementById(element.id + OG.Constants.GUIDE_SUFFIX.GUIDE) === null) {
-							$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (index, item) {
-								if (OG.Util.isElement(item) && item.id) {
-									me._RENDERER.removeGuide(item);
-								}
-							});
-							me._RENDERER.removeAllTerminal();
-						}
-
-						// redraw guide
-						me._RENDERER.removeGuide(element);
-						guide = me._RENDERER.drawGuide(element);
-
-						$(this).data("start", {x: eventOffset.x, y: eventOffset.y});
-						$(this).data("offset", {
-							x: eventOffset.x - me._num(me._RENDERER.getAttr(guide.bBox, "x")),
-							y: eventOffset.y - me._num(me._RENDERER.getAttr(guide.bBox, "y"))
-						});
-
-						$(root).data("bBoxArray", me._getMoveTargets());
-						me._RENDERER.removeRubberBand(me._RENDERER.getRootElement());
-						me._RENDERER.removeAllTerminal();
-					},
-					drag : function (event) {
-						var eventOffset = me._getOffset(event),
-							start = $(this).data("start"),
-							bBoxArray = $(root).data("bBoxArray"),
-							dx = me._grid(eventOffset.x - start.x),
-							dy = me._grid(eventOffset.y - start.y);
-
-						// Canvas 영역을 벗어나서 드래그되는 경우 Canvas 확장
-						me._autoExtend(eventOffset.x, eventOffset.y);
-
-						$(this).css({"position": "", "left": "", "top": ""});
-						$.each(bBoxArray, function (k, item) {
-							me._RENDERER.setAttr(item.box, {transform: "t" + dx + "," + dy});
+					// 선택되지 않은 Shape 을 drag 시 다른 모든 Shape 은 deselect 처리
+					if (me._RENDERER.getElementById(element.id + OG.Constants.GUIDE_SUFFIX.GUIDE) === null) {
+						$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (index, item) {
+							if (OG.Util.isElement(item) && item.id) {
+								me._RENDERER.removeGuide(item);
+							}
 						});
 						me._RENDERER.removeAllTerminal();
-					},
-					stop : function (event) {
-						var eventOffset = me._getOffset(event),
-							start = $(this).data("start"),
-							bBoxArray = $(root).data("bBoxArray"),
-							dx = me._grid(eventOffset.x - start.x),
-							dy = me._grid(eventOffset.y - start.y),
-							groupTarget = $(root).data("groupTarget"),
-							eleArray,
-							guide;
-
-						// 이동 처리
-						$(this).css({"position": "", "left": "", "top": ""});
-						eleArray = me._moveElements(bBoxArray, dx, dy);
-
-						// group target 이 있는 경우 grouping 처리
-						if (groupTarget && OG.Util.isElement(groupTarget)) {
-							// grouping
-							me._RENDERER.addToGroup(groupTarget, eleArray);
-
-							// guide
-							$.each(eleArray, function (k, item) {
-								me._RENDERER.removeGuide(item);
-							});
-							guide = me._RENDERER.drawGuide(groupTarget);
-							// enable event
-							me.setResizable(groupTarget, guide, OG.Constants.SELECTABLE && OG.Constants.RESIZABLE);
-							me._RENDERER.toFront(guide.group);
-
-							me._RENDERER.remove(groupTarget.id + OG.Constants.DROP_OVER_BBOX_SUFFIX);
-							$(root).removeData("groupTarget");
-						} else {
-							// ungrouping
-							me._RENDERER.addToGroup(root, eleArray);
-
-							// guide
-							$.each(eleArray, function (k, item) {
-								me._RENDERER.removeGuide(item);
-								guide = me._RENDERER.drawGuide(item);
-								// enable event
-								me.setResizable(item, guide, OG.Constants.SELECTABLE && OG.Constants.RESIZABLE);
-								me._RENDERER.toFront(guide.group);
-							});
-						}
-
-						$(root).removeData("bBoxArray");
 					}
-				});
-				me._RENDERER.setAttr(element, {cursor: 'move'});
-				OG.Util.apply(element.shape.geom.style.map, {cursor: 'move'});
-			}
+
+					// redraw guide
+					me._RENDERER.removeGuide(element);
+					guide = me._RENDERER.drawGuide(element);
+
+					$(this).data("start", {x: eventOffset.x, y: eventOffset.y});
+					$(this).data("offset", {
+						x: eventOffset.x - me._num(me._RENDERER.getAttr(guide.bBox, "x")),
+						y: eventOffset.y - me._num(me._RENDERER.getAttr(guide.bBox, "y"))
+					});
+
+					$(root).data("bBoxArray", me._getMoveTargets());
+					me._RENDERER.removeRubberBand(me._RENDERER.getRootElement());
+					me._RENDERER.removeAllTerminal();
+				},
+				drag : function (event) {
+					var eventOffset = me._getOffset(event),
+						start = $(this).data("start"),
+						bBoxArray = $(root).data("bBoxArray"),
+						dx = me._grid(eventOffset.x - start.x),
+						dy = me._grid(eventOffset.y - start.y);
+
+					// Canvas 영역을 벗어나서 드래그되는 경우 Canvas 확장
+					me._autoExtend(eventOffset.x, eventOffset.y);
+
+					$(this).css({"position": "", "left": "", "top": ""});
+					$.each(bBoxArray, function (k, item) {
+						me._RENDERER.setAttr(item.box, {transform: "t" + dx + "," + dy});
+					});
+					me._RENDERER.removeAllTerminal();
+				},
+				stop : function (event) {
+					var eventOffset = me._getOffset(event),
+						start = $(this).data("start"),
+						bBoxArray = $(root).data("bBoxArray"),
+						dx = me._grid(eventOffset.x - start.x),
+						dy = me._grid(eventOffset.y - start.y),
+						groupTarget = $(root).data("groupTarget"),
+						eleArray,
+						guide;
+
+					// 이동 처리
+					$(this).css({"position": "", "left": "", "top": ""});
+					eleArray = me._moveElements(bBoxArray, dx, dy);
+
+					// group target 이 있는 경우 grouping 처리
+					if (groupTarget && OG.Util.isElement(groupTarget)) {
+						// grouping
+						me._RENDERER.addToGroup(groupTarget, eleArray);
+
+						// guide
+						$.each(eleArray, function (k, item) {
+							me._RENDERER.removeGuide(item);
+						});
+						guide = me._RENDERER.drawGuide(groupTarget);
+						// enable event
+						me.setResizable(groupTarget, guide, groupTarget.shape.SELECTABLE && groupTarget.shape.RESIZABLE);
+						me._RENDERER.toFront(guide.group);
+
+						me._RENDERER.remove(groupTarget.id + OG.Constants.DROP_OVER_BBOX_SUFFIX);
+						$(root).removeData("groupTarget");
+					} else {
+						// ungrouping
+						me._RENDERER.addToGroup(root, eleArray);
+
+						// guide
+						$.each(eleArray, function (k, item) {
+							me._RENDERER.removeGuide(item);
+							guide = me._RENDERER.drawGuide(item);
+							// enable event
+							me.setResizable(item, guide, item.shape.SELECTABLE && item.shape.RESIZABLE);
+							me._RENDERER.toFront(guide.group);
+						});
+					}
+
+					$(root).removeData("bBoxArray");
+				}
+			});
+			me._RENDERER.setAttr(element, {cursor: 'move'});
+			OG.Util.apply(element.shape.geom.style.map, {cursor: 'move'});
 		} else {
 			$(element).draggable("destroy");
-			me._RENDERER.setAttr(element, {cursor: OG.Constants.SELECTABLE ? 'pointer' : OG.Constants.DEFAULT_STYLE.SHAPE.cursor});
-			OG.Util.apply(element.shape.geom.style.map, {cursor: OG.Constants.SELECTABLE ? 'pointer' : OG.Constants.DEFAULT_STYLE.SHAPE.cursor});
+			me._RENDERER.setAttr(element, {cursor: element.shape.SELECTABLE ? 'pointer' : OG.Constants.DEFAULT_STYLE.SHAPE.cursor});
+			OG.Util.apply(element.shape.geom.style.map, {cursor: element.shape.SELECTABLE ? 'pointer' : OG.Constants.DEFAULT_STYLE.SHAPE.cursor});
 		}
 	},
 
@@ -665,727 +645,719 @@ OG.handler.EventHandler.prototype = {
 			return;
 		}
 
-		if (isResizable) {
-			if (($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.GEOM && OG.Constants.RESIZABLE_GEOM) ||
-				($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.TEXT && OG.Constants.RESIZABLE_TEXT) ||
-				($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.HTML && OG.Constants.RESIZABLE_HTML) ||
-				($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.IMAGE && OG.Constants.RESIZABLE_IMAGE) ||
-				($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.EDGE && OG.Constants.RESIZABLE_EDGE) ||
-				($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.GROUP && OG.Constants.RESIZABLE_GROUP)) {
+		if (isResizable === true) {
+			if ($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.EDGE) {
+				// resize handle
+				$(guide.from).draggable({
+					start: function (event) {
+						var isBezier, vertices, _style = {},
+							toTerminalId = $(element).attr("_to"), toShape, toTerminal, edge;
 
-				if ($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.EDGE) {
-					// resize handle
-					$(guide.from).draggable({
-						start: function (event) {
-							var isBezier, vertices, _style = {},
-								toTerminalId = $(element).attr("_to"), toShape, toTerminal, edge;
+						_style = OG.Util.apply(_style, OG.Constants.DEFAULT_STYLE.EDGE_SHADOW, element.shape.geom.style.map);
+						isBezier = _style["edge-type"].toLowerCase() === OG.Constants.EDGE_TYPE.BEZIER;
 
-							_style = OG.Util.apply(_style, OG.Constants.DEFAULT_STYLE.EDGE_SHADOW, element.shape.geom.style.map);
-							isBezier = _style["edge-type"].toLowerCase() === OG.Constants.EDGE_TYPE.BEZIER;
+						vertices = isBezier ? element.shape.geom.getControlPoints() : element.shape.geom.getVertices();
+						edge = me._RENDERER.drawEdge(isBezier ? new OG.BezierCurve(vertices) : new OG.PolyLine(vertices), _style);
 
-							vertices = isBezier ? element.shape.geom.getControlPoints() : element.shape.geom.getVertices();
-							edge = me._RENDERER.drawEdge(isBezier ? new OG.BezierCurve(vertices) : new OG.PolyLine(vertices), _style);
+						toTerminal = [vertices[vertices.length - 1].x, vertices[vertices.length - 1].y];
 
-							toTerminal = [vertices[vertices.length - 1].x, vertices[vertices.length - 1].y];
-
-							if (toTerminalId) {
-								toShape = me._getShapeFromTerminal(toTerminalId);
-								me._RENDERER.drawTerminal(toShape);
-								toTerminal = me._RENDERER.getElementById(toTerminalId);
-							}
-
-							$(root).data("to_terminal", toTerminal);
-							$(root).data("edge", edge);
-							$(root).data("dragged_guide", "from");
-
-							me._RENDERER.removeRubberBand(me._RENDERER.getRootElement());
-							$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (n, selectedItem) {
-								if (selectedItem.id && $(selectedItem).attr("_shape") !== OG.Constants.SHAPE_TYPE.EDGE) {
-									me._RENDERER.removeGuide(selectedItem);
-								}
-							});
-						},
-						drag : function (event) {
-							var eventOffset = me._getOffset(event),
-								edge = $(root).data("edge"),
-								fromTerminal = $(root).data("edge_terminal"),
-								toTerminal = $(root).data("to_terminal"),
-								fromXY = fromTerminal ?
-									[fromTerminal.terminal.position.x, fromTerminal.terminal.position.y] : [eventOffset.x, eventOffset.y],
-								toXY = OG.Util.isElement(toTerminal) ?
-									[toTerminal.terminal.position.x, toTerminal.terminal.position.y] : toTerminal,
-								fromDrct = fromTerminal ? fromTerminal.terminal.direction.toLowerCase() : "c",
-								toDrct = OG.Util.isElement(toTerminal) ? toTerminal.terminal.direction.toLowerCase() : "c",
-								fromShape = fromTerminal ? me._getShapeFromTerminal(fromTerminal) : null,
-								toShape = OG.Util.isElement(toTerminal) ? me._getShapeFromTerminal(toTerminal) : null,
-								orgFromXY, orgToXY, intersectionInfo, isSelf;
-
-							$(this).css({"position": "", "left": "", "top": ""});
-
-							// backup edge-direction
-							orgFromXY = fromXY;
-							orgToXY = toXY;
-
-							// direction 이 c 인 경우에 대한 처리(센터 연결)
-							if (fromShape && fromDrct === "c") {
-								intersectionInfo = me._RENDERER.intersectionEdge(
-									edge.geom.style.get("edge-type"), fromShape, [orgFromXY[0], orgFromXY[1]], [orgToXY[0], orgToXY[1]], true
-								);
-								fromXY = intersectionInfo.position;
-								fromDrct = intersectionInfo.direction;
-							}
-							if (toShape && toDrct === "c") {
-								intersectionInfo = me._RENDERER.intersectionEdge(
-									edge.geom.style.get("edge-type"), toShape, [orgFromXY[0], orgFromXY[1]], [orgToXY[0], orgToXY[1]], false
-								);
-								toXY = intersectionInfo.position;
-								toDrct = intersectionInfo.direction;
-							}
-
-							isSelf = fromShape && toShape && fromShape.id === toShape.id;
-							if (isSelf) {
-								fromXY = toXY = fromShape.shape.geom.getBoundary().getRightCenter();
-							}
-
-							if (!isSelf || OG.Constants.SELF_CONNECTABLE) {
-								me._RENDERER.drawEdge(new OG.Line(fromXY, toXY),
-									OG.Util.apply(edge.geom.style.map, {"edge-direction": fromDrct + " " + toDrct}), edge.id, isSelf);
-							}
-						},
-						stop : function (event) {
-							var eventOffset = me._getOffset(event),
-								fromTerminal = $(root).data("edge_terminal") || [eventOffset.x, eventOffset.y],
-								toTerminal = $(root).data("to_terminal"),
-								fromShape = OG.Util.isElement(fromTerminal) ? me._getShapeFromTerminal(fromTerminal) : null,
-								toShape = OG.Util.isElement(toTerminal) ? me._getShapeFromTerminal(toTerminal) : null,
-								edge = $(root).data("edge"), isSelf;
-
-							$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
-
-							// clear
-							$(root).removeData("to_terminal");
-							$(root).removeData("edge");
-							$(root).removeData("edge_terminal");
-							$(root).removeData("dragged_guide");
-							me._RENDERER.remove(edge);
-							me._RENDERER.removeGuide(element);
-							if (fromShape) {
-								me._RENDERER.remove(fromShape.id + OG.Constants.DROP_OVER_BBOX_SUFFIX);
-							}
-
-							isSelf = fromShape && toShape && fromShape.id === toShape.id;
-
-							if (!isSelf || OG.Constants.SELF_CONNECTABLE) {
-								// draw
-								element = me._RENDERER.connect(fromTerminal, toTerminal, element, element.shape.geom.style);
-								if (element) {
-									guide = me._RENDERER.drawGuide(element);
-									if (element && guide) {
-										me.setResizable(element, guide, true);
-										me._RENDERER.toFront(guide.group);
-									}
-								}
-							}
+						if (toTerminalId) {
+							toShape = me._getShapeFromTerminal(toTerminalId);
+							me._RENDERER.drawTerminal(toShape);
+							toTerminal = me._RENDERER.getElementById(toTerminalId);
 						}
-					});
 
-					$(guide.to).draggable({
-						start: function (event) {
-							var isBezier, vertices, _style = {},
-								fromTerminalId = $(element).attr("_from"), fromShape, fromTerminal, edge;
+						$(root).data("to_terminal", toTerminal);
+						$(root).data("edge", edge);
+						$(root).data("dragged_guide", "from");
 
-							_style = OG.Util.apply(_style, OG.Constants.DEFAULT_STYLE.EDGE_SHADOW, element.shape.geom.style.map);
-							isBezier = _style["edge-type"].toLowerCase() === OG.Constants.EDGE_TYPE.BEZIER;
-
-							vertices = isBezier ? element.shape.geom.getControlPoints() : element.shape.geom.getVertices();
-							edge = me._RENDERER.drawEdge(isBezier ? new OG.BezierCurve(vertices) : new OG.PolyLine(vertices), _style);
-
-							fromTerminal = [vertices[0].x, vertices[0].y];
-
-							if (fromTerminalId) {
-								fromShape = me._getShapeFromTerminal(fromTerminalId);
-								me._RENDERER.drawTerminal(fromShape);
-								fromTerminal = me._RENDERER.getElementById(fromTerminalId);
-							}
-
-							$(root).data("from_terminal", fromTerminal);
-							$(root).data("edge", edge);
-							$(root).data("dragged_guide", "to");
-
-							me._RENDERER.removeRubberBand(me._RENDERER.getRootElement());
-							$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (n, selectedItem) {
-								if (selectedItem.id && $(selectedItem).attr("_shape") !== OG.Constants.SHAPE_TYPE.EDGE) {
-									me._RENDERER.removeGuide(selectedItem);
-								}
-							});
-						},
-						drag : function (event) {
-							var eventOffset = me._getOffset(event),
-								edge = $(root).data("edge"),
-								fromTerminal = $(root).data("from_terminal"),
-								toTerminal = $(root).data("edge_terminal"),
-								fromXY = OG.Util.isElement(fromTerminal) ?
-									[fromTerminal.terminal.position.x, fromTerminal.terminal.position.y] : fromTerminal,
-								toXY = toTerminal ?
-									[toTerminal.terminal.position.x, toTerminal.terminal.position.y] : [eventOffset.x, eventOffset.y],
-								fromDrct = OG.Util.isElement(fromTerminal) ? fromTerminal.terminal.direction.toLowerCase() : "c",
-								toDrct = toTerminal ? toTerminal.terminal.direction.toLowerCase() : "c",
-								fromShape = OG.Util.isElement(fromTerminal) ? me._getShapeFromTerminal(fromTerminal) : null,
-								toShape = toTerminal ? me._getShapeFromTerminal(toTerminal) : null,
-								orgFromXY, orgToXY, intersectionInfo, isSelf;
-
-							$(this).css({"position": "", "left": "", "top": ""});
-
-							// backup edge-direction
-							orgFromXY = fromXY;
-							orgToXY = toXY;
-
-							// direction 이 c 인 경우에 대한 처리(센터 연결)
-							if (fromShape && fromDrct === "c") {
-								intersectionInfo = me._RENDERER.intersectionEdge(
-									edge.geom.style.get("edge-type"), fromShape, [orgFromXY[0], orgFromXY[1]], [orgToXY[0], orgToXY[1]], true
-								);
-								fromXY = intersectionInfo.position;
-								fromDrct = intersectionInfo.direction;
-							}
-							if (toShape && toDrct === "c") {
-								intersectionInfo = me._RENDERER.intersectionEdge(
-									edge.geom.style.get("edge-type"), toShape, [orgFromXY[0], orgFromXY[1]], [orgToXY[0], orgToXY[1]], false
-								);
-								toXY = intersectionInfo.position;
-								toDrct = intersectionInfo.direction;
-							}
-
-							isSelf = (fromShape !== null) && (toShape !== null) && fromShape.id === toShape.id;
-							if (isSelf) {
-								fromXY = toXY = toShape.shape.geom.getBoundary().getRightCenter();
-							}
-
-							if (!isSelf || OG.Constants.SELF_CONNECTABLE) {
-								me._RENDERER.drawEdge(new OG.Line(fromXY, toXY),
-									OG.Util.apply(edge.geom.style.map, {"edge-direction": fromDrct + " " + toDrct}), edge.id, isSelf);
-							}
-						},
-						stop : function (event) {
-							var eventOffset = me._getOffset(event),
-								fromTerminal = $(root).data("from_terminal"),
-								toTerminal = $(root).data("edge_terminal") || [eventOffset.x, eventOffset.y],
-								fromShape = OG.Util.isElement(fromTerminal) ? me._getShapeFromTerminal(fromTerminal) : null,
-								toShape = OG.Util.isElement(toTerminal) ? me._getShapeFromTerminal(toTerminal) : null,
-								edge = $(root).data("edge"), isSelf;
-
-							$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
-
-							// clear
-							$(root).removeData("from_terminal");
-							$(root).removeData("edge");
-							$(root).removeData("edge_terminal");
-							$(root).removeData("dragged_guide");
-							me._RENDERER.remove(edge);
-							me._RENDERER.removeGuide(element);
-							if (toShape) {
-								me._RENDERER.remove(toShape.id + OG.Constants.DROP_OVER_BBOX_SUFFIX);
-							}
-
-							isSelf = fromShape && toShape && fromShape.id === toShape.id;
-
-							if (!isSelf || OG.Constants.SELF_CONNECTABLE) {
-								// draw
-								element = me._RENDERER.connect(fromTerminal, toTerminal, element, element.shape.geom.style);
-								if (element) {
-									guide = me._RENDERER.drawGuide(element);
-									if (guide) {
-										me.setResizable(element, guide, true);
-										me._RENDERER.toFront(guide.group);
-									}
-								}
-							}
-						}
-					});
-
-					$.each(guide.controls, function (idx, item) {
-						$(item).draggable({
-							start: function (event) {
-								var eventOffset = me._getOffset(event);
-								$(this).data("start", {x: eventOffset.x, y: eventOffset.y});
-								$(this).data("offset", {
-									x: eventOffset.x - me._num(me._RENDERER.getAttr(item, "x")),
-									y: eventOffset.y - me._num(me._RENDERER.getAttr(item, "y"))
-								});
-								me._RENDERER.remove(guide.bBox);
-								me._RENDERER.removeRubberBand(me._RENDERER.getRootElement());
-							},
-							drag : function (event) {
-								var eventOffset = me._getOffset(event),
-									start = $(this).data("start"),
-									offset = $(this).data("offset"),
-									newX = eventOffset.x - offset.x,
-									newY = eventOffset.y - offset.y,
-									vertices = element.shape.geom.getVertices(),
-									isHorizontal = item.id.indexOf(OG.Constants.GUIDE_SUFFIX.CTL_H) >= 0,
-									num = isHorizontal ?
-										parseInt(item.id.replace(element.id + OG.Constants.GUIDE_SUFFIX.CTL_H, ""), 10) :
-										parseInt(item.id.replace(element.id + OG.Constants.GUIDE_SUFFIX.CTL_V, ""), 10);
-
-								$(this).css({"position": "", "left": "", "top": ""});
-
-								if (isHorizontal) {
-									vertices[num].x = newX;
-									vertices[num + 1].x = newX;
-								} else {
-									vertices[num].y = newY;
-									vertices[num + 1].y = newY;
-								}
-
-								element = me._RENDERER.drawEdge(new OG.PolyLine(vertices), element.shape.geom.style, element.id);
-								me._RENDERER.drawGuide(element);
-
-								me._RENDERER.removeAllTerminal();
-
-								// Draw Label
-								me._RENDERER.drawLabel(element);
-								me._RENDERER.drawEdgeLabel(element, null, 'FROM');
-								me._RENDERER.drawEdgeLabel(element, null, 'TO');
-							},
-							stop : function (event) {
-								var eventOffset = me._getOffset(event),
-									start = $(this).data("start"),
-									offset = $(this).data("offset"),
-									newX = eventOffset.x - offset.x,
-									newY = eventOffset.y - offset.y,
-									vertices = element.shape.geom.getVertices(),
-									isHorizontal = item.id.indexOf(OG.Constants.GUIDE_SUFFIX.CTL_H) >= 0,
-									num = isHorizontal ?
-										parseInt(item.id.replace(element.id + OG.Constants.GUIDE_SUFFIX.CTL_H, ""), 10) :
-										parseInt(item.id.replace(element.id + OG.Constants.GUIDE_SUFFIX.CTL_V, ""), 10);
-
-								$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
-
-								if (isHorizontal) {
-									vertices[num].x = newX;
-									vertices[num + 1].x = newX;
-								} else {
-									vertices[num].y = newY;
-									vertices[num + 1].y = newY;
-								}
-
-								element = me._RENDERER.drawEdge(new OG.PolyLine(vertices), element.shape.geom.style, element.id);
-								me._RENDERER.drawGuide(element);
-
-								// Draw Label
-								me._RENDERER.drawLabel(element);
-								me._RENDERER.drawEdgeLabel(element, null, 'FROM');
-								me._RENDERER.drawEdgeLabel(element, null, 'TO');
+						me._RENDERER.removeRubberBand(me._RENDERER.getRootElement());
+						$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (n, selectedItem) {
+							if (selectedItem.id && $(selectedItem).attr("_shape") !== OG.Constants.SHAPE_TYPE.EDGE) {
+								me._RENDERER.removeGuide(selectedItem);
 							}
 						});
-					});
-				} else {
-					// resize handle
-					$(guide.rc).draggable({
+					},
+					drag : function (event) {
+						var eventOffset = me._getOffset(event),
+							edge = $(root).data("edge"),
+							fromTerminal = $(root).data("edge_terminal"),
+							toTerminal = $(root).data("to_terminal"),
+							fromXY = fromTerminal ?
+								[fromTerminal.terminal.position.x, fromTerminal.terminal.position.y] : [eventOffset.x, eventOffset.y],
+							toXY = OG.Util.isElement(toTerminal) ?
+								[toTerminal.terminal.position.x, toTerminal.terminal.position.y] : toTerminal,
+							fromDrct = fromTerminal ? fromTerminal.terminal.direction.toLowerCase() : "c",
+							toDrct = OG.Util.isElement(toTerminal) ? toTerminal.terminal.direction.toLowerCase() : "c",
+							fromShape = fromTerminal ? me._getShapeFromTerminal(fromTerminal) : null,
+							toShape = OG.Util.isElement(toTerminal) ? me._getShapeFromTerminal(toTerminal) : null,
+							orgFromXY, orgToXY, intersectionInfo, isSelf;
+
+						$(this).css({"position": "", "left": "", "top": ""});
+
+						// backup edge-direction
+						orgFromXY = fromXY;
+						orgToXY = toXY;
+
+						// direction 이 c 인 경우에 대한 처리(센터 연결)
+						if (fromShape && fromDrct === "c") {
+							intersectionInfo = me._RENDERER.intersectionEdge(
+								edge.geom.style.get("edge-type"), fromShape, [orgFromXY[0], orgFromXY[1]], [orgToXY[0], orgToXY[1]], true
+							);
+							fromXY = intersectionInfo.position;
+							fromDrct = intersectionInfo.direction;
+						}
+						if (toShape && toDrct === "c") {
+							intersectionInfo = me._RENDERER.intersectionEdge(
+								edge.geom.style.get("edge-type"), toShape, [orgFromXY[0], orgFromXY[1]], [orgToXY[0], orgToXY[1]], false
+							);
+							toXY = intersectionInfo.position;
+							toDrct = intersectionInfo.direction;
+						}
+
+						isSelf = fromShape && toShape && fromShape.id === toShape.id;
+						if (isSelf) {
+							fromXY = toXY = fromShape.shape.geom.getBoundary().getRightCenter();
+						}
+
+						if (!isSelf || fromShape.shape.SELF_CONNECTABLE) {
+							me._RENDERER.drawEdge(new OG.Line(fromXY, toXY),
+								OG.Util.apply(edge.geom.style.map, {"edge-direction": fromDrct + " " + toDrct}), edge.id, isSelf);
+						}
+					},
+					stop : function (event) {
+						var eventOffset = me._getOffset(event),
+							fromTerminal = $(root).data("edge_terminal") || [eventOffset.x, eventOffset.y],
+							toTerminal = $(root).data("to_terminal"),
+							fromShape = OG.Util.isElement(fromTerminal) ? me._getShapeFromTerminal(fromTerminal) : null,
+							toShape = OG.Util.isElement(toTerminal) ? me._getShapeFromTerminal(toTerminal) : null,
+							edge = $(root).data("edge"), isSelf;
+
+						$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
+
+						// clear
+						$(root).removeData("to_terminal");
+						$(root).removeData("edge");
+						$(root).removeData("edge_terminal");
+						$(root).removeData("dragged_guide");
+						me._RENDERER.remove(edge);
+						me._RENDERER.removeGuide(element);
+						if (fromShape) {
+							me._RENDERER.remove(fromShape.id + OG.Constants.DROP_OVER_BBOX_SUFFIX);
+						}
+
+						isSelf = fromShape && toShape && fromShape.id === toShape.id;
+
+						if (!isSelf || fromShape.shape.SELF_CONNECTABLE) {
+							// draw
+							element = me._RENDERER.connect(fromTerminal, toTerminal, element, element.shape.geom.style);
+							if (element) {
+								guide = me._RENDERER.drawGuide(element);
+								if (element && guide) {
+									me.setResizable(element, guide, true);
+									me._RENDERER.toFront(guide.group);
+								}
+							}
+						}
+					}
+				});
+
+				$(guide.to).draggable({
+					start: function (event) {
+						var isBezier, vertices, _style = {},
+							fromTerminalId = $(element).attr("_from"), fromShape, fromTerminal, edge;
+
+						_style = OG.Util.apply(_style, OG.Constants.DEFAULT_STYLE.EDGE_SHADOW, element.shape.geom.style.map);
+						isBezier = _style["edge-type"].toLowerCase() === OG.Constants.EDGE_TYPE.BEZIER;
+
+						vertices = isBezier ? element.shape.geom.getControlPoints() : element.shape.geom.getVertices();
+						edge = me._RENDERER.drawEdge(isBezier ? new OG.BezierCurve(vertices) : new OG.PolyLine(vertices), _style);
+
+						fromTerminal = [vertices[0].x, vertices[0].y];
+
+						if (fromTerminalId) {
+							fromShape = me._getShapeFromTerminal(fromTerminalId);
+							me._RENDERER.drawTerminal(fromShape);
+							fromTerminal = me._RENDERER.getElementById(fromTerminalId);
+						}
+
+						$(root).data("from_terminal", fromTerminal);
+						$(root).data("edge", edge);
+						$(root).data("dragged_guide", "to");
+
+						me._RENDERER.removeRubberBand(me._RENDERER.getRootElement());
+						$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (n, selectedItem) {
+							if (selectedItem.id && $(selectedItem).attr("_shape") !== OG.Constants.SHAPE_TYPE.EDGE) {
+								me._RENDERER.removeGuide(selectedItem);
+							}
+						});
+					},
+					drag : function (event) {
+						var eventOffset = me._getOffset(event),
+							edge = $(root).data("edge"),
+							fromTerminal = $(root).data("from_terminal"),
+							toTerminal = $(root).data("edge_terminal"),
+							fromXY = OG.Util.isElement(fromTerminal) ?
+								[fromTerminal.terminal.position.x, fromTerminal.terminal.position.y] : fromTerminal,
+							toXY = toTerminal ?
+								[toTerminal.terminal.position.x, toTerminal.terminal.position.y] : [eventOffset.x, eventOffset.y],
+							fromDrct = OG.Util.isElement(fromTerminal) ? fromTerminal.terminal.direction.toLowerCase() : "c",
+							toDrct = toTerminal ? toTerminal.terminal.direction.toLowerCase() : "c",
+							fromShape = OG.Util.isElement(fromTerminal) ? me._getShapeFromTerminal(fromTerminal) : null,
+							toShape = toTerminal ? me._getShapeFromTerminal(toTerminal) : null,
+							orgFromXY, orgToXY, intersectionInfo, isSelf;
+
+						$(this).css({"position": "", "left": "", "top": ""});
+
+						// backup edge-direction
+						orgFromXY = fromXY;
+						orgToXY = toXY;
+
+						// direction 이 c 인 경우에 대한 처리(센터 연결)
+						if (fromShape && fromDrct === "c") {
+							intersectionInfo = me._RENDERER.intersectionEdge(
+								edge.geom.style.get("edge-type"), fromShape, [orgFromXY[0], orgFromXY[1]], [orgToXY[0], orgToXY[1]], true
+							);
+							fromXY = intersectionInfo.position;
+							fromDrct = intersectionInfo.direction;
+						}
+						if (toShape && toDrct === "c") {
+							intersectionInfo = me._RENDERER.intersectionEdge(
+								edge.geom.style.get("edge-type"), toShape, [orgFromXY[0], orgFromXY[1]], [orgToXY[0], orgToXY[1]], false
+							);
+							toXY = intersectionInfo.position;
+							toDrct = intersectionInfo.direction;
+						}
+
+						isSelf = (fromShape !== null) && (toShape !== null) && fromShape.id === toShape.id;
+						if (isSelf) {
+							fromXY = toXY = toShape.shape.geom.getBoundary().getRightCenter();
+						}
+
+						if (!isSelf || toShape.shape.SELF_CONNECTABLE) {
+							me._RENDERER.drawEdge(new OG.Line(fromXY, toXY),
+								OG.Util.apply(edge.geom.style.map, {"edge-direction": fromDrct + " " + toDrct}), edge.id, isSelf);
+						}
+					},
+					stop : function (event) {
+						var eventOffset = me._getOffset(event),
+							fromTerminal = $(root).data("from_terminal"),
+							toTerminal = $(root).data("edge_terminal") || [eventOffset.x, eventOffset.y],
+							fromShape = OG.Util.isElement(fromTerminal) ? me._getShapeFromTerminal(fromTerminal) : null,
+							toShape = OG.Util.isElement(toTerminal) ? me._getShapeFromTerminal(toTerminal) : null,
+							edge = $(root).data("edge"), isSelf;
+
+						$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
+
+						// clear
+						$(root).removeData("from_terminal");
+						$(root).removeData("edge");
+						$(root).removeData("edge_terminal");
+						$(root).removeData("dragged_guide");
+						me._RENDERER.remove(edge);
+						me._RENDERER.removeGuide(element);
+						if (toShape) {
+							me._RENDERER.remove(toShape.id + OG.Constants.DROP_OVER_BBOX_SUFFIX);
+						}
+
+						isSelf = fromShape && toShape && fromShape.id === toShape.id;
+
+						if (!isSelf || toShape.shape.SELF_CONNECTABLE) {
+							// draw
+							element = me._RENDERER.connect(fromTerminal, toTerminal, element, element.shape.geom.style);
+							if (element) {
+								guide = me._RENDERER.drawGuide(element);
+								if (guide) {
+									me.setResizable(element, guide, true);
+									me._RENDERER.toFront(guide.group);
+								}
+							}
+						}
+					}
+				});
+
+				$.each(guide.controls, function (idx, item) {
+					$(item).draggable({
 						start: function (event) {
 							var eventOffset = me._getOffset(event);
 							$(this).data("start", {x: eventOffset.x, y: eventOffset.y});
 							$(this).data("offset", {
-								x: eventOffset.x - me._num(me._RENDERER.getAttr(guide.rc, "x")),
-								y: eventOffset.y - me._num(me._RENDERER.getAttr(guide.rc, "y"))
+								x: eventOffset.x - me._num(me._RENDERER.getAttr(item, "x")),
+								y: eventOffset.y - me._num(me._RENDERER.getAttr(item, "y"))
 							});
+							me._RENDERER.remove(guide.bBox);
 							me._RENDERER.removeRubberBand(me._RENDERER.getRootElement());
 						},
 						drag : function (event) {
 							var eventOffset = me._getOffset(event),
 								start = $(this).data("start"),
 								offset = $(this).data("offset"),
-								newX = me._grid(eventOffset.x - offset.x),
-								newWidth = me._grid(newX - me._num(me._RENDERER.getAttr(guide.lc, "x")));
+								newX = eventOffset.x - offset.x,
+								newY = eventOffset.y - offset.y,
+								vertices = element.shape.geom.getVertices(),
+								isHorizontal = item.id.indexOf(OG.Constants.GUIDE_SUFFIX.CTL_H) >= 0,
+								num = isHorizontal ?
+									parseInt(item.id.replace(element.id + OG.Constants.GUIDE_SUFFIX.CTL_H, ""), 10) :
+									parseInt(item.id.replace(element.id + OG.Constants.GUIDE_SUFFIX.CTL_V, ""), 10);
+
 							$(this).css({"position": "", "left": "", "top": ""});
-							if (newWidth >= OG.Constants.GUIDE_MIN_SIZE) {
-								me._RENDERER.setAttr(guide.rc, {x: newX});
-								me._RENDERER.setAttr(guide.ur, {x: newX});
-								me._RENDERER.setAttr(guide.lr, {x: newX});
-								me._RENDERER.setAttr(guide.uc, {x: OG.Util.round((me._num(me._RENDERER.getAttr(guide.lc, "x")) + newX) / 2)});
-								me._RENDERER.setAttr(guide.lwc, {x: OG.Util.round((me._num(me._RENDERER.getAttr(guide.lc, "x")) + newX) / 2)});
-								me._RENDERER.setAttr(guide.bBox, {width: newWidth});
+
+							if (isHorizontal) {
+								vertices[num].x = newX;
+								vertices[num + 1].x = newX;
+							} else {
+								vertices[num].y = newY;
+								vertices[num + 1].y = newY;
 							}
+
+							element = me._RENDERER.drawEdge(new OG.PolyLine(vertices), element.shape.geom.style, element.id);
+							me._RENDERER.drawGuide(element);
+
 							me._RENDERER.removeAllTerminal();
+
+							// Draw Label
+							me._RENDERER.drawLabel(element);
+							me._RENDERER.drawEdgeLabel(element, null, 'FROM');
+							me._RENDERER.drawEdgeLabel(element, null, 'TO');
 						},
 						stop : function (event) {
-							var eventOffset = me._getOffset(event),
-								start = $(this).data("start"),
-								dx = eventOffset.x - start.x;
-							$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
-							if (element && element.shape.geom) {
-								// resizing
-								if (element.shape.geom.getBoundary().getWidth() + dx < OG.Constants.GUIDE_MIN_SIZE) {
-									dx = OG.Constants.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getWidth();
-								}
-								me._RENDERER.resize(element, [0, 0, 0, me._grid(dx)]);
-								me._RENDERER.drawGuide(element);
-							}
-						}
-					});
-
-					$(guide.lwc).draggable({
-						start: function (event) {
-							var eventOffset = me._getOffset(event);
-							$(this).data("start", {x: eventOffset.x, y: eventOffset.y});
-							$(this).data("offset", {
-								x: eventOffset.x - me._num(me._RENDERER.getAttr(guide.lwc, "x")),
-								y: eventOffset.y - me._num(me._RENDERER.getAttr(guide.lwc, "y"))
-							});
-							me._RENDERER.removeRubberBand(me._RENDERER.getRootElement());
-						},
-						drag : function (event) {
 							var eventOffset = me._getOffset(event),
 								start = $(this).data("start"),
 								offset = $(this).data("offset"),
-								newY = me._grid(eventOffset.y - offset.y),
-								newHeight = me._grid(newY - me._num(me._RENDERER.getAttr(guide.uc, "y")));
-							$(this).css({"position": "", "left": "", "top": ""});
-							if (newHeight >= OG.Constants.GUIDE_MIN_SIZE) {
-								me._RENDERER.setAttr(guide.lwc, {y: newY});
-								me._RENDERER.setAttr(guide.ll, {y: newY});
-								me._RENDERER.setAttr(guide.lr, {y: newY});
-								me._RENDERER.setAttr(guide.lc, {y: OG.Util.round((me._num(me._RENDERER.getAttr(guide.uc, "y")) + newY) / 2)});
-								me._RENDERER.setAttr(guide.rc, {y: OG.Util.round((me._num(me._RENDERER.getAttr(guide.uc, "y")) + newY) / 2)});
-								me._RENDERER.setAttr(guide.bBox, {height: newHeight});
-							}
-							me._RENDERER.removeAllTerminal();
-						},
-						stop : function (event) {
-							var eventOffset = me._getOffset(event),
-								start = $(this).data("start"),
-								dy = eventOffset.y - start.y;
+								newX = eventOffset.x - offset.x,
+								newY = eventOffset.y - offset.y,
+								vertices = element.shape.geom.getVertices(),
+								isHorizontal = item.id.indexOf(OG.Constants.GUIDE_SUFFIX.CTL_H) >= 0,
+								num = isHorizontal ?
+									parseInt(item.id.replace(element.id + OG.Constants.GUIDE_SUFFIX.CTL_H, ""), 10) :
+									parseInt(item.id.replace(element.id + OG.Constants.GUIDE_SUFFIX.CTL_V, ""), 10);
+
 							$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
-							if (element && element.shape.geom) {
-								// resizing
-								if (element.shape.geom.getBoundary().getHeight() + dy < OG.Constants.GUIDE_MIN_SIZE) {
-									dy = OG.Constants.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getHeight();
-								}
-								me._RENDERER.resize(element, [0, me._grid(dy), 0, 0]);
-								me._RENDERER.drawGuide(element);
+
+							if (isHorizontal) {
+								vertices[num].x = newX;
+								vertices[num + 1].x = newX;
+							} else {
+								vertices[num].y = newY;
+								vertices[num + 1].y = newY;
 							}
+
+							element = me._RENDERER.drawEdge(new OG.PolyLine(vertices), element.shape.geom.style, element.id);
+							me._RENDERER.drawGuide(element);
+
+							// Draw Label
+							me._RENDERER.drawLabel(element);
+							me._RENDERER.drawEdgeLabel(element, null, 'FROM');
+							me._RENDERER.drawEdgeLabel(element, null, 'TO');
 						}
 					});
-
-					$(guide.lr).draggable({
-						start: function (event) {
-							var eventOffset = me._getOffset(event);
-							$(this).data("start", {x: eventOffset.x, y: eventOffset.y});
-							$(this).data("offset", {
-								x: eventOffset.x - me._num(me._RENDERER.getAttr(guide.lr, "x")),
-								y: eventOffset.y - me._num(me._RENDERER.getAttr(guide.lr, "y"))
-							});
-							me._RENDERER.removeRubberBand(me._RENDERER.getRootElement());
-						},
-						drag : function (event) {
-							var eventOffset = me._getOffset(event),
-								start = $(this).data("start"),
-								offset = $(this).data("offset"),
-								newX = me._grid(eventOffset.x - offset.x),
-								newWidth = me._grid(newX - me._num(me._RENDERER.getAttr(guide.lc, "x"))),
-								newY = me._grid(eventOffset.y - offset.y),
-								newHeight = me._grid(newY - me._num(me._RENDERER.getAttr(guide.uc, "y")));
-							$(this).css({"position": "", "left": "", "top": ""});
-							if (newWidth >= OG.Constants.GUIDE_MIN_SIZE) {
-								me._RENDERER.setAttr(guide.rc, {x: newX});
-								me._RENDERER.setAttr(guide.ur, {x: newX});
-								me._RENDERER.setAttr(guide.lr, {x: newX});
-								me._RENDERER.setAttr(guide.uc, {x: OG.Util.round((me._num(me._RENDERER.getAttr(guide.lc, "x")) + newX) / 2)});
-								me._RENDERER.setAttr(guide.lwc, {x: OG.Util.round((me._num(me._RENDERER.getAttr(guide.lc, "x")) + newX) / 2)});
-								me._RENDERER.setAttr(guide.bBox, {width: newWidth});
-							}
-							if (newHeight >= OG.Constants.GUIDE_MIN_SIZE) {
-								me._RENDERER.setAttr(guide.lwc, {y: newY});
-								me._RENDERER.setAttr(guide.ll, {y: newY});
-								me._RENDERER.setAttr(guide.lr, {y: newY});
-								me._RENDERER.setAttr(guide.lc, {y: OG.Util.round((me._num(me._RENDERER.getAttr(guide.uc, "y")) + newY) / 2)});
-								me._RENDERER.setAttr(guide.rc, {y: OG.Util.round((me._num(me._RENDERER.getAttr(guide.uc, "y")) + newY) / 2)});
-								me._RENDERER.setAttr(guide.bBox, {height: newHeight});
-							}
-							me._RENDERER.removeAllTerminal();
-						},
-						stop : function (event) {
-							var eventOffset = me._getOffset(event),
-								start = $(this).data("start"),
-								dx = eventOffset.x - start.x,
-								dy = eventOffset.y - start.y;
-							$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
-							if (element && element.shape.geom) {
-								// resizing
-								if (element.shape.geom.getBoundary().getWidth() + dx < OG.Constants.GUIDE_MIN_SIZE) {
-									dx = OG.Constants.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getWidth();
-								}
-								if (element.shape.geom.getBoundary().getHeight() + dy < OG.Constants.GUIDE_MIN_SIZE) {
-									dy = OG.Constants.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getHeight();
-								}
-								me._RENDERER.resize(element, [0, me._grid(dy), 0, me._grid(dx)]);
-								me._RENDERER.drawGuide(element);
-							}
-							me._RENDERER.removeAllTerminal();
+				});
+			} else {
+				// resize handle
+				$(guide.rc).draggable({
+					start: function (event) {
+						var eventOffset = me._getOffset(event);
+						$(this).data("start", {x: eventOffset.x, y: eventOffset.y});
+						$(this).data("offset", {
+							x: eventOffset.x - me._num(me._RENDERER.getAttr(guide.rc, "x")),
+							y: eventOffset.y - me._num(me._RENDERER.getAttr(guide.rc, "y"))
+						});
+						me._RENDERER.removeRubberBand(me._RENDERER.getRootElement());
+					},
+					drag : function (event) {
+						var eventOffset = me._getOffset(event),
+							start = $(this).data("start"),
+							offset = $(this).data("offset"),
+							newX = me._grid(eventOffset.x - offset.x),
+							newWidth = me._grid(newX - me._num(me._RENDERER.getAttr(guide.lc, "x")));
+						$(this).css({"position": "", "left": "", "top": ""});
+						if (newWidth >= OG.Constants.GUIDE_MIN_SIZE) {
+							me._RENDERER.setAttr(guide.rc, {x: newX});
+							me._RENDERER.setAttr(guide.ur, {x: newX});
+							me._RENDERER.setAttr(guide.lr, {x: newX});
+							me._RENDERER.setAttr(guide.uc, {x: OG.Util.round((me._num(me._RENDERER.getAttr(guide.lc, "x")) + newX) / 2)});
+							me._RENDERER.setAttr(guide.lwc, {x: OG.Util.round((me._num(me._RENDERER.getAttr(guide.lc, "x")) + newX) / 2)});
+							me._RENDERER.setAttr(guide.bBox, {width: newWidth});
 						}
-					});
-
-					$(guide.lc).draggable({
-						start: function (event) {
-							var eventOffset = me._getOffset(event);
-							$(this).data("start", {x: eventOffset.x, y: eventOffset.y});
-							$(this).data("offset", {
-								x: eventOffset.x - me._num(me._RENDERER.getAttr(guide.lc, "x")),
-								y: eventOffset.y - me._num(me._RENDERER.getAttr(guide.lc, "y"))
-							});
-							me._RENDERER.removeRubberBand(me._RENDERER.getRootElement());
-						},
-						drag : function (event) {
-							var eventOffset = me._getOffset(event),
-								start = $(this).data("start"),
-								offset = $(this).data("offset"),
-								newX = me._grid(eventOffset.x - offset.x),
-								newWidth = me._grid(me._num(me._RENDERER.getAttr(guide.rc, "x")) - newX);
-							$(this).css({"position": "", "left": "", "top": ""});
-							if (newWidth >= OG.Constants.GUIDE_MIN_SIZE) {
-								me._RENDERER.setAttr(guide.lc, {x: newX});
-								me._RENDERER.setAttr(guide.ul, {x: newX});
-								me._RENDERER.setAttr(guide.ll, {x: newX});
-								me._RENDERER.setAttr(guide.uc, {x: OG.Util.round((me._num(me._RENDERER.getAttr(guide.rc, "x")) + newX) / 2)});
-								me._RENDERER.setAttr(guide.lwc, {x: OG.Util.round((me._num(me._RENDERER.getAttr(guide.rc, "x")) + newX) / 2)});
-								me._RENDERER.setAttr(guide.bBox, {x: OG.Util.round(newX + me._num(me._RENDERER.getAttr(guide.lc, "width")) / 2), width: newWidth});
+						me._RENDERER.removeAllTerminal();
+					},
+					stop : function (event) {
+						var eventOffset = me._getOffset(event),
+							start = $(this).data("start"),
+							dx = eventOffset.x - start.x;
+						$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
+						if (element && element.shape.geom) {
+							// resizing
+							if (element.shape.geom.getBoundary().getWidth() + dx < OG.Constants.GUIDE_MIN_SIZE) {
+								dx = OG.Constants.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getWidth();
 							}
-							me._RENDERER.removeAllTerminal();
-						},
-						stop : function (event) {
-							var eventOffset = me._getOffset(event),
-								start = $(this).data("start"),
-								dx = start.x - eventOffset.x;
-							$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
-							if (element && element.shape.geom) {
-								// resizing
-								if (element.shape.geom.getBoundary().getWidth() + dx < OG.Constants.GUIDE_MIN_SIZE) {
-									dx = OG.Constants.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getWidth();
-								}
-								me._RENDERER.resize(element, [0, 0, me._grid(dx), 0]);
-								me._RENDERER.drawGuide(element);
-							}
+							me._RENDERER.resize(element, [0, 0, 0, me._grid(dx)]);
+							me._RENDERER.drawGuide(element);
 						}
-					});
+					}
+				});
 
-					$(guide.ll).draggable({
-						start: function (event) {
-							var eventOffset = me._getOffset(event);
-							$(this).data("start", {x: eventOffset.x, y: eventOffset.y});
-							$(this).data("offset", {
-								x: eventOffset.x - me._num(me._RENDERER.getAttr(guide.ll, "x")),
-								y: eventOffset.y - me._num(me._RENDERER.getAttr(guide.ll, "y"))
-							});
-
-							me._RENDERER.removeRubberBand(me._RENDERER.getRootElement());
-						},
-						drag : function (event) {
-							var eventOffset = me._getOffset(event),
-								start = $(this).data("start"),
-								offset = $(this).data("offset"),
-								newX = me._grid(eventOffset.x - offset.x),
-								newY = me._grid(eventOffset.y - offset.y),
-								newWidth = me._grid(me._num(me._RENDERER.getAttr(guide.rc, "x")) - newX),
-								newHeight = me._grid(newY - me._num(me._RENDERER.getAttr(guide.uc, "y")));
-							$(this).css({"position": "", "left": "", "top": ""});
-							if (newWidth >= OG.Constants.GUIDE_MIN_SIZE) {
-								me._RENDERER.setAttr(guide.lc, {x: newX});
-								me._RENDERER.setAttr(guide.ul, {x: newX});
-								me._RENDERER.setAttr(guide.ll, {x: newX});
-								me._RENDERER.setAttr(guide.uc, {x: OG.Util.round((me._num(me._RENDERER.getAttr(guide.rc, "x")) + newX) / 2)});
-								me._RENDERER.setAttr(guide.lwc, {x: OG.Util.round((me._num(me._RENDERER.getAttr(guide.rc, "x")) + newX) / 2)});
-								me._RENDERER.setAttr(guide.bBox, {x: OG.Util.round(newX + me._num(me._RENDERER.getAttr(guide.lc, "width")) / 2), width: newWidth});
-							}
-							if (newHeight >= OG.Constants.GUIDE_MIN_SIZE) {
-								me._RENDERER.setAttr(guide.lwc, {y: newY});
-								me._RENDERER.setAttr(guide.ll, {y: newY});
-								me._RENDERER.setAttr(guide.lr, {y: newY});
-								me._RENDERER.setAttr(guide.lc, {y: OG.Util.round((me._num(me._RENDERER.getAttr(guide.uc, "y")) + newY) / 2)});
-								me._RENDERER.setAttr(guide.rc, {y: OG.Util.round((me._num(me._RENDERER.getAttr(guide.uc, "y")) + newY) / 2)});
-								me._RENDERER.setAttr(guide.bBox, {height: newHeight});
-							}
-							me._RENDERER.removeAllTerminal();
-						},
-						stop : function (event) {
-							var eventOffset = me._getOffset(event),
-								start = $(this).data("start"),
-								dx = start.x - eventOffset.x,
-								dy = eventOffset.y - start.y;
-							$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
-							if (element && element.shape.geom) {
-								// resizing
-								if (element.shape.geom.getBoundary().getWidth() + dx < OG.Constants.GUIDE_MIN_SIZE) {
-									dx = OG.Constants.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getWidth();
-								}
-								if (element.shape.geom.getBoundary().getHeight() + dy < OG.Constants.GUIDE_MIN_SIZE) {
-									dy = OG.Constants.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getHeight();
-								}
-								me._RENDERER.resize(element, [0, me._grid(dy), me._grid(dx), 0]);
-								me._RENDERER.drawGuide(element);
-							}
+				$(guide.lwc).draggable({
+					start: function (event) {
+						var eventOffset = me._getOffset(event);
+						$(this).data("start", {x: eventOffset.x, y: eventOffset.y});
+						$(this).data("offset", {
+							x: eventOffset.x - me._num(me._RENDERER.getAttr(guide.lwc, "x")),
+							y: eventOffset.y - me._num(me._RENDERER.getAttr(guide.lwc, "y"))
+						});
+						me._RENDERER.removeRubberBand(me._RENDERER.getRootElement());
+					},
+					drag : function (event) {
+						var eventOffset = me._getOffset(event),
+							start = $(this).data("start"),
+							offset = $(this).data("offset"),
+							newY = me._grid(eventOffset.y - offset.y),
+							newHeight = me._grid(newY - me._num(me._RENDERER.getAttr(guide.uc, "y")));
+						$(this).css({"position": "", "left": "", "top": ""});
+						if (newHeight >= OG.Constants.GUIDE_MIN_SIZE) {
+							me._RENDERER.setAttr(guide.lwc, {y: newY});
+							me._RENDERER.setAttr(guide.ll, {y: newY});
+							me._RENDERER.setAttr(guide.lr, {y: newY});
+							me._RENDERER.setAttr(guide.lc, {y: OG.Util.round((me._num(me._RENDERER.getAttr(guide.uc, "y")) + newY) / 2)});
+							me._RENDERER.setAttr(guide.rc, {y: OG.Util.round((me._num(me._RENDERER.getAttr(guide.uc, "y")) + newY) / 2)});
+							me._RENDERER.setAttr(guide.bBox, {height: newHeight});
 						}
-					});
-
-					$(guide.uc).draggable({
-						start: function (event) {
-							var eventOffset = me._getOffset(event);
-							$(this).data("start", {x: eventOffset.x, y: eventOffset.y});
-							$(this).data("offset", {
-								x: eventOffset.x - me._num(me._RENDERER.getAttr(guide.uc, "x")),
-								y: eventOffset.y - me._num(me._RENDERER.getAttr(guide.uc, "y"))
-							});
-
-							me._RENDERER.removeRubberBand(me._RENDERER.getRootElement());
-						},
-						drag : function (event) {
-							var eventOffset = me._getOffset(event),
-								start = $(this).data("start"),
-								offset = $(this).data("offset"),
-								newY = me._grid(eventOffset.y - offset.y),
-								newHeight = me._grid(me._num(me._RENDERER.getAttr(guide.lwc, "y")) - newY);
-							$(this).css({"position": "", "left": "", "top": ""});
-							if (newHeight >= OG.Constants.GUIDE_MIN_SIZE) {
-								me._RENDERER.setAttr(guide.uc, {y: newY});
-								me._RENDERER.setAttr(guide.ul, {y: newY});
-								me._RENDERER.setAttr(guide.ur, {y: newY});
-								me._RENDERER.setAttr(guide.lc, {y: OG.Util.round((me._num(me._RENDERER.getAttr(guide.lwc, "y")) + newY) / 2)});
-								me._RENDERER.setAttr(guide.rc, {y: OG.Util.round((me._num(me._RENDERER.getAttr(guide.lwc, "y")) + newY) / 2)});
-								me._RENDERER.setAttr(guide.bBox, {y: OG.Util.round(newY + me._num(me._RENDERER.getAttr(guide.uc, "width")) / 2), height: newHeight});
+						me._RENDERER.removeAllTerminal();
+					},
+					stop : function (event) {
+						var eventOffset = me._getOffset(event),
+							start = $(this).data("start"),
+							dy = eventOffset.y - start.y;
+						$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
+						if (element && element.shape.geom) {
+							// resizing
+							if (element.shape.geom.getBoundary().getHeight() + dy < OG.Constants.GUIDE_MIN_SIZE) {
+								dy = OG.Constants.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getHeight();
 							}
-							me._RENDERER.removeAllTerminal();
-						},
-						stop : function (event) {
-							var eventOffset = me._getOffset(event),
-								start = $(this).data("start"),
-								dy = start.y - eventOffset.y;
-							$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
-							if (element && element.shape.geom) {
-								// resizing
-								if (element.shape.geom.getBoundary().getHeight() + dy < OG.Constants.GUIDE_MIN_SIZE) {
-									dy = OG.Constants.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getHeight();
-								}
-								me._RENDERER.resize(element, [me._grid(dy), 0, 0, 0]);
-								me._RENDERER.drawGuide(element);
-							}
+							me._RENDERER.resize(element, [0, me._grid(dy), 0, 0]);
+							me._RENDERER.drawGuide(element);
 						}
-					});
+					}
+				});
 
-					$(guide.ul).draggable({
-						start: function (event) {
-							var eventOffset = me._getOffset(event);
-							$(this).data("start", {x: eventOffset.x, y: eventOffset.y});
-							$(this).data("offset", {
-								x: eventOffset.x - me._num(me._RENDERER.getAttr(guide.ul, "x")),
-								y: eventOffset.y - me._num(me._RENDERER.getAttr(guide.ul, "y"))
-							});
-
-							me._RENDERER.removeRubberBand(me._RENDERER.getRootElement());
-						},
-						drag : function (event) {
-							var eventOffset = me._getOffset(event),
-								start = $(this).data("start"),
-								offset = $(this).data("offset"),
-								newX = me._grid(eventOffset.x - offset.x),
-								newY = me._grid(eventOffset.y - offset.y),
-								newWidth = me._grid(me._num(me._RENDERER.getAttr(guide.rc, "x")) - newX),
-								newHeight = me._grid(me._num(me._RENDERER.getAttr(guide.lwc, "y")) - newY);
-							$(this).css({"position": "", "left": "", "top": ""});
-							if (newWidth >= OG.Constants.GUIDE_MIN_SIZE) {
-								me._RENDERER.setAttr(guide.lc, {x: newX});
-								me._RENDERER.setAttr(guide.ul, {x: newX});
-								me._RENDERER.setAttr(guide.ll, {x: newX});
-								me._RENDERER.setAttr(guide.uc, {x: OG.Util.round((me._num(me._RENDERER.getAttr(guide.rc, "x")) + newX) / 2)});
-								me._RENDERER.setAttr(guide.lwc, {x: OG.Util.round((me._num(me._RENDERER.getAttr(guide.rc, "x")) + newX) / 2)});
-								me._RENDERER.setAttr(guide.bBox, {x: OG.Util.round(newX + me._num(me._RENDERER.getAttr(guide.lc, "width")) / 2), width: newWidth});
-							}
-							if (newHeight >= OG.Constants.GUIDE_MIN_SIZE) {
-								me._RENDERER.setAttr(guide.uc, {y: newY});
-								me._RENDERER.setAttr(guide.ul, {y: newY});
-								me._RENDERER.setAttr(guide.ur, {y: newY});
-								me._RENDERER.setAttr(guide.lc, {y: OG.Util.round((me._num(me._RENDERER.getAttr(guide.lwc, "y")) + newY) / 2)});
-								me._RENDERER.setAttr(guide.rc, {y: OG.Util.round((me._num(me._RENDERER.getAttr(guide.lwc, "y")) + newY) / 2)});
-								me._RENDERER.setAttr(guide.bBox, {y: OG.Util.round(newY + me._num(me._RENDERER.getAttr(guide.uc, "height")) / 2), height: newHeight});
-							}
-							me._RENDERER.removeAllTerminal();
-						},
-						stop : function (event) {
-							var eventOffset = me._getOffset(event),
-								start = $(this).data("start"),
-								dx = start.x - eventOffset.x,
-								dy = start.y - eventOffset.y;
-							$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
-							if (element && element.shape.geom) {
-								// resizing
-								if (element.shape.geom.getBoundary().getWidth() + dx < OG.Constants.GUIDE_MIN_SIZE) {
-									dx = OG.Constants.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getWidth();
-								}
-								if (element.shape.geom.getBoundary().getHeight() + dy < OG.Constants.GUIDE_MIN_SIZE) {
-									dy = OG.Constants.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getHeight();
-								}
-								me._RENDERER.resize(element, [me._grid(dy), 0, me._grid(dx), 0]);
-								me._RENDERER.drawGuide(element);
-							}
+				$(guide.lr).draggable({
+					start: function (event) {
+						var eventOffset = me._getOffset(event);
+						$(this).data("start", {x: eventOffset.x, y: eventOffset.y});
+						$(this).data("offset", {
+							x: eventOffset.x - me._num(me._RENDERER.getAttr(guide.lr, "x")),
+							y: eventOffset.y - me._num(me._RENDERER.getAttr(guide.lr, "y"))
+						});
+						me._RENDERER.removeRubberBand(me._RENDERER.getRootElement());
+					},
+					drag : function (event) {
+						var eventOffset = me._getOffset(event),
+							start = $(this).data("start"),
+							offset = $(this).data("offset"),
+							newX = me._grid(eventOffset.x - offset.x),
+							newWidth = me._grid(newX - me._num(me._RENDERER.getAttr(guide.lc, "x"))),
+							newY = me._grid(eventOffset.y - offset.y),
+							newHeight = me._grid(newY - me._num(me._RENDERER.getAttr(guide.uc, "y")));
+						$(this).css({"position": "", "left": "", "top": ""});
+						if (newWidth >= OG.Constants.GUIDE_MIN_SIZE) {
+							me._RENDERER.setAttr(guide.rc, {x: newX});
+							me._RENDERER.setAttr(guide.ur, {x: newX});
+							me._RENDERER.setAttr(guide.lr, {x: newX});
+							me._RENDERER.setAttr(guide.uc, {x: OG.Util.round((me._num(me._RENDERER.getAttr(guide.lc, "x")) + newX) / 2)});
+							me._RENDERER.setAttr(guide.lwc, {x: OG.Util.round((me._num(me._RENDERER.getAttr(guide.lc, "x")) + newX) / 2)});
+							me._RENDERER.setAttr(guide.bBox, {width: newWidth});
 						}
-					});
-
-					$(guide.ur).draggable({
-						start: function (event) {
-							var eventOffset = me._getOffset(event);
-							$(this).data("start", {x: eventOffset.x, y: eventOffset.y});
-							$(this).data("offset", {
-								x: eventOffset.x - me._num(me._RENDERER.getAttr(guide.ur, "x")),
-								y: eventOffset.y - me._num(me._RENDERER.getAttr(guide.ur, "y"))
-							});
-
-							me._RENDERER.removeRubberBand(me._RENDERER.getRootElement());
-						},
-						drag : function (event) {
-							var eventOffset = me._getOffset(event),
-								start = $(this).data("start"),
-								offset = $(this).data("offset"),
-								newX = me._grid(eventOffset.x - offset.x),
-								newY = me._grid(eventOffset.y - offset.y),
-								newWidth = me._grid(newX - me._num(me._RENDERER.getAttr(guide.lc, "x"))),
-								newHeight = me._grid(me._num(me._RENDERER.getAttr(guide.lwc, "y")) - newY);
-							$(this).css({"position": "", "left": "", "top": ""});
-							if (newWidth >= OG.Constants.GUIDE_MIN_SIZE) {
-								me._RENDERER.setAttr(guide.rc, {x: newX});
-								me._RENDERER.setAttr(guide.ur, {x: newX});
-								me._RENDERER.setAttr(guide.lr, {x: newX});
-								me._RENDERER.setAttr(guide.uc, {x: OG.Util.round((me._num(me._RENDERER.getAttr(guide.lc, "x")) + newX) / 2)});
-								me._RENDERER.setAttr(guide.lwc, {x: OG.Util.round((me._num(me._RENDERER.getAttr(guide.lc, "x")) + newX) / 2)});
-								me._RENDERER.setAttr(guide.bBox, {width: newWidth});
-							}
-							if (newHeight >= OG.Constants.GUIDE_MIN_SIZE) {
-								me._RENDERER.setAttr(guide.uc, {y: newY});
-								me._RENDERER.setAttr(guide.ul, {y: newY});
-								me._RENDERER.setAttr(guide.ur, {y: newY});
-								me._RENDERER.setAttr(guide.lc, {y: OG.Util.round((me._num(me._RENDERER.getAttr(guide.lwc, "y")) + newY) / 2)});
-								me._RENDERER.setAttr(guide.rc, {y: OG.Util.round((me._num(me._RENDERER.getAttr(guide.lwc, "y")) + newY) / 2)});
-								me._RENDERER.setAttr(guide.bBox, {y: OG.Util.round(newY + me._num(me._RENDERER.getAttr(guide.uc, "width")) / 2), height: newHeight});
-							}
-							me._RENDERER.removeAllTerminal();
-						},
-						stop : function (event) {
-							var eventOffset = me._getOffset(event),
-								start = $(this).data("start"),
-								dx = eventOffset.x - start.x,
-								dy = start.y - eventOffset.y;
-							$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
-							if (element && element.shape.geom) {
-								// resizing
-								if (element.shape.geom.getBoundary().getWidth() + dx < OG.Constants.GUIDE_MIN_SIZE) {
-									dx = OG.Constants.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getWidth();
-								}
-								if (element.shape.geom.getBoundary().getHeight() + dy < OG.Constants.GUIDE_MIN_SIZE) {
-									dy = OG.Constants.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getHeight();
-								}
-								me._RENDERER.resize(element, [me._grid(dy), 0, 0, me._grid(dx)]);
-								me._RENDERER.drawGuide(element);
-							}
+						if (newHeight >= OG.Constants.GUIDE_MIN_SIZE) {
+							me._RENDERER.setAttr(guide.lwc, {y: newY});
+							me._RENDERER.setAttr(guide.ll, {y: newY});
+							me._RENDERER.setAttr(guide.lr, {y: newY});
+							me._RENDERER.setAttr(guide.lc, {y: OG.Util.round((me._num(me._RENDERER.getAttr(guide.uc, "y")) + newY) / 2)});
+							me._RENDERER.setAttr(guide.rc, {y: OG.Util.round((me._num(me._RENDERER.getAttr(guide.uc, "y")) + newY) / 2)});
+							me._RENDERER.setAttr(guide.bBox, {height: newHeight});
 						}
-					});
-				}
+						me._RENDERER.removeAllTerminal();
+					},
+					stop : function (event) {
+						var eventOffset = me._getOffset(event),
+							start = $(this).data("start"),
+							dx = eventOffset.x - start.x,
+							dy = eventOffset.y - start.y;
+						$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
+						if (element && element.shape.geom) {
+							// resizing
+							if (element.shape.geom.getBoundary().getWidth() + dx < OG.Constants.GUIDE_MIN_SIZE) {
+								dx = OG.Constants.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getWidth();
+							}
+							if (element.shape.geom.getBoundary().getHeight() + dy < OG.Constants.GUIDE_MIN_SIZE) {
+								dy = OG.Constants.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getHeight();
+							}
+							me._RENDERER.resize(element, [0, me._grid(dy), 0, me._grid(dx)]);
+							me._RENDERER.drawGuide(element);
+						}
+						me._RENDERER.removeAllTerminal();
+					}
+				});
+
+				$(guide.lc).draggable({
+					start: function (event) {
+						var eventOffset = me._getOffset(event);
+						$(this).data("start", {x: eventOffset.x, y: eventOffset.y});
+						$(this).data("offset", {
+							x: eventOffset.x - me._num(me._RENDERER.getAttr(guide.lc, "x")),
+							y: eventOffset.y - me._num(me._RENDERER.getAttr(guide.lc, "y"))
+						});
+						me._RENDERER.removeRubberBand(me._RENDERER.getRootElement());
+					},
+					drag : function (event) {
+						var eventOffset = me._getOffset(event),
+							start = $(this).data("start"),
+							offset = $(this).data("offset"),
+							newX = me._grid(eventOffset.x - offset.x),
+							newWidth = me._grid(me._num(me._RENDERER.getAttr(guide.rc, "x")) - newX);
+						$(this).css({"position": "", "left": "", "top": ""});
+						if (newWidth >= OG.Constants.GUIDE_MIN_SIZE) {
+							me._RENDERER.setAttr(guide.lc, {x: newX});
+							me._RENDERER.setAttr(guide.ul, {x: newX});
+							me._RENDERER.setAttr(guide.ll, {x: newX});
+							me._RENDERER.setAttr(guide.uc, {x: OG.Util.round((me._num(me._RENDERER.getAttr(guide.rc, "x")) + newX) / 2)});
+							me._RENDERER.setAttr(guide.lwc, {x: OG.Util.round((me._num(me._RENDERER.getAttr(guide.rc, "x")) + newX) / 2)});
+							me._RENDERER.setAttr(guide.bBox, {x: OG.Util.round(newX + me._num(me._RENDERER.getAttr(guide.lc, "width")) / 2), width: newWidth});
+						}
+						me._RENDERER.removeAllTerminal();
+					},
+					stop : function (event) {
+						var eventOffset = me._getOffset(event),
+							start = $(this).data("start"),
+							dx = start.x - eventOffset.x;
+						$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
+						if (element && element.shape.geom) {
+							// resizing
+							if (element.shape.geom.getBoundary().getWidth() + dx < OG.Constants.GUIDE_MIN_SIZE) {
+								dx = OG.Constants.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getWidth();
+							}
+							me._RENDERER.resize(element, [0, 0, me._grid(dx), 0]);
+							me._RENDERER.drawGuide(element);
+						}
+					}
+				});
+
+				$(guide.ll).draggable({
+					start: function (event) {
+						var eventOffset = me._getOffset(event);
+						$(this).data("start", {x: eventOffset.x, y: eventOffset.y});
+						$(this).data("offset", {
+							x: eventOffset.x - me._num(me._RENDERER.getAttr(guide.ll, "x")),
+							y: eventOffset.y - me._num(me._RENDERER.getAttr(guide.ll, "y"))
+						});
+
+						me._RENDERER.removeRubberBand(me._RENDERER.getRootElement());
+					},
+					drag : function (event) {
+						var eventOffset = me._getOffset(event),
+							start = $(this).data("start"),
+							offset = $(this).data("offset"),
+							newX = me._grid(eventOffset.x - offset.x),
+							newY = me._grid(eventOffset.y - offset.y),
+							newWidth = me._grid(me._num(me._RENDERER.getAttr(guide.rc, "x")) - newX),
+							newHeight = me._grid(newY - me._num(me._RENDERER.getAttr(guide.uc, "y")));
+						$(this).css({"position": "", "left": "", "top": ""});
+						if (newWidth >= OG.Constants.GUIDE_MIN_SIZE) {
+							me._RENDERER.setAttr(guide.lc, {x: newX});
+							me._RENDERER.setAttr(guide.ul, {x: newX});
+							me._RENDERER.setAttr(guide.ll, {x: newX});
+							me._RENDERER.setAttr(guide.uc, {x: OG.Util.round((me._num(me._RENDERER.getAttr(guide.rc, "x")) + newX) / 2)});
+							me._RENDERER.setAttr(guide.lwc, {x: OG.Util.round((me._num(me._RENDERER.getAttr(guide.rc, "x")) + newX) / 2)});
+							me._RENDERER.setAttr(guide.bBox, {x: OG.Util.round(newX + me._num(me._RENDERER.getAttr(guide.lc, "width")) / 2), width: newWidth});
+						}
+						if (newHeight >= OG.Constants.GUIDE_MIN_SIZE) {
+							me._RENDERER.setAttr(guide.lwc, {y: newY});
+							me._RENDERER.setAttr(guide.ll, {y: newY});
+							me._RENDERER.setAttr(guide.lr, {y: newY});
+							me._RENDERER.setAttr(guide.lc, {y: OG.Util.round((me._num(me._RENDERER.getAttr(guide.uc, "y")) + newY) / 2)});
+							me._RENDERER.setAttr(guide.rc, {y: OG.Util.round((me._num(me._RENDERER.getAttr(guide.uc, "y")) + newY) / 2)});
+							me._RENDERER.setAttr(guide.bBox, {height: newHeight});
+						}
+						me._RENDERER.removeAllTerminal();
+					},
+					stop : function (event) {
+						var eventOffset = me._getOffset(event),
+							start = $(this).data("start"),
+							dx = start.x - eventOffset.x,
+							dy = eventOffset.y - start.y;
+						$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
+						if (element && element.shape.geom) {
+							// resizing
+							if (element.shape.geom.getBoundary().getWidth() + dx < OG.Constants.GUIDE_MIN_SIZE) {
+								dx = OG.Constants.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getWidth();
+							}
+							if (element.shape.geom.getBoundary().getHeight() + dy < OG.Constants.GUIDE_MIN_SIZE) {
+								dy = OG.Constants.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getHeight();
+							}
+							me._RENDERER.resize(element, [0, me._grid(dy), me._grid(dx), 0]);
+							me._RENDERER.drawGuide(element);
+						}
+					}
+				});
+
+				$(guide.uc).draggable({
+					start: function (event) {
+						var eventOffset = me._getOffset(event);
+						$(this).data("start", {x: eventOffset.x, y: eventOffset.y});
+						$(this).data("offset", {
+							x: eventOffset.x - me._num(me._RENDERER.getAttr(guide.uc, "x")),
+							y: eventOffset.y - me._num(me._RENDERER.getAttr(guide.uc, "y"))
+						});
+
+						me._RENDERER.removeRubberBand(me._RENDERER.getRootElement());
+					},
+					drag : function (event) {
+						var eventOffset = me._getOffset(event),
+							start = $(this).data("start"),
+							offset = $(this).data("offset"),
+							newY = me._grid(eventOffset.y - offset.y),
+							newHeight = me._grid(me._num(me._RENDERER.getAttr(guide.lwc, "y")) - newY);
+						$(this).css({"position": "", "left": "", "top": ""});
+						if (newHeight >= OG.Constants.GUIDE_MIN_SIZE) {
+							me._RENDERER.setAttr(guide.uc, {y: newY});
+							me._RENDERER.setAttr(guide.ul, {y: newY});
+							me._RENDERER.setAttr(guide.ur, {y: newY});
+							me._RENDERER.setAttr(guide.lc, {y: OG.Util.round((me._num(me._RENDERER.getAttr(guide.lwc, "y")) + newY) / 2)});
+							me._RENDERER.setAttr(guide.rc, {y: OG.Util.round((me._num(me._RENDERER.getAttr(guide.lwc, "y")) + newY) / 2)});
+							me._RENDERER.setAttr(guide.bBox, {y: OG.Util.round(newY + me._num(me._RENDERER.getAttr(guide.uc, "width")) / 2), height: newHeight});
+						}
+						me._RENDERER.removeAllTerminal();
+					},
+					stop : function (event) {
+						var eventOffset = me._getOffset(event),
+							start = $(this).data("start"),
+							dy = start.y - eventOffset.y;
+						$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
+						if (element && element.shape.geom) {
+							// resizing
+							if (element.shape.geom.getBoundary().getHeight() + dy < OG.Constants.GUIDE_MIN_SIZE) {
+								dy = OG.Constants.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getHeight();
+							}
+							me._RENDERER.resize(element, [me._grid(dy), 0, 0, 0]);
+							me._RENDERER.drawGuide(element);
+						}
+					}
+				});
+
+				$(guide.ul).draggable({
+					start: function (event) {
+						var eventOffset = me._getOffset(event);
+						$(this).data("start", {x: eventOffset.x, y: eventOffset.y});
+						$(this).data("offset", {
+							x: eventOffset.x - me._num(me._RENDERER.getAttr(guide.ul, "x")),
+							y: eventOffset.y - me._num(me._RENDERER.getAttr(guide.ul, "y"))
+						});
+
+						me._RENDERER.removeRubberBand(me._RENDERER.getRootElement());
+					},
+					drag : function (event) {
+						var eventOffset = me._getOffset(event),
+							start = $(this).data("start"),
+							offset = $(this).data("offset"),
+							newX = me._grid(eventOffset.x - offset.x),
+							newY = me._grid(eventOffset.y - offset.y),
+							newWidth = me._grid(me._num(me._RENDERER.getAttr(guide.rc, "x")) - newX),
+							newHeight = me._grid(me._num(me._RENDERER.getAttr(guide.lwc, "y")) - newY);
+						$(this).css({"position": "", "left": "", "top": ""});
+						if (newWidth >= OG.Constants.GUIDE_MIN_SIZE) {
+							me._RENDERER.setAttr(guide.lc, {x: newX});
+							me._RENDERER.setAttr(guide.ul, {x: newX});
+							me._RENDERER.setAttr(guide.ll, {x: newX});
+							me._RENDERER.setAttr(guide.uc, {x: OG.Util.round((me._num(me._RENDERER.getAttr(guide.rc, "x")) + newX) / 2)});
+							me._RENDERER.setAttr(guide.lwc, {x: OG.Util.round((me._num(me._RENDERER.getAttr(guide.rc, "x")) + newX) / 2)});
+							me._RENDERER.setAttr(guide.bBox, {x: OG.Util.round(newX + me._num(me._RENDERER.getAttr(guide.lc, "width")) / 2), width: newWidth});
+						}
+						if (newHeight >= OG.Constants.GUIDE_MIN_SIZE) {
+							me._RENDERER.setAttr(guide.uc, {y: newY});
+							me._RENDERER.setAttr(guide.ul, {y: newY});
+							me._RENDERER.setAttr(guide.ur, {y: newY});
+							me._RENDERER.setAttr(guide.lc, {y: OG.Util.round((me._num(me._RENDERER.getAttr(guide.lwc, "y")) + newY) / 2)});
+							me._RENDERER.setAttr(guide.rc, {y: OG.Util.round((me._num(me._RENDERER.getAttr(guide.lwc, "y")) + newY) / 2)});
+							me._RENDERER.setAttr(guide.bBox, {y: OG.Util.round(newY + me._num(me._RENDERER.getAttr(guide.uc, "height")) / 2), height: newHeight});
+						}
+						me._RENDERER.removeAllTerminal();
+					},
+					stop : function (event) {
+						var eventOffset = me._getOffset(event),
+							start = $(this).data("start"),
+							dx = start.x - eventOffset.x,
+							dy = start.y - eventOffset.y;
+						$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
+						if (element && element.shape.geom) {
+							// resizing
+							if (element.shape.geom.getBoundary().getWidth() + dx < OG.Constants.GUIDE_MIN_SIZE) {
+								dx = OG.Constants.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getWidth();
+							}
+							if (element.shape.geom.getBoundary().getHeight() + dy < OG.Constants.GUIDE_MIN_SIZE) {
+								dy = OG.Constants.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getHeight();
+							}
+							me._RENDERER.resize(element, [me._grid(dy), 0, me._grid(dx), 0]);
+							me._RENDERER.drawGuide(element);
+						}
+					}
+				});
+
+				$(guide.ur).draggable({
+					start: function (event) {
+						var eventOffset = me._getOffset(event);
+						$(this).data("start", {x: eventOffset.x, y: eventOffset.y});
+						$(this).data("offset", {
+							x: eventOffset.x - me._num(me._RENDERER.getAttr(guide.ur, "x")),
+							y: eventOffset.y - me._num(me._RENDERER.getAttr(guide.ur, "y"))
+						});
+
+						me._RENDERER.removeRubberBand(me._RENDERER.getRootElement());
+					},
+					drag : function (event) {
+						var eventOffset = me._getOffset(event),
+							start = $(this).data("start"),
+							offset = $(this).data("offset"),
+							newX = me._grid(eventOffset.x - offset.x),
+							newY = me._grid(eventOffset.y - offset.y),
+							newWidth = me._grid(newX - me._num(me._RENDERER.getAttr(guide.lc, "x"))),
+							newHeight = me._grid(me._num(me._RENDERER.getAttr(guide.lwc, "y")) - newY);
+						$(this).css({"position": "", "left": "", "top": ""});
+						if (newWidth >= OG.Constants.GUIDE_MIN_SIZE) {
+							me._RENDERER.setAttr(guide.rc, {x: newX});
+							me._RENDERER.setAttr(guide.ur, {x: newX});
+							me._RENDERER.setAttr(guide.lr, {x: newX});
+							me._RENDERER.setAttr(guide.uc, {x: OG.Util.round((me._num(me._RENDERER.getAttr(guide.lc, "x")) + newX) / 2)});
+							me._RENDERER.setAttr(guide.lwc, {x: OG.Util.round((me._num(me._RENDERER.getAttr(guide.lc, "x")) + newX) / 2)});
+							me._RENDERER.setAttr(guide.bBox, {width: newWidth});
+						}
+						if (newHeight >= OG.Constants.GUIDE_MIN_SIZE) {
+							me._RENDERER.setAttr(guide.uc, {y: newY});
+							me._RENDERER.setAttr(guide.ul, {y: newY});
+							me._RENDERER.setAttr(guide.ur, {y: newY});
+							me._RENDERER.setAttr(guide.lc, {y: OG.Util.round((me._num(me._RENDERER.getAttr(guide.lwc, "y")) + newY) / 2)});
+							me._RENDERER.setAttr(guide.rc, {y: OG.Util.round((me._num(me._RENDERER.getAttr(guide.lwc, "y")) + newY) / 2)});
+							me._RENDERER.setAttr(guide.bBox, {y: OG.Util.round(newY + me._num(me._RENDERER.getAttr(guide.uc, "width")) / 2), height: newHeight});
+						}
+						me._RENDERER.removeAllTerminal();
+					},
+					stop : function (event) {
+						var eventOffset = me._getOffset(event),
+							start = $(this).data("start"),
+							dx = eventOffset.x - start.x,
+							dy = start.y - eventOffset.y;
+						$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
+						if (element && element.shape.geom) {
+							// resizing
+							if (element.shape.geom.getBoundary().getWidth() + dx < OG.Constants.GUIDE_MIN_SIZE) {
+								dx = OG.Constants.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getWidth();
+							}
+							if (element.shape.geom.getBoundary().getHeight() + dy < OG.Constants.GUIDE_MIN_SIZE) {
+								dy = OG.Constants.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getHeight();
+							}
+							me._RENDERER.resize(element, [me._grid(dy), 0, 0, me._grid(dx)]);
+							me._RENDERER.drawGuide(element);
+						}
+					}
+				});
 			}
 		} else {
 			if ($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.EDGE) {
@@ -1416,7 +1388,7 @@ OG.handler.EventHandler.prototype = {
 	 */
 	setClickSelectable: function (element, isSelectable) {
 		var me = this;
-		if (isSelectable) {
+		if (isSelectable === true) {
 			// 마우스 클릭하여 선택 처리
 			$(element).bind("click", function (event) {
 				var guide;
@@ -1442,7 +1414,7 @@ OG.handler.EventHandler.prototype = {
 							guide = me._RENDERER.drawGuide(element);
 							if (guide) {
 								// enable event
-								me.setResizable(element, guide, OG.Constants.SELECTABLE && OG.Constants.RESIZABLE);
+								me.setResizable(element, guide, element.shape.SELECTABLE && element.shape.RESIZABLE);
 								me._RENDERER.removeAllTerminal();
 								me._RENDERER.toFront(guide.group);
 							}
@@ -1470,7 +1442,7 @@ OG.handler.EventHandler.prototype = {
 								guide = me._RENDERER.drawGuide(element);
 								if (guide) {
 									// enable event
-									me.setResizable(element, guide, OG.Constants.SELECTABLE && OG.Constants.RESIZABLE);
+									me.setResizable(element, guide, element.shape.SELECTABLE && element.shape.RESIZABLE);
 									me._RENDERER.removeAllTerminal();
 									me._RENDERER.toFront(guide.group);
 								}
@@ -1482,7 +1454,7 @@ OG.handler.EventHandler.prototype = {
 				});
 			}
 
-			if (isSelectable && OG.Constants.MOVABLE) {
+			if (isSelectable && element.shape.MOVABLE) {
 				me._RENDERER.setAttr(element, {cursor: 'move'});
 				OG.Util.apply(element.shape.geom.style.map, {cursor: 'move'});
 			} else {
@@ -1519,7 +1491,7 @@ OG.handler.EventHandler.prototype = {
 			}
 		});
 
-		if (isSelectable) {
+		if (isSelectable === true) {
 			// 마우스 영역 드래그하여 선택 처리
 			$(rootEle).bind("mousedown", function (event) {
 				var eventOffset = me._getOffset(event);
@@ -1556,7 +1528,7 @@ OG.handler.EventHandler.prototype = {
 								guide = me._RENDERER.drawGuide(element);
 								if (guide) {
 									// enable event
-									me.setResizable(element, guide, OG.Constants.SELECTABLE && OG.Constants.RESIZABLE);
+									me.setResizable(element, guide, element.shape.SELECTABLE && element.shape.RESIZABLE);
 									me._RENDERER.removeAllTerminal();
 								}
 							}
@@ -1585,7 +1557,7 @@ OG.handler.EventHandler.prototype = {
 	 */
 	setEnableHotKey: function (isEnableHotKey) {
 		var me = this;
-		if (isEnableHotKey) {
+		if (isEnableHotKey === true) {
 			// delete, ctrl+A
 			$(me._RENDERER.getContainer()).bind("keydown", function (event) {
 				// 라벨수정중엔 keydown 이벤트무시
@@ -2569,11 +2541,11 @@ OG.handler.EventHandler.prototype = {
 
 	selectShape: function (element) {
 		var me = this, guide;
-		if ($(element.parentNode).attr("_shape") !== OG.Constants.SHAPE_TYPE.GROUP) {
+		if ($(element.parentNode).attr("_shape") !== OG.Constants.SHAPE_TYPE.GROUP && element.shape.SELECTABLE === true) {
 			guide = me._RENDERER.drawGuide(element);
 			if (guide) {
 				// enable event
-				me.setResizable(element, guide, OG.Constants.SELECTABLE && OG.Constants.RESIZABLE);
+				me.setResizable(element, guide, element.shape.SELECTABLE && element.shape.RESIZABLE);
 				me._RENDERER.removeTerminal(element);
 			}
 		}
@@ -2638,22 +2610,20 @@ OG.handler.EventHandler.prototype = {
 
 				// enable event
 				newGuide = me._RENDERER.drawGuide(newElement);
-				me.setClickSelectable(newElement, OG.Constants.SELECTABLE);
-				me.setMovable(newElement, OG.Constants.SELECTABLE && OG.Constants.MOVABLE);
-				me.setResizable(newElement, newGuide, OG.Constants.SELECTABLE && OG.Constants.RESIZABLE);
-				if (OG.Constants.GROUP_DROPABLE) {
+				me.setClickSelectable(newElement, newElement.shape.SELECTABLE);
+				me.setMovable(newElement, newElement.shape.SELECTABLE && newElement.shape.MOVABLE);
+				me.setResizable(newElement, newGuide, newElement.shape.SELECTABLE && newElement.shape.RESIZABLE);
+				if (newElement.shape.GROUP_DROPABLE) {
 					me.enableDragAndDropGroup(newElement);
 				}
-				if (OG.Constants.GROUP_COLLAPSIBLE) {
+				if (newElement.shape.GROUP_COLLAPSIBLE) {
 					me.enableCollapse(newElement);
 				}
-				if ($(newElement).attr("_shape") !== OG.Constants.SHAPE_TYPE.GROUP) {
-					if (OG.Constants.CONNECTABLE) {
-						me.enableConnect(newElement);
-					}
-					if (OG.Constants.LABEL_EDITABLE) {
-						me.enableEditLabel(newElement);
-					}
+				if (newElement.shape.CONNECTABLE) {
+					me.enableConnect(newElement);
+				}
+				if (newElement.shape.LABEL_EDITABLE) {
+					me.enableEditLabel(newElement);
 				}
 
 				// copy children
@@ -2683,10 +2653,10 @@ OG.handler.EventHandler.prototype = {
 			guide = me._RENDERER.drawGuide(groupElement);
 			if (guide) {
 				// enable event
-				me.setClickSelectable(groupElement, OG.Constants.SELECTABLE);
-				me.setMovable(groupElement, OG.Constants.SELECTABLE && OG.Constants.MOVABLE);
-				me.setResizable(groupElement, guide, OG.Constants.SELECTABLE && OG.Constants.RESIZABLE);
-				if (OG.Constants.GROUP_DROPABLE) {
+				me.setClickSelectable(groupElement, groupElement.shape.SELECTABLE);
+				me.setMovable(groupElement, groupElement.shape.SELECTABLE && groupElement.shape.MOVABLE);
+				me.setResizable(groupElement, guide, groupElement.shape.SELECTABLE && groupElement.shape.RESIZABLE);
+				if (groupElement.shape.GROUP_DROPABLE) {
 					me.enableDragAndDropGroup(groupElement);
 				}
 
@@ -2720,7 +2690,7 @@ OG.handler.EventHandler.prototype = {
 
 				me._RENDERER.removeGuide(item);
 				guide = me._RENDERER.drawGuide(item);
-				me.setResizable(item, guide, OG.Constants.SELECTABLE && OG.Constants.RESIZABLE);
+				me.setResizable(item, guide, item.shape.SELECTABLE && item.shape.RESIZABLE);
 				me._RENDERER.toFront(guide.group);
 			}
 		});
@@ -2751,7 +2721,7 @@ OG.handler.EventHandler.prototype = {
 
 			me._RENDERER.removeGuide(edge);
 			guide = me._RENDERER.drawGuide(edge);
-			me.setResizable(edge, guide, OG.Constants.SELECTABLE && OG.Constants.RESIZABLE);
+			me.setResizable(edge, guide, edge.shape.SELECTABLE && edge.shape.RESIZABLE);
 			me._RENDERER.toFront(guide.group);
 		});
 	},
@@ -3119,21 +3089,19 @@ OG.handler.EventHandler.prototype = {
 				newCopiedElement.appendChild(newElement);
 
 				// enable event
-				me.setClickSelectable(newElement, OG.Constants.SELECTABLE);
-				me.setMovable(newElement, OG.Constants.SELECTABLE && OG.Constants.MOVABLE);
-				if (OG.Constants.GROUP_DROPABLE) {
+				me.setClickSelectable(newElement, newElement.shape.SELECTABLE);
+				me.setMovable(newElement, newElement.shape.SELECTABLE && newElement.shape.MOVABLE);
+				if (newElement.shape.GROUP_DROPABLE) {
 					me.enableDragAndDropGroup(newElement);
 				}
-				if (OG.Constants.GROUP_COLLAPSIBLE) {
+				if (newElement.shape.GROUP_COLLAPSIBLE) {
 					me.enableCollapse(newElement);
 				}
-				if ($(newElement).attr("_shape") !== OG.Constants.SHAPE_TYPE.GROUP) {
-					if (OG.Constants.CONNECTABLE) {
-						me.enableConnect(newElement);
-					}
-					if (OG.Constants.LABEL_EDITABLE) {
-						me.enableEditLabel(newElement);
-					}
+				if (newElement.shape.CONNECTABLE) {
+					me.enableConnect(newElement);
+				}
+				if (newElement.shape.LABEL_EDITABLE) {
+					me.enableEditLabel(newElement);
 				}
 
 				// recursive call

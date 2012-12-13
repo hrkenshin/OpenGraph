@@ -9,6 +9,8 @@
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.EllipseShape = function (label) {
+	OG.shape.EllipseShape.superclass.call(this);
+
 	this.SHAPE_ID = 'OG.shape.EllipseShape';
 	this.label = label;
 };

@@ -140,22 +140,22 @@ OG.graph.Canvas.prototype = {
 			this.initConfig();
 		}
 
-		this._HANDLER.setClickSelectable(element, OG.Constants.SELECTABLE);
-		this._HANDLER.setMovable(element, OG.Constants.SELECTABLE && OG.Constants.MOVABLE);
+		this._HANDLER.setClickSelectable(element, element.shape.SELECTABLE);
+		this._HANDLER.setMovable(element, element.shape.SELECTABLE && element.shape.MOVABLE);
 
-		if (OG.Constants.CONNECTABLE) {
+		if (element.shape.CONNECTABLE) {
 			this._HANDLER.enableConnect(element);
 		}
 
-		if (OG.Constants.LABEL_EDITABLE) {
+		if (element.shape.LABEL_EDITABLE) {
 			this._HANDLER.enableEditLabel(element);
 		}
 
-		if (OG.Constants.GROUP_DROPABLE) {
+		if (element.shape.GROUP_DROPABLE) {
 			this._HANDLER.enableDragAndDropGroup(element);
 		}
 
-		if (OG.Constants.GROUP_COLLAPSIBLE) {
+		if (element.shape.GROUP_COLLAPSIBLE) {
 			this._HANDLER.enableCollapse(element);
 		}
 
@@ -242,13 +242,11 @@ OG.graph.Canvas.prototype = {
 
 			if (edge && guide) {
 				// enable event
-				this._HANDLER.setClickSelectable(edge, OG.Constants.SELECTABLE);
-				this._HANDLER.setMovable(edge, OG.Constants.SELECTABLE && OG.Constants.MOVABLE);
-				this._HANDLER.setResizable(edge, guide, OG.Constants.SELECTABLE && OG.Constants.RESIZABLE);
-				if ($(edge).attr("_shape") !== OG.Constants.SHAPE_TYPE.GROUP) {
-					if (OG.Constants.LABEL_EDITABLE) {
-						this._HANDLER.enableEditLabel(edge);
-					}
+				this._HANDLER.setClickSelectable(edge, edge.shape.SELECTABLE);
+				this._HANDLER.setMovable(edge, edge.shape.SELECTABLE && edge.shape.MOVABLE);
+				this._HANDLER.setResizable(edge, guide, edge.shape.SELECTABLE && edge.shape.RESIZABLE);
+				if (edge.shape.LABEL_EDITABLE) {
+					this._HANDLER.enableEditLabel(edge);
 				}
 				this._RENDERER.toFront(guide.group);
 			}
@@ -276,12 +274,10 @@ OG.graph.Canvas.prototype = {
 		var group = this._RENDERER.group(elements);
 
 		// enable event
-		this._HANDLER.setClickSelectable(group, OG.Constants.SELECTABLE);
-		this._HANDLER.setMovable(group, OG.Constants.SELECTABLE && OG.Constants.MOVABLE);
-		if ($(group).attr("_shape") !== OG.Constants.SHAPE_TYPE.GROUP) {
-			if (OG.Constants.LABEL_EDITABLE) {
-				this._HANDLER.enableEditLabel(group);
-			}
+		this._HANDLER.setClickSelectable(group, group.shape.SELECTABLE);
+		this._HANDLER.setMovable(group, group.shape.SELECTABLE && group.shape.MOVABLE);
+		if (group.shape.LABEL_EDITABLE) {
+			this._HANDLER.enableEditLabel(group);
 		}
 
 		return group;

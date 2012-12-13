@@ -9,8 +9,9 @@
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.bpmn.A_Subprocess = function (label) {
+	OG.shape.bpmn.A_Subprocess.superclass.call(this, label);
+
 	this.SHAPE_ID = 'OG.shape.bpmn.A_Subprocess';
-	this.label = label;
 };
 OG.shape.bpmn.A_Subprocess.prototype = new OG.shape.GroupShape();
 OG.shape.bpmn.A_Subprocess.superclass = OG.shape.GroupShape;

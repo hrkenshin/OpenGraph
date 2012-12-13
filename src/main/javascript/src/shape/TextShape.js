@@ -9,6 +9,8 @@
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.TextShape = function (text) {
+	OG.shape.TextShape.superclass.call(this);
+
 	this.TYPE = OG.Constants.SHAPE_TYPE.TEXT;
 	this.SHAPE_ID = 'OG.shape.TextShape';
 
@@ -23,6 +25,10 @@ OG.shape.TextShape = function (text) {
 	 * @type Number
 	 */
 	this.angle = 0;
+
+	this.MOVABLE = OG.Constants.MOVABLE && OG.Constants.MOVABLE_TEXT;
+	this.RESIZABLE = OG.Constants.RESIZABLE && OG.Constants.RESIZABLE_TEXT;
+	this.LABEL_EDITABLE = OG.Constants.LABEL_EDITABLE && OG.Constants.LABEL_EDITABLE_TEXT;
 };
 OG.shape.TextShape.prototype = new OG.shape.IShape();
 OG.shape.TextShape.superclass = OG.shape.IShape;

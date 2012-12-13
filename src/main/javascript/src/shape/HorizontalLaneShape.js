@@ -9,8 +9,9 @@
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.shape.HorizontalLaneShape = function (label) {
+	OG.shape.HorizontalLaneShape.superclass.call(this, label);
+
 	this.SHAPE_ID = 'OG.shape.HorizontalLaneShape';
-	this.label = label;
 };
 OG.shape.HorizontalLaneShape.prototype = new OG.shape.GroupShape();
 OG.shape.HorizontalLaneShape.superclass = OG.shape.GroupShape;
