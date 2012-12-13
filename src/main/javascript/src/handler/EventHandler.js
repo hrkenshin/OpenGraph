@@ -1462,7 +1462,7 @@ OG.handler.EventHandler.prototype = {
 				OG.Util.apply(element.shape.geom.style.map, {cursor: 'pointer'});
 			}
 		} else {
-			$(element).click("destroy");
+			$(element).unbind('click');
 			me._RENDERER.setAttr(element, {cursor: OG.Constants.DEFAULT_STYLE.SHAPE.cursor});
 			OG.Util.apply(element.shape.geom.style.map, {cursor: OG.Constants.DEFAULT_STYLE.SHAPE.cursor});
 		}
