@@ -2590,7 +2590,11 @@ OG.handler.EventHandler.prototype = {
 				newShape = item.shape.clone();
 
 				if ($(item).attr("_shape") === OG.Constants.SHAPE_TYPE.EDGE) {
-					newShape.geom = new OG.PolyLine(item.shape.geom.getVertices());
+					if (item.shape.geom instanceof OG.geometry.BezierCurve) {
+						newShape.geom = new OG.BezierCurve(item.shape.geom.getControlPoints());
+					} else {
+						newShape.geom = new OG.PolyLine(item.shape.geom.getVertices());
+					}
 					newShape.geom.style = item.shape.geom.style;
 					newShape.geom.move(OG.Constants.COPY_PASTE_PADDING, OG.Constants.COPY_PASTE_PADDING);
 					newElement = me._RENDERER.drawShape(

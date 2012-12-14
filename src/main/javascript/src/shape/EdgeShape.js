@@ -88,6 +88,7 @@ OG.shape.EdgeShape.prototype.clone = function () {
 	var shape = eval('new ' + this.SHAPE_ID + '()');
 	shape.from = this.from;
 	shape.to = this.to;
+	shape.label = this.label;
 	shape.fromLabel = this.fromLabel;
 	shape.toLabel = this.toLabel;
 
