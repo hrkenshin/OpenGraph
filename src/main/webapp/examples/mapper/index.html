@@ -60,7 +60,6 @@
 </script>
 <script type="text/javascript">
 OG.Constants.DEFAULT_STYLE.EDGE["edge-type"] = "straight";
-OG.Constants.ENABLE_CONTEXTMENU = false;
 
 var canvas;
 
@@ -68,17 +67,18 @@ $(document).ready(function () {
     // OpenGraph Canvas
     canvas = new OG.Canvas('canvas', null, '#f6f6f6');
     canvas.initConfig({
-        selectable      : true,
-        dragSelectable  : false,
-        movable         : false,
-        resizable       : false,
-        connectable     : true,
-        connectCloneable: false,
-        connectRequired : true,
-        labelEditable   : false,
-        groupDropable   : false,
-        collapsible     : false,
-        enableHotKey    : true
+        selectable       : true,
+        dragSelectable   : false,
+        movable          : false,
+        resizable        : false,
+        connectable      : true,
+        connectCloneable : false,
+        connectRequired  : true,
+        labelEditable    : false,
+        groupDropable    : false,
+        collapsible      : false,
+        enableHotKey     : true,
+        enableContextMenu: false
     });
 
     // Tree1

@@ -12,7 +12,8 @@
     <!--<script type="text/javascript" src="../resources/opengraph/OpenGraph-0.1-SNAPSHOT-All.js"></script>-->
 
     <script type="text/javascript" src="../../resources/opengraph/lib/jquery-1.7.2.min.js"></script>
-    <script type="text/javascript" src="../../resources/opengraph/lib/ui-lightness/jquery-ui-1.8.19.custom.min.js"></script>
+    <script type="text/javascript"
+            src="../../resources/opengraph/lib/ui-lightness/jquery-ui-1.8.19.custom.min.js"></script>
     <script type="text/javascript" src="../../resources/opengraph/lib/contextmenu/jquery.contextMenu-min.js"></script>
     <script type="text/javascript" src="../../resources/opengraph/OpenGraph-0.1-SNAPSHOT.js"></script>
 
@@ -76,18 +77,19 @@
             canvas = new OG.Canvas('canvas', [1000, 800], 'white', 'url(./images/grid.gif)');
 
             canvas.initConfig({
-                selectable      : true,
-                dragSelectable  : true,
-                movable         : true,
-                resizable       : true,
-                connectable     : true,
-                selfConnectable : true,
-                connectCloneable: true,
-                connectRequired : true,
-                labelEditable   : true,
-                groupDropable   : true,
-                collapsible     : true,
-                enableHotKey    : true
+                selectable       : true,
+                dragSelectable   : true,
+                movable          : true,
+                resizable        : true,
+                connectable      : true,
+                selfConnectable  : true,
+                connectCloneable : true,
+                connectRequired  : true,
+                labelEditable    : true,
+                groupDropable    : true,
+                collapsible      : true,
+                enableHotKey     : true,
+                enableContextMenu: true
             });
 
             // Shape drag & drop

@@ -42,6 +42,7 @@ OG.graph.Canvas.prototype = {
 	 * - groupDropable      : 그룹핑 가능여부(디폴트 true)
 	 * - collapsible        : 최소화 가능여부(디폴트 true)
 	 * - enableHotKey       : 핫키 가능여부(디폴트 true)
+	 * - enableContextMenu  : 마우스 우클릭 메뉴 가능여부(디폴트 true)
 	 * </pre>
 	 *
 	 * @param {Object} config JSON 포맷의 configuration
@@ -60,6 +61,7 @@ OG.graph.Canvas.prototype = {
 			OG.Constants.GROUP_DROPABLE = config.groupDropable === undefined ? OG.Constants.GROUP_DROPABLE : config.groupDropable;
 			OG.Constants.GROUP_COLLAPSIBLE = config.collapsible === undefined ? OG.Constants.GROUP_COLLAPSIBLE : config.collapsible;
 			OG.Constants.ENABLE_HOTKEY = config.enableHotKey === undefined ? OG.Constants.ENABLE_HOTKEY : config.enableHotKey;
+			OG.Constants.ENABLE_CONTEXTMENU = config.enableContextMenu === undefined ? OG.Constants.ENABLE_CONTEXTMENU : config.enableContextMenu;
 		}
 
 		this._HANDLER.setDragSelectable(OG.Constants.SELECTABLE && OG.Constants.DRAG_SELECTABLE);
