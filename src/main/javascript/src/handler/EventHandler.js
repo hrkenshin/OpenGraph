@@ -71,152 +71,154 @@ OG.handler.EventHandler.prototype = {
 					},
 					centerOfEdge;
 
-				// textarea
-				$(container).append("<textarea id='" + element.id + OG.Constants.LABEL_EDITOR_SUFFIX + "'></textarea>");
-				labelEditor = $("#" + editorId);
+				if (element.shape.isCollapsed === false) {
+					// textarea
+					$(container).append("<textarea id='" + element.id + OG.Constants.LABEL_EDITOR_SUFFIX + "'></textarea>");
+					labelEditor = $("#" + editorId);
 
-				// text-align 스타일 적용
-				switch (element.shape.geom.style.get("text-anchor")) {
-				case "start":
-					textAlign = "left";
-					break;
-				case "middle":
-					textAlign = "center";
-					break;
-				case "end":
-					textAlign = "right";
-					break;
-				default:
-					textAlign = "center";
-					break;
-				}
+					// text-align 스타일 적용
+					switch (element.shape.geom.style.get("text-anchor")) {
+					case "start":
+						textAlign = "left";
+						break;
+					case "middle":
+						textAlign = "center";
+						break;
+					case "end":
+						textAlign = "right";
+						break;
+					default:
+						textAlign = "center";
+						break;
+					}
 
-				if ($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.HTML) {
-					// Html Shape
-					$(labelEditor).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR, {
-						left: left, top: top, width: width, height: height, "text-align": 'left', overflow: "hidden", resize: "none"
-					}));
-					$(labelEditor).focus();
-					$(labelEditor).val(element.shape.html);
+					if ($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.HTML) {
+						// Html Shape
+						$(labelEditor).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR, {
+							left: left, top: top, width: width, height: height, "text-align": 'left', overflow: "hidden", resize: "none"
+						}));
+						$(labelEditor).focus();
+						$(labelEditor).val(element.shape.html);
 
-					$(labelEditor).bind({
-						focusout: function () {
-							element.shape.html = this.value;
-							if (element.shape.html) {
-								me._RENDERER.redrawShape(element);
-								this.parentNode.removeChild(this);
-							} else {
-								me._RENDERER.removeShape(element);
-								this.parentNode.removeChild(this);
+						$(labelEditor).bind({
+							focusout: function () {
+								element.shape.html = this.value;
+								if (element.shape.html) {
+									me._RENDERER.redrawShape(element);
+									this.parentNode.removeChild(this);
+								} else {
+									me._RENDERER.removeShape(element);
+									this.parentNode.removeChild(this);
+								}
 							}
-						}
-					});
-				} else if ($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.TEXT) {
-					// Text Shape
-					$(labelEditor).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR, {
-						left: left, top: top, width: width, height: height, "text-align": textAlign, overflow: "hidden", resize: "none"
-					}));
-					$(labelEditor).focus();
-					$(labelEditor).val(element.shape.text);
+						});
+					} else if ($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.TEXT) {
+						// Text Shape
+						$(labelEditor).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR, {
+							left: left, top: top, width: width, height: height, "text-align": textAlign, overflow: "hidden", resize: "none"
+						}));
+						$(labelEditor).focus();
+						$(labelEditor).val(element.shape.text);
 
-					$(labelEditor).bind({
-						focusout: function () {
-							element.shape.text = this.value;
-							if (element.shape.text) {
-								me._RENDERER.redrawShape(element);
-								this.parentNode.removeChild(this);
-							} else {
-								me._RENDERER.removeShape(element);
-								this.parentNode.removeChild(this);
+						$(labelEditor).bind({
+							focusout: function () {
+								element.shape.text = this.value;
+								if (element.shape.text) {
+									me._RENDERER.redrawShape(element);
+									this.parentNode.removeChild(this);
+								} else {
+									me._RENDERER.removeShape(element);
+									this.parentNode.removeChild(this);
+								}
 							}
+						});
+					} else if ($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.EDGE) {
+						// Edge Shape
+						if (element.shape.label && me._RENDERER.isSVG()) {
+							$(element).children('[id$=_LABEL]').each(function (idx, item) {
+								$(item).find("text").each(function (idx2, item2) {
+									bBox = me._RENDERER.getBBox(item2);
+									left = bBox.x - 10;
+									top = bBox.y;
+									width = bBox.width + 20;
+									height = bBox.height;
+								});
+							});
+						} else {
+							centerOfEdge = getCenterOfEdge(element);
+							left = centerOfEdge.x - OG.Constants.LABEL_EDITOR_WIDTH / 2;
+							top = centerOfEdge.y - OG.Constants.LABEL_EDITOR_HEIGHT / 2;
+							width = OG.Constants.LABEL_EDITOR_WIDTH;
+							height = OG.Constants.LABEL_EDITOR_HEIGHT;
 						}
-					});
-				} else if ($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.EDGE) {
-					// Edge Shape
-					if (element.shape.label && me._RENDERER.isSVG()) {
-						$(element).children('[id$=_LABEL]').each(function (idx, item) {
+
+						// 시작점 라벨인 경우
+						$(event.srcElement).parents('[id$=_FROMLABEL]').each(function (idx, item) {
 							$(item).find("text").each(function (idx2, item2) {
 								bBox = me._RENDERER.getBBox(item2);
 								left = bBox.x - 10;
 								top = bBox.y;
 								width = bBox.width + 20;
 								height = bBox.height;
+								fromLabel = element.shape.fromLabel;
 							});
 						});
-					} else {
-						centerOfEdge = getCenterOfEdge(element);
-						left = centerOfEdge.x - OG.Constants.LABEL_EDITOR_WIDTH / 2;
-						top = centerOfEdge.y - OG.Constants.LABEL_EDITOR_HEIGHT / 2;
-						width = OG.Constants.LABEL_EDITOR_WIDTH;
-						height = OG.Constants.LABEL_EDITOR_HEIGHT;
-					}
 
-					// 시작점 라벨인 경우
-					$(event.srcElement).parents('[id$=_FROMLABEL]').each(function (idx, item) {
-						$(item).find("text").each(function (idx2, item2) {
-							bBox = me._RENDERER.getBBox(item2);
-							left = bBox.x - 10;
-							top = bBox.y;
-							width = bBox.width + 20;
-							height = bBox.height;
-							fromLabel = element.shape.fromLabel;
+						// 끝점 라벨인 경우
+						$(event.srcElement).parents('[id$=_TOLABEL]').each(function (idx, item) {
+							$(item).find("text").each(function (idx2, item2) {
+								bBox = me._RENDERER.getBBox(item2);
+								left = bBox.x - 10;
+								top = bBox.y;
+								width = bBox.width + 20;
+								height = bBox.height;
+								toLabel = element.shape.toLabel;
+							});
 						});
-					});
 
-					// 끝점 라벨인 경우
-					$(event.srcElement).parents('[id$=_TOLABEL]').each(function (idx, item) {
-						$(item).find("text").each(function (idx2, item2) {
-							bBox = me._RENDERER.getBBox(item2);
-							left = bBox.x - 10;
-							top = bBox.y;
-							width = bBox.width + 20;
-							height = bBox.height;
-							toLabel = element.shape.toLabel;
-						});
-					});
+						$(labelEditor).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR, {
+							left    : left * OG.Constants.SCALE,
+							top     : top * OG.Constants.SCALE,
+							width   : width * OG.Constants.SCALE,
+							height  : height * OG.Constants.SCALE,
+							overflow: "hidden",
+							resize  : "none"
+						}));
+						$(labelEditor).focus();
 
-					$(labelEditor).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR, {
-						left    : left * OG.Constants.SCALE,
-						top     : top * OG.Constants.SCALE,
-						width   : width * OG.Constants.SCALE,
-						height  : height * OG.Constants.SCALE,
-						overflow: "hidden",
-						resize  : "none"
-					}));
-					$(labelEditor).focus();
+						if (fromLabel || toLabel) {
+							$(labelEditor).val(fromLabel ? element.shape.fromLabel : element.shape.toLabel);
+						} else {
+							$(labelEditor).val(element.shape.label);
+						}
 
-					if (fromLabel || toLabel) {
-						$(labelEditor).val(fromLabel ? element.shape.fromLabel : element.shape.toLabel);
-					} else {
-						$(labelEditor).val(element.shape.label);
-					}
+						$(labelEditor).bind({
+							focusout: function () {
+								if (fromLabel) {
+									me._RENDERER.drawEdgeLabel(element, this.value, 'FROM');
+								} else if (toLabel) {
+									me._RENDERER.drawEdgeLabel(element, this.value, 'TO');
+								} else {
+									me._RENDERER.drawLabel(element, this.value);
+								}
 
-					$(labelEditor).bind({
-						focusout: function () {
-							if (fromLabel) {
-								me._RENDERER.drawEdgeLabel(element, this.value, 'FROM');
-							} else if (toLabel) {
-								me._RENDERER.drawEdgeLabel(element, this.value, 'TO');
-							} else {
-								me._RENDERER.drawLabel(element, this.value);
+								this.parentNode.removeChild(this);
 							}
+						});
+					} else {
+						$(labelEditor).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR, {
+							left: left, top: top, width: width, height: height, "text-align": textAlign, overflow: "hidden", resize: "none"
+						}));
+						$(labelEditor).focus();
+						$(labelEditor).val(element.shape.label);
 
-							this.parentNode.removeChild(this);
-						}
-					});
-				} else {
-					$(labelEditor).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR, {
-						left: left, top: top, width: width, height: height, "text-align": textAlign, overflow: "hidden", resize: "none"
-					}));
-					$(labelEditor).focus();
-					$(labelEditor).val(element.shape.label);
-
-					$(labelEditor).bind({
-						focusout: function () {
-							me._RENDERER.drawLabel(element, this.value);
-							this.parentNode.removeChild(this);
-						}
-					});
+						$(labelEditor).bind({
+							focusout: function () {
+								me._RENDERER.drawLabel(element, this.value);
+								this.parentNode.removeChild(this);
+							}
+						});
+					}
 				}
 			}
 		});
@@ -232,204 +234,206 @@ OG.handler.EventHandler.prototype = {
 
 		$(element).bind({
 			mouseover: function () {
-				terminalGroup = me._RENDERER.drawTerminal(element,
-					$(root).data("dragged_guide") === "to" ? OG.Constants.TERMINAL_TYPE.IN : OG.Constants.TERMINAL_TYPE.OUT);
+				if (element.shape.isCollapsed === false) {
+					terminalGroup = me._RENDERER.drawTerminal(element,
+						$(root).data("dragged_guide") === "to" ? OG.Constants.TERMINAL_TYPE.IN : OG.Constants.TERMINAL_TYPE.OUT);
 
-				if (terminalGroup && terminalGroup.terminal && terminalGroup.terminal.childNodes.length > 0) {
-					// 센터 연결 터미널 찾기
-					if ($(root).data("edge")) {
-						$.each(terminalGroup.terminal.childNodes, function (idx, item) {
-							var fromTerminal = $(root).data("from_terminal"),
-								fromShape = fromTerminal && OG.Util.isElement(fromTerminal) ? me._getShapeFromTerminal(fromTerminal) : null,
-								isSelf = element && fromShape && element.id === fromShape.id;
+					if (terminalGroup && terminalGroup.terminal && terminalGroup.terminal.childNodes.length > 0) {
+						// 센터 연결 터미널 찾기
+						if ($(root).data("edge")) {
+							$.each(terminalGroup.terminal.childNodes, function (idx, item) {
+								var fromTerminal = $(root).data("from_terminal"),
+									fromShape = fromTerminal && OG.Util.isElement(fromTerminal) ? me._getShapeFromTerminal(fromTerminal) : null,
+									isSelf = element && fromShape && element.id === fromShape.id;
 
-							if (item.terminal && item.terminal.direction.toLowerCase() === "c"
-								&& (($(root).data("dragged_guide") === "to" && item.terminal.inout.indexOf(OG.Constants.TERMINAL_TYPE.IN) >= 0) ||
-								($(root).data("dragged_guide") === "from" && item.terminal.inout.indexOf(OG.Constants.TERMINAL_TYPE.OUT) >= 0))
-								&& (!isSelf || element.shape.SELF_CONNECTABLE)) {
-								me._RENDERER.drawDropOverGuide(element);
-								$(root).data("edge_terminal", item);
-								return false;
+								if (item.terminal && item.terminal.direction.toLowerCase() === "c"
+									&& (($(root).data("dragged_guide") === "to" && item.terminal.inout.indexOf(OG.Constants.TERMINAL_TYPE.IN) >= 0) ||
+									($(root).data("dragged_guide") === "from" && item.terminal.inout.indexOf(OG.Constants.TERMINAL_TYPE.OUT) >= 0))
+									&& (!isSelf || element.shape.SELF_CONNECTABLE)) {
+									me._RENDERER.drawDropOverGuide(element);
+									$(root).data("edge_terminal", item);
+									return false;
+								}
+							});
+						}
+
+						$(terminalGroup.bBox).bind({
+							mouseout: function () {
+								if (!$(root).data("edge")) {
+									me._RENDERER.removeTerminal(element);
+								}
 							}
 						});
-					}
 
-					$(terminalGroup.bBox).bind({
-						mouseout: function () {
-							if (!$(root).data("edge")) {
-								me._RENDERER.removeTerminal(element);
-							}
-						}
-					});
+						$.each(terminalGroup.terminal.childNodes, function (idx, item) {
+							if (item.terminal) {
+								$(item).bind({
+									mouseover: function (event) {
+										var fromTerminal = $(root).data("from_terminal"),
+											fromShape = fromTerminal && OG.Util.isElement(fromTerminal) ? me._getShapeFromTerminal(fromTerminal) : null,
+											isSelf = element && fromShape && element.id === fromShape.id;
 
-					$.each(terminalGroup.terminal.childNodes, function (idx, item) {
-						if (item.terminal) {
-							$(item).bind({
-								mouseover: function (event) {
-									var fromTerminal = $(root).data("from_terminal"),
-										fromShape = fromTerminal && OG.Util.isElement(fromTerminal) ? me._getShapeFromTerminal(fromTerminal) : null,
-										isSelf = element && fromShape && element.id === fromShape.id;
-
-									if ((($(root).data("dragged_guide") === "to" && item.terminal.inout.indexOf(OG.Constants.TERMINAL_TYPE.IN) >= 0) ||
-										($(root).data("dragged_guide") === "from" && item.terminal.inout.indexOf(OG.Constants.TERMINAL_TYPE.OUT) >= 0) ||
-										(!$(root).data("dragged_guide") && item.terminal.inout.indexOf(OG.Constants.TERMINAL_TYPE.OUT) >= 0))
-										&& (!isSelf || element.shape.SELF_CONNECTABLE)) {
-										me._RENDERER.setAttr(item, OG.Constants.DEFAULT_STYLE.TERMINAL_OVER);
-										$(root).data("edge_terminal", item);
-									}
-								},
-								mouseout : function () {
-									me._RENDERER.setAttr(item, OG.Constants.DEFAULT_STYLE.TERMINAL);
-									$(root).removeData("edge_terminal");
-								}
-							});
-
-							$(item).draggable({
-								start: function (event) {
-									var x = item.terminal.position.x, y = item.terminal.position.y,
-										edge = me._RENDERER.drawShape(null, new OG.EdgeShape([x, y], [x, y]), null,
-											OG.Constants.DEFAULT_STYLE.EDGE_SHADOW);
-
-									$(root).data("edge", edge);
-									$(root).data("from_terminal", item);
-									$(root).data("dragged_guide", "to");
-
-									me._RENDERER.removeRubberBand(me._RENDERER.getRootElement());
-									$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (n, selectedItem) {
-										if (selectedItem.id) {
-											me._RENDERER.removeGuide(selectedItem);
+										if ((($(root).data("dragged_guide") === "to" && item.terminal.inout.indexOf(OG.Constants.TERMINAL_TYPE.IN) >= 0) ||
+											($(root).data("dragged_guide") === "from" && item.terminal.inout.indexOf(OG.Constants.TERMINAL_TYPE.OUT) >= 0) ||
+											(!$(root).data("dragged_guide") && item.terminal.inout.indexOf(OG.Constants.TERMINAL_TYPE.OUT) >= 0))
+											&& (!isSelf || element.shape.SELF_CONNECTABLE)) {
+											me._RENDERER.setAttr(item, OG.Constants.DEFAULT_STYLE.TERMINAL_OVER);
+											$(root).data("edge_terminal", item);
 										}
-									});
-								},
-								drag : function (event) {
-									var eventOffset = me._getOffset(event),
-										edge = $(root).data("edge"),
-										fromTerminal = $(root).data("from_terminal"),
-										toTerminal = $(root).data("edge_terminal"),
-										fromXY = [fromTerminal.terminal.position.x, fromTerminal.terminal.position.y],
-										toXY = toTerminal ?
-											[toTerminal.terminal.position.x, toTerminal.terminal.position.y] :
-											[eventOffset.x, eventOffset.y],
-										fromDrct = fromTerminal.terminal.direction.toLowerCase(),
-										toDrct = toTerminal ? toTerminal.terminal.direction.toLowerCase() : "c",
-										toShape = toTerminal ? me._getShapeFromTerminal(toTerminal) : null,
-										orgFromXY, orgToXY, intersectionInfo, isSelf;
-
-									$(this).css({"position": "", "left": "", "top": ""});
-
-									// backup edge-direction
-									orgFromXY = fromXY;
-									orgToXY = toXY;
-
-									// direction 이 c 인 경우에 대한 처리(센터 연결)
-									if (!element.shape.geom.getBoundary().isContains(toXY) && fromDrct === "c") {
-										intersectionInfo = me._RENDERER.intersectionEdge(
-											edge.shape.geom.style.get("edge-type"), element, [orgFromXY[0], orgFromXY[1]], [orgToXY[0], orgToXY[1]], true
-										);
-										fromXY = intersectionInfo.position;
-										fromDrct = intersectionInfo.direction;
+									},
+									mouseout : function () {
+										me._RENDERER.setAttr(item, OG.Constants.DEFAULT_STYLE.TERMINAL);
+										$(root).removeData("edge_terminal");
 									}
-									if (toShape && toDrct === "c") {
-										intersectionInfo = me._RENDERER.intersectionEdge(
-											edge.shape.geom.style.get("edge-type"), toShape, [orgFromXY[0], orgFromXY[1]], [orgToXY[0], orgToXY[1]], false
-										);
-										toXY = intersectionInfo.position;
-										toDrct = intersectionInfo.direction;
-									}
+								});
 
-									isSelf = element && toShape && element.id === toShape.id;
-									if (isSelf) {
-										fromXY = toXY = element.shape.geom.getBoundary().getRightCenter();
-									}
+								$(item).draggable({
+									start: function (event) {
+										var x = item.terminal.position.x, y = item.terminal.position.y,
+											edge = me._RENDERER.drawShape(null, new OG.EdgeShape([x, y], [x, y]), null,
+												OG.Constants.DEFAULT_STYLE.EDGE_SHADOW);
 
-									if (!isSelf || element.shape.SELF_CONNECTABLE) {
-										me._RENDERER.drawEdge(new OG.Line(fromXY, toXY),
-											OG.Util.apply(edge.shape.geom.style.map, {"edge-direction": fromDrct + " " + toDrct}), edge.id, isSelf);
-									}
-								},
-								stop : function (event) {
-									var to = me._getOffset(event),
-										edge = $(root).data("edge"),
-										fromTerminal = $(root).data("from_terminal"),
-										toTerminal = $(root).data("edge_terminal") || [to.x, to.y],
-										toShape = OG.Util.isElement(toTerminal) ? me._getShapeFromTerminal(toTerminal) : null,
-										boundary, clonedElement, terminalGroup, childTerminals, guide, i, isSelf;
+										$(root).data("edge", edge);
+										$(root).data("from_terminal", item);
+										$(root).data("dragged_guide", "to");
 
-									$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
-
-									// 연결대상이 없으면 복사후 연결
-									if (!$(root).data("edge_terminal") && element.shape.CONNECT_CLONEABLE) {
-										boundary = element.shape.geom.getBoundary();
-										clonedElement = me._RENDERER.drawShape([to.x, to.y], element.shape.clone(),
-											[boundary.getWidth(), boundary.getHeight()], element.shapeStyle);
-
-										// enable event
-										me.setClickSelectable(clonedElement, clonedElement.shape.SELECTABLE);
-										me.setMovable(clonedElement, clonedElement.shape.SELECTABLE && clonedElement.shape.MOVABLE);
-										if (clonedElement.shape.GROUP_DROPABLE) {
-											me.enableDragAndDropGroup(clonedElement);
-										}
-										if (clonedElement.shape.GROUP_COLLAPSIBLE) {
-											me.enableCollapse(clonedElement);
-										}
-										if (clonedElement.shape.CONNECTABLE) {
-											me.enableConnect(clonedElement);
-										}
-										if (clonedElement.shape.LABEL_EDITABLE) {
-											me.enableEditLabel(clonedElement);
-										}
-
-										// 센터 연결 터미널 찾기
-										terminalGroup = me._RENDERER.drawTerminal(clonedElement, OG.Constants.TERMINAL_TYPE.IN);
-										childTerminals = terminalGroup.terminal.childNodes;
-										toTerminal = childTerminals[0];
-										for (i = 0; i < childTerminals.length; i++) {
-											if (childTerminals[i].terminal && childTerminals[i].terminal.direction.toLowerCase() === "c") {
-												toTerminal = childTerminals[i];
-												break;
+										me._RENDERER.removeRubberBand(me._RENDERER.getRootElement());
+										$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (n, selectedItem) {
+											if (selectedItem.id) {
+												me._RENDERER.removeGuide(selectedItem);
 											}
+										});
+									},
+									drag : function (event) {
+										var eventOffset = me._getOffset(event),
+											edge = $(root).data("edge"),
+											fromTerminal = $(root).data("from_terminal"),
+											toTerminal = $(root).data("edge_terminal"),
+											fromXY = [fromTerminal.terminal.position.x, fromTerminal.terminal.position.y],
+											toXY = toTerminal ?
+												[toTerminal.terminal.position.x, toTerminal.terminal.position.y] :
+												[eventOffset.x, eventOffset.y],
+											fromDrct = fromTerminal.terminal.direction.toLowerCase(),
+											toDrct = toTerminal ? toTerminal.terminal.direction.toLowerCase() : "c",
+											toShape = toTerminal ? me._getShapeFromTerminal(toTerminal) : null,
+											orgFromXY, orgToXY, intersectionInfo, isSelf;
+
+										$(this).css({"position": "", "left": "", "top": ""});
+
+										// backup edge-direction
+										orgFromXY = fromXY;
+										orgToXY = toXY;
+
+										// direction 이 c 인 경우에 대한 처리(센터 연결)
+										if (!element.shape.geom.getBoundary().isContains(toXY) && fromDrct === "c") {
+											intersectionInfo = me._RENDERER.intersectionEdge(
+												edge.shape.geom.style.get("edge-type"), element, [orgFromXY[0], orgFromXY[1]], [orgToXY[0], orgToXY[1]], true
+											);
+											fromXY = intersectionInfo.position;
+											fromDrct = intersectionInfo.direction;
 										}
-									}
+										if (toShape && toDrct === "c") {
+											intersectionInfo = me._RENDERER.intersectionEdge(
+												edge.shape.geom.style.get("edge-type"), toShape, [orgFromXY[0], orgFromXY[1]], [orgToXY[0], orgToXY[1]], false
+											);
+											toXY = intersectionInfo.position;
+											toDrct = intersectionInfo.direction;
+										}
 
-									isSelf = element && toShape && element.id === toShape.id;
+										isSelf = element && toShape && element.id === toShape.id;
+										if (isSelf) {
+											fromXY = toXY = element.shape.geom.getBoundary().getRightCenter();
+										}
 
-									if (toTerminal && (OG.Util.isElement(toTerminal) || !element.shape.CONNECT_REQUIRED)
-										&& (!isSelf || element.shape.SELF_CONNECTABLE)) {
-										// connect
-										edge = me._RENDERER.connect(fromTerminal, toTerminal, edge);
-										if (edge) {
-											guide = me._RENDERER.drawGuide(edge);
+										if (!isSelf || element.shape.SELF_CONNECTABLE) {
+											me._RENDERER.drawEdge(new OG.Line(fromXY, toXY),
+												OG.Util.apply(edge.shape.geom.style.map, {"edge-direction": fromDrct + " " + toDrct}), edge.id, isSelf);
+										}
+									},
+									stop : function (event) {
+										var to = me._getOffset(event),
+											edge = $(root).data("edge"),
+											fromTerminal = $(root).data("from_terminal"),
+											toTerminal = $(root).data("edge_terminal") || [to.x, to.y],
+											toShape = OG.Util.isElement(toTerminal) ? me._getShapeFromTerminal(toTerminal) : null,
+											boundary, clonedElement, terminalGroup, childTerminals, guide, i, isSelf;
 
-											if (edge && guide) {
-												// enable event
-												me.setClickSelectable(edge, edge.shape.SELECTABLE);
-												me.setMovable(edge, edge.shape.SELECTABLE && edge.shape.MOVABLE);
-												me.setResizable(edge, guide, edge.shape.SELECTABLE && edge.shape.RESIZABLE);
-												if (edge.shape.LABEL_EDITABLE) {
-													me.enableEditLabel(edge);
+										$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
+
+										// 연결대상이 없으면 복사후 연결
+										if (!$(root).data("edge_terminal") && element.shape.CONNECT_CLONEABLE) {
+											boundary = element.shape.geom.getBoundary();
+											clonedElement = me._RENDERER.drawShape([to.x, to.y], element.shape.clone(),
+												[boundary.getWidth(), boundary.getHeight()], element.shapeStyle);
+
+											// enable event
+											me.setClickSelectable(clonedElement, clonedElement.shape.SELECTABLE);
+											me.setMovable(clonedElement, clonedElement.shape.SELECTABLE && clonedElement.shape.MOVABLE);
+											if (clonedElement.shape.GROUP_DROPABLE) {
+												me.enableDragAndDropGroup(clonedElement);
+											}
+											if (clonedElement.shape.GROUP_COLLAPSIBLE) {
+												me.enableCollapse(clonedElement);
+											}
+											if (clonedElement.shape.CONNECTABLE) {
+												me.enableConnect(clonedElement);
+											}
+											if (clonedElement.shape.LABEL_EDITABLE) {
+												me.enableEditLabel(clonedElement);
+											}
+
+											// 센터 연결 터미널 찾기
+											terminalGroup = me._RENDERER.drawTerminal(clonedElement, OG.Constants.TERMINAL_TYPE.IN);
+											childTerminals = terminalGroup.terminal.childNodes;
+											toTerminal = childTerminals[0];
+											for (i = 0; i < childTerminals.length; i++) {
+												if (childTerminals[i].terminal && childTerminals[i].terminal.direction.toLowerCase() === "c") {
+													toTerminal = childTerminals[i];
+													break;
 												}
-
-												me._RENDERER.toFront(guide.group);
 											}
 										}
-									} else {
-										me._RENDERER.removeShape(edge);
-									}
 
-									// clear
-									$(root).removeData("edge");
-									$(root).removeData("from_terminal");
-									$(root).removeData("edge_terminal");
-									$(root).removeData("dragged_guide");
-									if (toShape) {
-										me._RENDERER.remove(toShape.id + OG.Constants.DROP_OVER_BBOX_SUFFIX);
+										isSelf = element && toShape && element.id === toShape.id;
+
+										if (toTerminal && (OG.Util.isElement(toTerminal) || !element.shape.CONNECT_REQUIRED)
+											&& (!isSelf || element.shape.SELF_CONNECTABLE)) {
+											// connect
+											edge = me._RENDERER.connect(fromTerminal, toTerminal, edge);
+											if (edge) {
+												guide = me._RENDERER.drawGuide(edge);
+
+												if (edge && guide) {
+													// enable event
+													me.setClickSelectable(edge, edge.shape.SELECTABLE);
+													me.setMovable(edge, edge.shape.SELECTABLE && edge.shape.MOVABLE);
+													me.setResizable(edge, guide, edge.shape.SELECTABLE && edge.shape.RESIZABLE);
+													if (edge.shape.LABEL_EDITABLE) {
+														me.enableEditLabel(edge);
+													}
+
+													me._RENDERER.toFront(guide.group);
+												}
+											}
+										} else {
+											me._RENDERER.removeShape(edge);
+										}
+
+										// clear
+										$(root).removeData("edge");
+										$(root).removeData("from_terminal");
+										$(root).removeData("edge_terminal");
+										$(root).removeData("dragged_guide");
+										if (toShape) {
+											me._RENDERER.remove(toShape.id + OG.Constants.DROP_OVER_BBOX_SUFFIX);
+										}
 									}
-								}
-							});
-						}
-					});
-				} else {
-					me._RENDERER.removeTerminal(element);
+								});
+							}
+						});
+					} else {
+						me._RENDERER.removeTerminal(element);
+					}
 				}
 			},
 			mouseout : function (event) {
@@ -451,18 +455,20 @@ OG.handler.EventHandler.prototype = {
 		if (element && $(element).attr("_shape") === OG.Constants.SHAPE_TYPE.GROUP) {
 			$(element).bind({
 				mouseover: function () {
-					// Drag & Drop 하여 그룹핑하는 경우 가이드 표시
-					if ($(root).data("bBoxArray")) {
-						isSelf = false;
-						$.each($(root).data("bBoxArray"), function (idx, item) {
-							if (element.id === item.id) {
-								isSelf = true;
-							}
-						});
+					if (element.shape.isCollapsed === false) {
+						// Drag & Drop 하여 그룹핑하는 경우 가이드 표시
+						if ($(root).data("bBoxArray")) {
+							isSelf = false;
+							$.each($(root).data("bBoxArray"), function (idx, item) {
+								if (element.id === item.id) {
+									isSelf = true;
+								}
+							});
 
-						if (!isSelf) {
-							$(root).data("groupTarget", element);
-							me._RENDERER.drawDropOverGuide(element);
+							if (!isSelf) {
+								$(root).data("groupTarget", element);
+								me._RENDERER.drawDropOverGuide(element);
+							}
 						}
 					}
 				},

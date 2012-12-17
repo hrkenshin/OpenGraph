@@ -1909,13 +1909,14 @@ OG.renderer.RaphaelRenderer.prototype.redrawShape = function (element, excludeEd
 			this.drawEdgeLabel(element, null, 'TO');
 			break;
 		case OG.Constants.SHAPE_TYPE.GROUP:
-			if (element.shape.isCollapsed) {
+			if (element.shape.isCollapsed === true) {
 				envelope = element.shape.geom.getBoundary();
 				upperLeft = envelope.getUpperLeft();
 				element = this.drawGroup(new OG.geometry.Rectangle(
 					upperLeft, OG.Constants.COLLAPSE_SIZE * 3, OG.Constants.COLLAPSE_SIZE * 2),
 					element.shape.geom.style, element.id);
 				redrawChildConnectedEdge(element, element);
+				this.redrawConnectedEdge(element, excludeEdgeId);
 			} else {
 				element = this.drawGroup(element.shape.geom, element.shape.geom.style, element.id);
 				this.redrawConnectedEdge(element, excludeEdgeId);
@@ -2003,9 +2004,13 @@ OG.renderer.RaphaelRenderer.prototype.redrawEdge = function (edgeElement) {
 		// fromShape 이 collapsed 인지 체크
 		if (fromShape) {
 			collapsedParents = $(fromShape).parents("[_collapsed=true]");
-			if (collapsedParents.length !== 0) {
+			if (collapsedParents.length !== 0 || $(fromShape).attr('_collapsed') === 'true') {
 				// collapsed 인 경우
-				collapsedEnvelope = collapsedParents[collapsedParents.length - 1].shape.geom.getBoundary();
+				if (collapsedParents.length === 0) {
+					collapsedEnvelope = fromShape.shape.geom.getBoundary();
+				} else {
+					collapsedEnvelope = collapsedParents[collapsedParents.length - 1].shape.geom.getBoundary();
+				}
 				collapsedUpperLeft = collapsedEnvelope.getUpperLeft();
 				collapsedGeom = new OG.geometry.Rectangle(
 					collapsedUpperLeft, OG.Constants.COLLAPSE_SIZE * 3, OG.Constants.COLLAPSE_SIZE * 2);
@@ -2033,9 +2038,13 @@ OG.renderer.RaphaelRenderer.prototype.redrawEdge = function (edgeElement) {
 		// toShape 이 collapsed 인지 체크
 		if (toShape) {
 			collapsedParents = $(toShape).parents("[_collapsed=true]");
-			if (collapsedParents.length !== 0) {
+			if (collapsedParents.length !== 0 || $(toShape).attr('_collapsed') === 'true') {
 				// collapsed 인 경우
-				collapsedEnvelope = collapsedParents[collapsedParents.length - 1].shape.geom.getBoundary();
+				if (collapsedParents.length === 0) {
+					collapsedEnvelope = toShape.shape.geom.getBoundary();
+				} else {
+					collapsedEnvelope = collapsedParents[collapsedParents.length - 1].shape.geom.getBoundary();
+				}
 				collapsedUpperLeft = collapsedEnvelope.getUpperLeft();
 				collapsedGeom = new OG.geometry.Rectangle(
 					collapsedUpperLeft, OG.Constants.COLLAPSE_SIZE * 3, OG.Constants.COLLAPSE_SIZE * 2);
