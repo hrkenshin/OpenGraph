@@ -19448,66 +19448,87 @@ OG.handler.EventHandler.prototype = {
 				if (!/^textarea$/i.test(event.srcElement.tagName) && !/^input$/i.test(event.srcElement.tagName)) {
 					// Delete : 삭제
 					if (OG.Constants.ENABLE_HOTKEY_DELETE && event.keyCode === KeyEvent.DOM_VK_DELETE) {
+						event.preventDefault();
 						me.deleteSelectedShape();
 					}
 
 					// Ctrl+A : 전체선택
-					if (OG.Constants.ENABLE_HOTKEY_CTRL_A && OG.Constants.SELECTABLE && event.ctrlKey && event.keyCode === KeyEvent.DOM_VK_A) {
+					if (OG.Constants.ENABLE_HOTKEY_CTRL_A && OG.Constants.SELECTABLE && (event.ctrlKey || event.metaKey) && event.keyCode === KeyEvent.DOM_VK_A) {
+						event.preventDefault();
 						me.selectAll();
 					}
 
 					// Ctrl+C : 복사
-					if (OG.Constants.ENABLE_HOTKEY_CTRL_C && event.ctrlKey && event.keyCode === KeyEvent.DOM_VK_C) {
+					if (OG.Constants.ENABLE_HOTKEY_CTRL_C && (event.ctrlKey || event.metaKey) && event.keyCode === KeyEvent.DOM_VK_C) {
+						event.preventDefault();
 						me.copySelectedShape();
 					}
 
+					// Ctrl+X : 잘라내기
+					if (OG.Constants.ENABLE_HOTKEY_CTRL_C && (event.ctrlKey || event.metaKey) && event.keyCode === KeyEvent.DOM_VK_X) {
+						event.preventDefault();
+						me.cutSelectedShape();
+					}
+
 					// Ctrl+V: 붙여넣기
-					if (OG.Constants.ENABLE_HOTKEY_CTRL_V && event.ctrlKey && event.keyCode === KeyEvent.DOM_VK_V) {
+					if (OG.Constants.ENABLE_HOTKEY_CTRL_V && (event.ctrlKey || event.metaKey) && event.keyCode === KeyEvent.DOM_VK_V) {
+						event.preventDefault();
 						me.pasteSelectedShape();
 					}
 
 					// Ctrl+D: 복제하기
-					if (OG.Constants.ENABLE_HOTKEY_CTRL_D && event.ctrlKey && event.keyCode === KeyEvent.DOM_VK_D) {
+					if (OG.Constants.ENABLE_HOTKEY_CTRL_D && (event.ctrlKey || event.metaKey) && event.keyCode === KeyEvent.DOM_VK_D) {
+						event.preventDefault();
 						me.duplicateSelectedShape();
 					}
 
 					// Ctrl+G : 그룹
-					if (OG.Constants.ENABLE_HOTKEY_CTRL_G && event.ctrlKey && event.keyCode === KeyEvent.DOM_VK_G) {
+					if (OG.Constants.ENABLE_HOTKEY_CTRL_G && (event.ctrlKey || event.metaKey) && event.keyCode === KeyEvent.DOM_VK_G) {
+						event.preventDefault();
 						me.groupSelectedShape();
 					}
 
 					// Ctrl+U : 언그룹
-					if (OG.Constants.ENABLE_HOTKEY_CTRL_U && event.ctrlKey && event.keyCode === KeyEvent.DOM_VK_U) {
+					if (OG.Constants.ENABLE_HOTKEY_CTRL_U && (event.ctrlKey || event.metaKey) && event.keyCode === KeyEvent.DOM_VK_U) {
+						event.preventDefault();
 						me.ungroupSelectedShape();
 					}
 
 					if (OG.Constants.ENABLE_HOTKEY_SHIFT_ARROW) {
 						// Shift+화살표 : 이동
 						if (event.shiftKey && event.keyCode === KeyEvent.DOM_VK_LEFT) {
+							event.preventDefault();
 							me._moveElements(me._getMoveTargets(), -1 * (OG.Constants.DRAG_GRIDABLE ? OG.Constants.MOVE_SNAP_SIZE : 1), 0);
 						}
 						if (event.shiftKey && event.keyCode === KeyEvent.DOM_VK_RIGHT) {
+							event.preventDefault();
 							me._moveElements(me._getMoveTargets(), (OG.Constants.DRAG_GRIDABLE ? OG.Constants.MOVE_SNAP_SIZE : 1), 0);
 						}
 						if (event.shiftKey && event.keyCode === KeyEvent.DOM_VK_UP) {
+							event.preventDefault();
 							me._moveElements(me._getMoveTargets(), 0, -1 * (OG.Constants.DRAG_GRIDABLE ? OG.Constants.MOVE_SNAP_SIZE : 1));
 						}
 						if (event.shiftKey && event.keyCode === KeyEvent.DOM_VK_DOWN) {
+							event.preventDefault();
 							me._moveElements(me._getMoveTargets(), 0, (OG.Constants.DRAG_GRIDABLE ? OG.Constants.MOVE_SNAP_SIZE : 1));
 						}
 					}
 					if (OG.Constants.ENABLE_HOTKEY_ARROW) {
 						// 화살표 : 이동
 						if (!event.shiftKey && event.keyCode === KeyEvent.DOM_VK_LEFT) {
+							event.preventDefault();
 							me._moveElements(me._getMoveTargets(), -1 * OG.Constants.MOVE_SNAP_SIZE, 0);
 						}
 						if (!event.shiftKey && event.keyCode === KeyEvent.DOM_VK_RIGHT) {
+							event.preventDefault();
 							me._moveElements(me._getMoveTargets(), OG.Constants.MOVE_SNAP_SIZE, 0);
 						}
 						if (!event.shiftKey && event.keyCode === KeyEvent.DOM_VK_UP) {
+							event.preventDefault();
 							me._moveElements(me._getMoveTargets(), 0, -1 * OG.Constants.MOVE_SNAP_SIZE);
 						}
 						if (!event.shiftKey && event.keyCode === KeyEvent.DOM_VK_DOWN) {
+							event.preventDefault();
 							me._moveElements(me._getMoveTargets(), 0, OG.Constants.MOVE_SNAP_SIZE);
 						}
 					}
