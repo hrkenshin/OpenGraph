@@ -2552,6 +2552,26 @@ OG.handler.EventHandler.prototype = {
 		});
 	},
 
+	/**
+	 * 주어진 Shape Element 를 선택된 상태로 되게 한다.
+	 *
+	 * @param {Element} element Shape 엘리먼트
+	 */
+	selectShape: function (element) {
+		var me = this, guide;
+		if ($(element.parentNode).attr("_shape") !== OG.Constants.SHAPE_TYPE.GROUP && element.shape.SELECTABLE === true) {
+			guide = me._RENDERER.drawGuide(element);
+			if (guide) {
+				// enable event
+				me.setResizable(element, guide, element.shape.SELECTABLE && element.shape.RESIZABLE);
+				me._RENDERER.removeTerminal(element);
+			}
+		}
+	},
+
+	/**
+	 * 메뉴 : 선택된 Shape 들을 삭제한다.
+	 */
 	deleteSelectedShape: function () {
 		var me = this;
 		$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_shape=EDGE][_selected=true]").each(function (index, item) {
@@ -2566,18 +2586,9 @@ OG.handler.EventHandler.prototype = {
 		});
 	},
 
-	selectShape: function (element) {
-		var me = this, guide;
-		if ($(element.parentNode).attr("_shape") !== OG.Constants.SHAPE_TYPE.GROUP && element.shape.SELECTABLE === true) {
-			guide = me._RENDERER.drawGuide(element);
-			if (guide) {
-				// enable event
-				me.setResizable(element, guide, element.shape.SELECTABLE && element.shape.RESIZABLE);
-				me._RENDERER.removeTerminal(element);
-			}
-		}
-	},
-
+	/**
+	 * 메뉴 : 모든 Shape 들을 선택한다.
+	 */
 	selectAll: function () {
 		var me = this;
 		$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "]").each(function (index, element) {
@@ -2585,6 +2596,9 @@ OG.handler.EventHandler.prototype = {
 		});
 	},
 
+	/**
+	 * 메뉴 : 선택된 Shape 들을 복사한다.
+	 */
 	copySelectedShape: function () {
 		var me = this, root = me._RENDERER.getRootGroup(), selectedElement = [];
 		$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (index, element) {
@@ -2593,12 +2607,18 @@ OG.handler.EventHandler.prototype = {
 		$(root).data("copied", selectedElement);
 	},
 
+	/**
+	 * 메뉴 : 선택된 Shape 들을 잘라내기한다.
+	 */
 	cutSelectedShape: function () {
 		var me = this;
 		me.copySelectedShape();
 		me.deleteSelectedShape();
 	},
 
+	/**
+	 * 메뉴 : 선택된 Shape 들을 붙여넣기 한다.
+	 */
 	pasteSelectedShape: function () {
 		var me = this, root = me._RENDERER.getRootGroup(),
 			copiedElement = $(root).data("copied"),
@@ -2666,12 +2686,18 @@ OG.handler.EventHandler.prototype = {
 		}
 	},
 
+	/**
+	 * 메뉴 : 선택된 Shape 들을 복제한다.
+	 */
 	duplicateSelectedShape: function () {
 		var me = this;
 		me.copySelectedShape();
 		me.pasteSelectedShape();
 	},
 
+	/**
+	 * 메뉴 : 선택된 Shape 들을 그룹핑한다.
+	 */
 	groupSelectedShape: function () {
 		var me = this, guide,
 			groupElement = me._RENDERER.group($(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]"));
@@ -2697,6 +2723,9 @@ OG.handler.EventHandler.prototype = {
 		}
 	},
 
+	/**
+	 * 메뉴 : 선택된 Shape 들을 그룹해제한다.
+	 */
 	ungroupSelectedShape: function () {
 		var me = this, guide,
 			ungroupedElements = me._RENDERER.ungroup($(me._RENDERER.getRootElement()).find("[_shape=" + OG.Constants.SHAPE_TYPE.GROUP + "][_selected=true]"));
@@ -2709,6 +2738,11 @@ OG.handler.EventHandler.prototype = {
 		});
 	},
 
+	/**
+	 * 메뉴 : 선택된 Shape 들을 회전한다.
+	 *
+	 * @param {Number} angle 회전각도
+	 */
 	rotateSelectedShape: function (angle) {
 		var me = this, guide;
 		$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_shape=" + OG.Constants.SHAPE_TYPE.EDGE + "][_selected=true]").each(function (idx, edge) {
@@ -2727,6 +2761,11 @@ OG.handler.EventHandler.prototype = {
 		});
 	},
 
+	/**
+	 * 메뉴 : 선택된 Shape 들의 Line Width 를 설정한다.
+	 *
+	 * @param {Number} lineWidth
+	 */
 	setLineWidthSelectedShape: function (lineWidth) {
 		var me = this;
 		$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (idx, item) {
@@ -2734,6 +2773,11 @@ OG.handler.EventHandler.prototype = {
 		});
 	},
 
+	/**
+	 * 메뉴 : 선택된 Shape 들의 Line Color 를 설정한다.
+	 *
+	 * @param {String} lineColor
+	 */
 	setLineColorSelectedShape: function (lineColor) {
 		var me = this;
 		$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (idx, item) {
@@ -2741,6 +2785,11 @@ OG.handler.EventHandler.prototype = {
 		});
 	},
 
+	/**
+	 * 메뉴 : 선택된 Shape 들의 Line Type 을 설정한다.
+	 *
+	 * @param {String} lineType ['straight' | 'plain' | 'bezier']
+	 */
 	setLineTypeSelectedShape: function (lineType) {
 		var me = this, guide;
 		$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_shape=" + OG.Constants.SHAPE_TYPE.EDGE + "][_selected=true]").each(function (idx, edge) {
@@ -2757,6 +2806,11 @@ OG.handler.EventHandler.prototype = {
 		});
 	},
 
+	/**
+	 * 메뉴 : 선택된 Shape 들의 Line Style 을 설정한다.
+	 *
+	 * @param {String} lineStyle ['' | '-' | '.' | '-.' | '-..' | '. ' | '- ' | '--' | '- .' | '--.' | '--..']
+	 */
 	setLineStyleSelectedShape: function (lineStyle) {
 		var me = this;
 		$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (idx, item) {
@@ -2764,20 +2818,35 @@ OG.handler.EventHandler.prototype = {
 		});
 	},
 
+	/**
+	 * 메뉴 : 선택된 Edge Shape 들의 시작점 화살표 스타일을 설정한다.
+	 *
+	 * @param {String} arrowType ['block' | 'open_block' | 'classic' | 'diamond' | 'open_diamond' | 'open' | 'oval' | 'open_oval']
+	 */
 	setArrowStartSelectedShape: function (arrowType) {
 		var me = this;
 		$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (idx, item) {
-			me._RENDERER.setShapeStyle(item, {"arrow-start": arrowType});
+			me._RENDERER.setShapeStyle(item, {"arrow-start": arrowType + '-wide-long'});
 		});
 	},
 
+	/**
+	 * 메뉴 : 선택된 Edge Shape 들의 끝점 화살표 스타일을 설정한다.
+	 *
+	 * @param {String} arrowType [] ['block' | 'open_block' | 'classic' | 'diamond' | 'open_diamond' | 'open' | 'oval' | 'open_oval']
+	 */
 	setArrowEndSelectedShape: function (arrowType) {
 		var me = this;
 		$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (idx, item) {
-			me._RENDERER.setShapeStyle(item, {"arrow-end": arrowType});
+			me._RENDERER.setShapeStyle(item, {"arrow-end": arrowType + '-wide-long'});
 		});
 	},
 
+	/**
+	 * 메뉴 : 선택된 Shape 들의 Fill Color 를 설정한다.
+	 *
+	 * @param {String} fillColor
+	 */
 	setFillColorSelectedShape: function (fillColor) {
 		var me = this;
 		$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (idx, item) {
@@ -2785,6 +2854,11 @@ OG.handler.EventHandler.prototype = {
 		});
 	},
 
+	/**
+	 * 메뉴 : 선택된 Shape 들의 Fill Opacity 를 설정한다.
+	 *
+	 * @param {Number} fillOpacity [0 ~ 1]
+	 */
 	setFillOpacitySelectedShape: function (fillOpacity) {
 		var me = this;
 		$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (idx, item) {
@@ -2792,6 +2866,11 @@ OG.handler.EventHandler.prototype = {
 		});
 	},
 
+	/**
+	 * 메뉴 : 선택된 Shape 들의 Font Family 를 설정한다.
+	 *
+	 * @param {String} fontFamily
+	 */
 	setFontFamilySelectedShape: function (fontFamily) {
 		var me = this;
 		$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (idx, item) {
@@ -2799,6 +2878,11 @@ OG.handler.EventHandler.prototype = {
 		});
 	},
 
+	/**
+	 * 메뉴 : 선택된 Shape 들의 Font Size 를 설정한다.
+	 *
+	 * @param {Number} fontSize
+	 */
 	setFontSizeSelectedShape: function (fontSize) {
 		var me = this;
 		$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (idx, item) {
@@ -2806,6 +2890,11 @@ OG.handler.EventHandler.prototype = {
 		});
 	},
 
+	/**
+	 * 메뉴 : 선택된 Shape 들의 Font Color 를 설정한다.
+	 *
+	 * @param {String} fontColor
+	 */
 	setFontColorSelectedShape: function (fontColor) {
 		var me = this;
 		$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (idx, item) {
@@ -2813,6 +2902,11 @@ OG.handler.EventHandler.prototype = {
 		});
 	},
 
+	/**
+	 * 메뉴 : 선택된 Shape 들의 Font Weight 를 설정한다.
+	 *
+	 * @param {String} fontWeight ['bold' | 'normal']
+	 */
 	setFontWeightSelectedShape: function (fontWeight) {
 		var me = this;
 		$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (idx, item) {
@@ -2820,6 +2914,11 @@ OG.handler.EventHandler.prototype = {
 		});
 	},
 
+	/**
+	 * 메뉴 : 선택된 Shape 들의 Font Style 을 설정한다.
+	 *
+	 * @param {String} fontStyle ['italic' | 'normal']
+	 */
 	setFontStyleSelectedShape: function (fontStyle) {
 		var me = this;
 		$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (idx, item) {
@@ -2827,6 +2926,11 @@ OG.handler.EventHandler.prototype = {
 		});
 	},
 
+	/**
+	 * 메뉴 : 선택된 Shape 들의 Text Decoration 을 설정한다.
+	 *
+	 * @param {String} textDecoration ['underline' | 'none']
+	 */
 	setTextDecorationSelectedShape: function (textDecoration) {
 		var me = this;
 		$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (idx, item) {
@@ -2834,6 +2938,11 @@ OG.handler.EventHandler.prototype = {
 		});
 	},
 
+	/**
+	 * 메뉴 : 선택된 Shape 들의 Label Direction 을 설정한다.
+	 *
+	 * @param {String} labelDirection ['vertical' | 'horizontal']
+	 */
 	setLabelDirectionSelectedShape: function (labelDirection) {
 		var me = this;
 		$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (idx, item) {
@@ -2841,6 +2950,11 @@ OG.handler.EventHandler.prototype = {
 		});
 	},
 
+	/**
+	 * 메뉴 : 선택된 Shape 들의 Label Angle 을 설정한다.
+	 *
+	 * @param {Number} labelAngle
+	 */
 	setLabelAngleSelectedShape: function (labelAngle) {
 		var me = this;
 		$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (idx, item) {
@@ -2848,6 +2962,11 @@ OG.handler.EventHandler.prototype = {
 		});
 	},
 
+	/**
+	 * 메뉴 : 선택된 Shape 들의 Label Position 을 설정한다.
+	 *
+	 * @param {String} labelPosition ['top' | 'bottom' | 'left' | 'right' | 'center']
+	 */
 	setLabelPositionSelectedShape: function (labelPosition) {
 		var me = this;
 		$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (idx, item) {
@@ -2885,6 +3004,11 @@ OG.handler.EventHandler.prototype = {
 		});
 	},
 
+	/**
+	 * 메뉴 : 선택된 Shape 들의 라벨 Vertical Align 를 설정한다.
+	 *
+	 * @param {String} verticalAlign ['top' | 'middle' | 'bottom']
+	 */
 	setLabelVerticalSelectedShape: function (verticalAlign) {
 		var me = this;
 		$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (idx, item) {
@@ -2892,6 +3016,11 @@ OG.handler.EventHandler.prototype = {
 		});
 	},
 
+	/**
+	 * 메뉴 : 선택된 Shape 들의 라벨 Horizontal Align 를 설정한다.
+	 *
+	 * @param {String} horizontalAlign ['start' | 'middle' | 'end']
+	 */
 	setLabelHorizontalSelectedShape: function (horizontalAlign) {
 		var me = this;
 		$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (idx, item) {
@@ -2899,6 +3028,11 @@ OG.handler.EventHandler.prototype = {
 		});
 	},
 
+	/**
+	 * 메뉴 : 선택된 Shape 의 라벨을 설정한다.
+	 *
+	 * @param {String} label
+	 */
 	setLabelSelectedShape: function (label) {
 		var me = this;
 		$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (idx, item) {
@@ -2906,6 +3040,11 @@ OG.handler.EventHandler.prototype = {
 		});
 	},
 
+	/**
+	 * 메뉴 : 선택된 Edge Shape 의 시작점 라벨을 설정한다.
+	 *
+	 * @param {String} label
+	 */
 	setEdgeFromLabelSelectedShape: function (label) {
 		var me = this;
 		$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_shape=" + OG.Constants.SHAPE_TYPE.EDGE + "][_selected=true]").each(function (idx, item) {
@@ -2913,6 +3052,11 @@ OG.handler.EventHandler.prototype = {
 		});
 	},
 
+	/**
+	 * 메뉴 : 선택된 Edge Shape 의 끝점 라벨을 설정한다.
+	 *
+	 * @param {String} label
+	 */
 	setEdgeToLabelSelectedShape: function (label) {
 		var me = this;
 		$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_shape=" + OG.Constants.SHAPE_TYPE.EDGE + "][_selected=true]").each(function (idx, item) {
@@ -2920,6 +3064,9 @@ OG.handler.EventHandler.prototype = {
 		});
 	},
 
+	/**
+	 * 메뉴 : Zoom In
+	 */
 	zoomIn: function () {
 		var me = this;
 		if (OG.Constants.SCALE + OG.Constants.SCALE * 0.1 <= OG.Constants.SCALE_MAX) {
@@ -2927,6 +3074,9 @@ OG.handler.EventHandler.prototype = {
 		}
 	},
 
+	/**
+	 * 메뉴 : Zoom Out
+	 */
 	zoomOut: function () {
 		var me = this;
 		if (OG.Constants.SCALE - OG.Constants.SCALE * 0.1 >= OG.Constants.SCALE_MIN) {
@@ -2934,24 +3084,22 @@ OG.handler.EventHandler.prototype = {
 		}
 	},
 
+	/**
+	 * 메뉴 : 그려진 Shape 들을 캔버스 사이즈에 맞게 조절한다.
+	 */
 	fitWindow: function () {
 		var me = this, container = me._RENDERER.getContainer();
 		me._RENDERER.fitCanvasSize([container.clientWidth, container.clientHeight], true);
 	},
 
-	_num: function (str) {
-		return parseInt(str, 10);
-	},
-
-	_grid: function (value, size) {
-		return OG.Constants.DRAG_GRIDABLE ? OG.Util.roundGrid(value, size) : value;
-	},
-
-	_getShapeFromTerminal: function (terminal) {
-		var me = this, terminalId = OG.Util.isElement(terminal) ? terminal.id : terminal;
-		return me._RENDERER.getElementById(terminalId.substring(0, terminalId.indexOf(OG.Constants.TERMINAL_SUFFIX.GROUP)));
-	},
-
+	/**
+	 * Edge 와 선택된 Shape 정보들과의 시작, 끝점 연결 정보를 반환한다.
+	 *
+	 * @param {Element} edgeEle
+	 * @param {Array} bBoxArray
+	 * @return {Object} 연결 정보. {none, all, either, attrEither}
+	 * @private
+	 */
 	_isContainsConnectedShape: function (edgeEle, bBoxArray) {
 		var me = this, fromTerminalId, toTerminalId, fromShape, toShape, isContainsFrom = false, isContainsTo = false, i;
 
@@ -2982,6 +3130,25 @@ OG.handler.EventHandler.prototype = {
 		};
 	},
 
+	/**
+	 * 주어진 터미널 정보로 이를 포함하는 Shape 엘리먼트를 반환한다.
+	 *
+	 * @param {OG.shape.Terminal} terminal 연결 터미널
+	 * @return {Element} Shape 엘리먼트
+	 * @private
+	 */
+	_getShapeFromTerminal: function (terminal) {
+		var me = this, terminalId = OG.Util.isElement(terminal) ? terminal.id : terminal;
+		return me._RENDERER.getElementById(terminalId.substring(0, terminalId.indexOf(OG.Constants.TERMINAL_SUFFIX.GROUP)));
+	},
+
+	/**
+	 * Page 및 Scroll offset 과 Scale 을 반영한 이벤트의 실제 offset 좌표를 반환한다.
+	 *
+	 * @param {Event} event
+	 * @return {Object} offset 정보. {x, y}
+	 * @private
+	 */
 	_getOffset: function (event) {
 		var me = this, container = me._RENDERER.getContainer();
 
@@ -2991,6 +3158,12 @@ OG.handler.EventHandler.prototype = {
 		};
 	},
 
+	/**
+	 * 이동할 대상 즉, 선택된 Shape 정보를 반환한다.
+	 *
+	 * @return {Array} 선택된 Shape 정보. {id, box}' Array
+	 * @private
+	 */
 	_getMoveTargets: function () {
 		var me = this, bBoxArray = [], box, newBBoxArray = [];
 		$(me._RENDERER.getRootElement()).find("[id$=" + OG.Constants.GUIDE_SUFFIX.BBOX + "]").each(function (index, item) {
@@ -3030,6 +3203,15 @@ OG.handler.EventHandler.prototype = {
 		return newBBoxArray;
 	},
 
+	/**
+	 * 가로, 세로 Offset 만큼 주어진 Shape을 이동한다.
+	 *
+	 * @param {Array} bBoxArray 선택된 Shape 정보. {id, box}' Array
+	 * @param {Number} dx 가로 Offset
+	 * @param {Number} dy 세로 Offset
+	 * @return {Array} 이동된 Shape 정보. {id, box}' Array
+	 * @private
+	 */
 	_moveElements: function (bBoxArray, dx, dy) {
 		var me = this, excludeEdgeId = [], eleArray = [];
 
@@ -3186,6 +3368,14 @@ OG.handler.EventHandler.prototype = {
 		}
 
 		return false;
+	},
+
+	_num: function (str) {
+		return parseInt(str, 10);
+	},
+
+	_grid: function (value, size) {
+		return OG.Constants.DRAG_GRIDABLE ? OG.Util.roundGrid(value, size) : value;
 	}
 };
 OG.handler.EventHandler.prototype.constructor = OG.handler.EventHandler;
