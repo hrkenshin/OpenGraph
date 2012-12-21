@@ -12,6 +12,15 @@
     OG.shape.From = function (label) {
         OG.shape.From.superclass.call(this, label);
         this.SHAPE_ID = 'OG.shape.From';
+
+        this.SELECTABLE = false;
+        this.MOVABLE = false;
+        this.RESIZABLE = false;
+        this.CONNECTABLE = true;
+        this.SELF_CONNECTABLE = false;
+        this.CONNECT_CLONEABLE = false;
+        this.CONNECT_REQUIRED = true;
+        this.LABEL_EDITABLE = false;
     };
     OG.shape.From.prototype = new OG.shape.CircleShape();
     OG.shape.From.superclass = OG.shape.CircleShape;
@@ -37,6 +46,15 @@
     OG.shape.To = function (label) {
         OG.shape.To.superclass.call(this, label);
         this.SHAPE_ID = 'OG.shape.To';
+
+        this.SELECTABLE = false;
+        this.MOVABLE = false;
+        this.RESIZABLE = false;
+        this.CONNECTABLE = true;
+        this.SELF_CONNECTABLE = false;
+        this.CONNECT_CLONEABLE = false;
+        this.CONNECT_REQUIRED = true;
+        this.LABEL_EDITABLE = false;
     };
     OG.shape.To.prototype = new OG.shape.CircleShape();
     OG.shape.To.superclass = OG.shape.CircleShape;
@@ -57,11 +75,30 @@
     OG.shape.To.prototype.clone = function () {
         return new OG.shape.To(this.label);
     };
+
+    // define Transformer Shape
+    OG.shape.Transformer = function (html, label) {
+        OG.shape.Transformer.superclass.call(this, html, label);
+        this.SHAPE_ID = 'OG.shape.Transformer';
+
+        this.SELECTABLE = true;
+        this.MOVABLE = true;
+        this.RESIZABLE = false;
+        this.CONNECTABLE = true;
+        this.SELF_CONNECTABLE = false;
+        this.CONNECT_CLONEABLE = false;
+        this.CONNECT_REQUIRED = true;
+        this.LABEL_EDITABLE = false;
+    };
+    OG.shape.Transformer.prototype = new OG.shape.HtmlShape();
+    OG.shape.Transformer.superclass = OG.shape.HtmlShape;
+    OG.shape.Transformer.prototype.constructor = OG.shape.Transformer;
+    OG.Transformer = OG.shape.Transformer;
 </script>
 <script type="text/javascript">
 OG.Constants.DEFAULT_STYLE.EDGE["edge-type"] = "straight";
 
-var canvas;
+var canvas, opengraphJSON;
 
 $(document).ready(function () {
     // OpenGraph Canvas
@@ -305,15 +342,13 @@ $(document).ready(function () {
 
     // contextmenu Event Listener
     $(canvas.getRootElement()).bind('contextmenu', function (event) {
-        var shapeElement, htmlShape = new OG.HtmlShape('<table width="70px" height="18px" border="1" cellspacing="0"><tr><td align="center">To Number</td></tr></table>');
+        var shapeElement, htmlShape = new OG.Transformer('<table width="70px" height="18px" border="1" cellspacing="0"><tr><td align="center">To Number</td></tr></table>');
         shapeElement = canvas.drawShape(
                 [event.offsetX, event.offsetY],
                 htmlShape,
                 [70, 18],
                 {'font-size': 10}
         );
-
-        canvas.getEventHandler().setMovable(shapeElement, true);
     });
 });
 
@@ -397,9 +432,23 @@ function drawTerminal(treeId, isLeft) {
         }
     });
 }
+
+function save() {
+    opengraphJSON = canvas.toJSON();
+}
+
+function load() {
+    canvas.loadJSON(opengraphJSON);
+    drawTerminal('tree1', true);
+    drawTerminal('tree2', false);
+}
 </script>
 </head>
 <body oncontextmenu="return false">
+<div align="center">
+    <input type="button" value="saveJSON" onclick="save();"/>
+    <input type="button" value="loadJSON" onclick="load();"/>
+</div>
 <div align="center">
     <div style="position: relative; left: 0; top:20px; width: 700px; height: 400px; background-color: #f6f6f6;">
         <div id="tree1" style="width:200px; height: 400px; float: left; background-color: #f6f6f6;" align="left"></div>
