@@ -472,7 +472,7 @@ OG.graph.Canvas.prototype = {
 	/**
 	 * 새로운 View Box 영역을 설정한다. (ZoomIn & ZoomOut 가능)
 	 *
-	 * @param @param {Number[]} position 위치 좌표(좌상단 기준)
+	 * @param {Number[]} position 위치 좌표(좌상단 기준)
 	 * @param {Number[]} size Canvas Width, Height
 	 * @param {Boolean} isFit Fit 여부
 	 */
@@ -483,9 +483,10 @@ OG.graph.Canvas.prototype = {
 	/**
 	 * Scale 을 반환한다. (리얼 사이즈 : Scale = 1)
 	 *
+	 * @return {Number} 스케일값
 	 */
 	getScale: function () {
-		this._RENDERER.getScale();
+		return this._RENDERER.getScale();
 	},
 
 	/**

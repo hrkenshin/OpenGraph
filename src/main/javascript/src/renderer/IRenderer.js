@@ -773,7 +773,7 @@ OG.renderer.IRenderer.prototype = {
 	/**
 	 * 새로운 View Box 영역을 설정한다. (ZoomIn & ZoomOut 가능)
 	 *
-	 * @param @param {Number[]} position 위치 좌표(좌상단 기준)
+	 * @param {Number[]} position 위치 좌표(좌상단 기준)
 	 * @param {Number[]} size Canvas Width, Height
 	 * @param {Boolean} isFit Fit 여부
 	 */
@@ -784,9 +784,9 @@ OG.renderer.IRenderer.prototype = {
 	/**
 	 * Scale 을 반환한다. (리얼 사이즈 : Scale = 1)
 	 *
-	 * @param {Number} scale 스케일값
+	 * @return {Number} 스케일값
 	 */
-	getScale: function (scale) {
+	getScale: function () {
 		throw new OG.NotImplementedException();
 	},
 

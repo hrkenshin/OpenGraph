@@ -3180,7 +3180,7 @@ OG.renderer.RaphaelRenderer.prototype.clear = function () {
  */
 OG.renderer.RaphaelRenderer.prototype.removeShape = function (element) {
 	var rElement = this._getREleById(OG.Util.isElement(element) ? element.id : element),
-		childNodes, beforeEvent, i;
+		childNodes, beforeEvent, i, removedElement;
 	childNodes = rElement.node.childNodes;
 
 	beforeEvent = jQuery.Event("beforeRemoveShape", {element: rElement.node});
@@ -3199,10 +3199,13 @@ OG.renderer.RaphaelRenderer.prototype.removeShape = function (element) {
 	this.removeTerminal(rElement.node);
 	this.removeGuide(rElement.node);
 	this.removeCollapseGuide(rElement.node);
+
+	removedElement = OG.Util.clone(rElement.node);
+
 	this.remove(rElement.node);
 
 	// removeShape event fire
-	$(this._PAPER.canvas).trigger('removeShape', [rElement.node]);
+	$(this._PAPER.canvas).trigger('removeShape', [removedElement]);
 };
 
 /**
@@ -3380,7 +3383,7 @@ OG.renderer.RaphaelRenderer.prototype.fitCanvasSize = function (minSize, fitScal
 /**
  * 새로운 View Box 영역을 설정한다. (ZoomIn & ZoomOut 가능)
  *
- * @param @param {Number[]} position 위치 좌표(좌상단 기준)
+ * @param {Number[]} position 위치 좌표(좌상단 기준)
  * @param {Number[]} size Canvas Width, Height
  * @param {Boolean} isFit Fit 여부
  * @override
@@ -3392,7 +3395,7 @@ OG.renderer.RaphaelRenderer.prototype.setViewBox = function (position, size, isF
 /**
  * Scale 을 반환한다. (리얼 사이즈 : Scale = 1)
  *
- * @param {Number} scale 스케일값
+ * @return {Number} 스케일값
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.getScale = function (scale) {
