@@ -35,11 +35,6 @@ OG.shape.bpmn = {};
 OG.common.Constants = {
 
 	/**
-	 * 캔버스 배경색
-	 */
-	CANVAS_BACKGROUND: "#f9f9f9",
-
-	/**
 	 * 공간 기하 객체 타입 정의
 	 */
 	GEOM_TYPE: {
@@ -65,21 +60,6 @@ OG.common.Constants = {
 	 * 숫자 반올림 소숫점 자리수
 	 */
 	NUM_PRECISION: 0,
-
-	/**
-	 * 캔버스 스케일(리얼 사이즈 : Scale = 1)
-	 */
-	SCALE: 1,
-
-	/**
-	 * 캔버스 최소 스케일
-	 */
-	SCALE_MIN: 0.1,
-
-	/**
-	 * 캔버스 최대 스케일
-	 */
-	SCALE_MAX: 10,
 
 	/**
 	 * 캔버스 노드 타입 정의
@@ -112,31 +92,6 @@ OG.common.Constants = {
 	},
 
 	/**
-	 * Edge 꺽은선 패딩 사이즈
-	 */
-	EDGE_PADDING: 20,
-
-	/**
-	 * 라벨의 패딩 사이즈
-	 */
-	LABEL_PADDING: 5,
-
-	/**
-	 * 라벨 에디터(textarea)의 디폴트 width
-	 */
-	LABEL_EDITOR_WIDTH: 70,
-
-	/**
-	 * 라벨 에디터(textarea)의 디폴트 height
-	 */
-	LABEL_EDITOR_HEIGHT: 16,
-
-	/**
-	 * 시작, 끝점 라벨의 offsetTop 값
-	 */
-	FROMTO_LABEL_OFFSET_TOP: 15,
-
-	/**
 	 * 라벨 ID의 suffix 정의
 	 */
 	LABEL_SUFFIX: "_LABEL",
@@ -155,44 +110,6 @@ OG.common.Constants = {
 	 * 끝점 라벨 ID의 suffix 정의
 	 */
 	TO_LABEL_SUFFIX: '_TOLABEL',
-
-	/**
-	 * 디폴트 스타일 정의
-	 */
-	DEFAULT_STYLE: {
-		SHAPE         : { cursor: "default" },
-		GEOM          : { stroke: "black", fill: "white", "fill-opacity": 0, "label-position": "center" },
-		TEXT          : { stroke: "none", "text-anchor": "middle" },
-		HTML          : { "label-position": "bottom", "text-anchor": "middle", "vertical-align": "top" },
-		IMAGE         : { "label-position": "bottom", "text-anchor": "middle", "vertical-align": "top" },
-		EDGE          : { stroke: "black", fill: "none", "fill-opacity": 0, "stroke-width": 1, "stroke-opacity": 1, "edge-type": "plain", "edge-direction": "c c", "arrow-start": "none", "arrow-end": "classic-wide-long", "stroke-dasharray": "", "label-position": "center" },
-		EDGE_SHADOW   : { stroke: "#00FF00", fill: "none", "fill-opacity": 0, "stroke-width": 1, "stroke-opacity": 1, "arrow-start": "none", "arrow-end": "none", "stroke-dasharray": "- " },
-		EDGE_HIDDEN   : { stroke: "white", fill: "none", "fill-opacity": 0, "stroke-width": 5, "stroke-opacity": 0 },
-		GROUP         : { stroke: "none", fill: "white", "fill-opacity": 0, "label-position": "bottom", "text-anchor": "middle", "vertical-align": "top" },
-		GUIDE_BBOX    : { stroke: "#00FF00", fill: "none", "stroke-dasharray": "- ", "shape-rendering": "crispEdges" },
-		GUIDE_UL      : { stroke: "black", fill: "#00FF00", cursor: "nwse-resize", "shape-rendering": "crispEdges" },
-		GUIDE_UR      : { stroke: "black", fill: "#00FF00", cursor: "nesw-resize", "shape-rendering": "crispEdges" },
-		GUIDE_LL      : { stroke: "black", fill: "#00FF00", cursor: "nesw-resize", "shape-rendering": "crispEdges" },
-		GUIDE_LR      : { stroke: "black", fill: "#00FF00", cursor: "nwse-resize", "shape-rendering": "crispEdges" },
-		GUIDE_LC      : { stroke: "black", fill: "#00FF00", cursor: "ew-resize", "shape-rendering": "crispEdges" },
-		GUIDE_UC      : { stroke: "black", fill: "#00FF00", cursor: "ns-resize", "shape-rendering": "crispEdges" },
-		GUIDE_RC      : { stroke: "black", fill: "#00FF00", cursor: "ew-resize", "shape-rendering": "crispEdges" },
-		GUIDE_LWC     : { stroke: "black", fill: "#00FF00", cursor: "ns-resize", "shape-rendering": "crispEdges" },
-		GUIDE_FROM    : { stroke: "black", fill: "#00FF00", cursor: "move", "shape-rendering": "crispEdges" },
-		GUIDE_TO      : { stroke: "black", fill: "#00FF00", cursor: "move", "shape-rendering": "crispEdges" },
-		GUIDE_CTL_H   : { stroke: "black", fill: "#00FF00", cursor: "ew-resize", "shape-rendering": "crispEdges" },
-		GUIDE_CTL_V   : { stroke: "black", fill: "#00FF00", cursor: "ns-resize", "shape-rendering": "crispEdges" },
-		GUIDE_SHADOW  : { stroke: "black", fill: "none", "stroke-dasharray": "- ", "shape-rendering": "crispEdges" },
-		RUBBER_BAND   : { stroke: "#0000FF", opacity: 0.2, fill: "#0077FF" },
-		TERMINAL      : { stroke: "#808080", "stroke-width": 1, fill: "r(0.5, 0.5)#FFFFFF-#808080", "fill-opacity": 0.5, cursor: "pointer" },
-		TERMINAL_OVER : { stroke: "#0077FF", "stroke-width": 4, fill: "r(0.5, 0.5)#FFFFFF-#0077FF", "fill-opacity": 1, cursor: "pointer" },
-		TERMINAL_BBOX : { stroke: "none", fill: "white", "fill-opacity": 0 },
-		DROP_OVER_BBOX: { stroke: "#0077FF", fill: "none", opacity: 0.6, "shape-rendering": "crispEdges" },
-		LABEL         : { "font-size": 12, "font-color": "black" },
-		LABEL_EDITOR  : { position: "absolute", overflow: "visible", resize: "none", "text-align": "center", display: "block", padding: 0 },
-		COLLAPSE      : { stroke: "black", fill: "white", "fill-opacity": 0, cursor: "pointer", "shape-rendering": "crispEdges" },
-		COLLAPSE_BBOX : { stroke: "none", fill: "white", "fill-opacity": 0 }
-	},
 
 	/**
 	 * Rectangle 모양의 마우스 드래그 선택 박스 영역
@@ -221,25 +138,10 @@ OG.common.Constants = {
 	},
 
 	/**
-	 * Move & Resize 용 가이드 콘트롤 Rect 사이즈
-	 */
-	GUIDE_RECT_SIZE: 8,
-
-	/**
-	 * Move & Resize 용 가이드 가로, 세로 최소 사이즈
-	 */
-	GUIDE_MIN_SIZE: 18,
-
-	/**
 	 * Collapse & Expand 용 가이드 ID의 suffix 정의
 	 */
 	COLLAPSE_SUFFIX     : "_COLLAPSE",
 	COLLAPSE_BBOX_SUFFIX: "_COLLAPSE_BBOX",
-
-	/**
-	 * Collapse & Expand 용 가이드 Rect 사이즈
-	 */
-	COLLAPSE_SIZE: 10,
 
 	/**
 	 * Shape Move & Resize 시 이동 간격
@@ -271,237 +173,7 @@ OG.common.Constants = {
 		IN   : "IN",
 		OUT  : "OUT",
 		INOUT: "INOUT"
-	},
-
-	/**
-	 * 터미널 cross 사이즈
-	 */
-	TERMINAL_SIZE: 3,
-
-	/**
-	 * Shape 복사시 패딩 사이즈
-	 */
-	COPY_PASTE_PADDING: 20,
-
-	/**
-	 * Fit Canvas 시 패딩 사이즈
-	 */
-	FIT_CANVAS_PADDING: 20,
-
-	/**
-	 * 캔버스 영역 자동 확장 여부
-	 */
-	AUTO_EXTENSIONAL: true,
-
-	/**
-	 * 캔버스 영역 자동 확장시 증가 사이즈
-	 */
-	AUTO_EXTENSION_SIZE: 100,
-
-	/**
-	 * 클릭선택 가능여부
-	 */
-	SELECTABLE: true,
-
-	/**
-	 * 마우스드래그선택 가능여부
-	 */
-	DRAG_SELECTABLE: true,
-
-	/**
-	 * 이동 가능여부
-	 */
-	MOVABLE: true,
-
-	/**
-	 * 이동 가능여부(GEOM Shape)
-	 */
-	MOVABLE_GEOM: true,
-
-	/**
-	 * 이동 가능여부(TEXT Shape)
-	 */
-	MOVABLE_TEXT: true,
-
-	/**
-	 * 이동 가능여부(HTML Shape)
-	 */
-	MOVABLE_HTML: true,
-
-	/**
-	 * 이동 가능여부(IMAGE Shape)
-	 */
-	MOVABLE_IMAGE: true,
-
-	/**
-	 * 이동 가능여부(EDGE Shape)
-	 */
-	MOVABLE_EDGE: true,
-
-	/**
-	 * 이동 가능여부(GROUP Shape)
-	 */
-	MOVABLE_GROUP: true,
-
-	/**
-	 * 리사이즈 가능여부
-	 */
-	RESIZABLE: true,
-
-	/**
-	 * 리사이즈 가능여부(GEOM Shape)
-	 */
-	RESIZABLE_GEOM: true,
-
-	/**
-	 * 리사이즈 가능여부(TEXT Shape)
-	 */
-	RESIZABLE_TEXT: true,
-
-	/**
-	 * 리사이즈 가능여부(HTML Shape)
-	 */
-	RESIZABLE_HTML: true,
-
-	/**
-	 * 리사이즈 가능여부(IMAGE Shape)
-	 */
-	RESIZABLE_IMAGE: true,
-
-	/**
-	 * 리사이즈 가능여부(EDGE Shape)
-	 */
-	RESIZABLE_EDGE: true,
-
-	/**
-	 * 리사이즈 가능여부(GROUP Shape)
-	 */
-	RESIZABLE_GROUP: true,
-
-	/**
-	 * 연결 가능여부
-	 */
-	CONNECTABLE: true,
-
-	/**
-	 * Self 연결 가능여부
-	 */
-	SELF_CONNECTABLE: true,
-
-	/**
-	 * 드래그하여 연결시 대상 없을 경우 자동으로 Shape 복사하여 연결 처리 여부
-	 */
-	CONNECT_CLONEABLE: true,
-
-	/**
-	 * 드래그하여 연결시 연결대상 있는 경우에만 Edge 드로잉 처리 여부
-	 */
-	CONNECT_REQUIRED: true,
-
-	/**
-	 * 라벨 수정여부
-	 */
-	LABEL_EDITABLE: true,
-
-	/**
-	 * 라벨 수정여부(GEOM Shape)
-	 */
-	LABEL_EDITABLE_GEOM: true,
-
-	/**
-	 * 라벨 수정여부(TEXT Shape)
-	 */
-	LABEL_EDITABLE_TEXT: true,
-
-	/**
-	 * 라벨 수정여부(HTML Shape)
-	 */
-	LABEL_EDITABLE_HTML: true,
-
-	/**
-	 * 라벨 수정여부(IMAGE Shape)
-	 */
-	LABEL_EDITABLE_IMAGE: true,
-
-	/**
-	 * 라벨 수정여부(EDGE Shape)
-	 */
-	LABEL_EDITABLE_EDGE: true,
-
-	/**
-	 * 라벨 수정여부(GROUP Shape)
-	 */
-	LABEL_EDITABLE_GROUP: true,
-
-	/**
-	 * 그룹핑 가능여부
-	 */
-	GROUP_DROPABLE: true,
-
-	/**
-	 * 최소화 가능여부
-	 */
-	GROUP_COLLAPSIBLE: true,
-
-	/**
-	 * 이동, 리사이즈 드래그시 MOVE_SNAP_SIZE 적용 여부
-	 */
-	DRAG_GRIDABLE: true,
-
-	/**
-	 * 핫키 가능여부
-	 */
-	ENABLE_HOTKEY: true,
-
-	/**
-	 * 핫키 : DELETE 삭제 키 가능여부
-	 */
-	ENABLE_HOTKEY_DELETE: true,
-
-	/**
-	 * 핫키 : Ctrl+A 전체선택 키 가능여부
-	 */
-	ENABLE_HOTKEY_CTRL_A: true,
-
-	/**
-	 * 핫키 : Ctrl+C 복사 키 가능여부
-	 */
-	ENABLE_HOTKEY_CTRL_C: true,
-
-	/**
-	 * 핫키 : Ctrl+V 붙여넣기 키 가능여부
-	 */
-	ENABLE_HOTKEY_CTRL_V: true,
-
-	/**
-	 * 핫키 : Ctrl+D 복제하기 키 가능여부
-	 */
-	ENABLE_HOTKEY_CTRL_D: true,
-
-	/**
-	 * 핫키 : Ctrl+G 그룹 키 가능여부
-	 */
-	ENABLE_HOTKEY_CTRL_G: true,
-
-	/**
-	 * 핫키 : Ctrl+U 언그룹 키 가능여부
-	 */
-	ENABLE_HOTKEY_CTRL_U: true,
-
-	/**
-	 * 핫키 : 방향키 가능여부
-	 */
-	ENABLE_HOTKEY_ARROW: true,
-
-	/**
-	 * 핫키 : Shift + 방향키 가능여부
-	 */
-	ENABLE_HOTKEY_SHIFT_ARROW: true,
-
-	/**
-	 * 마우스 우클릭 메뉴 가능여부
-	 */
-	ENABLE_CONTEXTMENU: true
+	}
 };
 OG.Constants = OG.common.Constants;
 

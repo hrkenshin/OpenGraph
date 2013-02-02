@@ -6064,11 +6064,6 @@ OG.shape.bpmn = {};
 OG.common.Constants = {
 
 	/**
-	 * 캔버스 배경색
-	 */
-	CANVAS_BACKGROUND: "#f9f9f9",
-
-	/**
 	 * 공간 기하 객체 타입 정의
 	 */
 	GEOM_TYPE: {
@@ -6094,21 +6089,6 @@ OG.common.Constants = {
 	 * 숫자 반올림 소숫점 자리수
 	 */
 	NUM_PRECISION: 0,
-
-	/**
-	 * 캔버스 스케일(리얼 사이즈 : Scale = 1)
-	 */
-	SCALE: 1,
-
-	/**
-	 * 캔버스 최소 스케일
-	 */
-	SCALE_MIN: 0.1,
-
-	/**
-	 * 캔버스 최대 스케일
-	 */
-	SCALE_MAX: 10,
 
 	/**
 	 * 캔버스 노드 타입 정의
@@ -6141,31 +6121,6 @@ OG.common.Constants = {
 	},
 
 	/**
-	 * Edge 꺽은선 패딩 사이즈
-	 */
-	EDGE_PADDING: 20,
-
-	/**
-	 * 라벨의 패딩 사이즈
-	 */
-	LABEL_PADDING: 5,
-
-	/**
-	 * 라벨 에디터(textarea)의 디폴트 width
-	 */
-	LABEL_EDITOR_WIDTH: 70,
-
-	/**
-	 * 라벨 에디터(textarea)의 디폴트 height
-	 */
-	LABEL_EDITOR_HEIGHT: 16,
-
-	/**
-	 * 시작, 끝점 라벨의 offsetTop 값
-	 */
-	FROMTO_LABEL_OFFSET_TOP: 15,
-
-	/**
 	 * 라벨 ID의 suffix 정의
 	 */
 	LABEL_SUFFIX: "_LABEL",
@@ -6184,44 +6139,6 @@ OG.common.Constants = {
 	 * 끝점 라벨 ID의 suffix 정의
 	 */
 	TO_LABEL_SUFFIX: '_TOLABEL',
-
-	/**
-	 * 디폴트 스타일 정의
-	 */
-	DEFAULT_STYLE: {
-		SHAPE         : { cursor: "default" },
-		GEOM          : { stroke: "black", fill: "white", "fill-opacity": 0, "label-position": "center" },
-		TEXT          : { stroke: "none", "text-anchor": "middle" },
-		HTML          : { "label-position": "bottom", "text-anchor": "middle", "vertical-align": "top" },
-		IMAGE         : { "label-position": "bottom", "text-anchor": "middle", "vertical-align": "top" },
-		EDGE          : { stroke: "black", fill: "none", "fill-opacity": 0, "stroke-width": 1, "stroke-opacity": 1, "edge-type": "plain", "edge-direction": "c c", "arrow-start": "none", "arrow-end": "classic-wide-long", "stroke-dasharray": "", "label-position": "center" },
-		EDGE_SHADOW   : { stroke: "#00FF00", fill: "none", "fill-opacity": 0, "stroke-width": 1, "stroke-opacity": 1, "arrow-start": "none", "arrow-end": "none", "stroke-dasharray": "- " },
-		EDGE_HIDDEN   : { stroke: "white", fill: "none", "fill-opacity": 0, "stroke-width": 5, "stroke-opacity": 0 },
-		GROUP         : { stroke: "none", fill: "white", "fill-opacity": 0, "label-position": "bottom", "text-anchor": "middle", "vertical-align": "top" },
-		GUIDE_BBOX    : { stroke: "#00FF00", fill: "none", "stroke-dasharray": "- ", "shape-rendering": "crispEdges" },
-		GUIDE_UL      : { stroke: "black", fill: "#00FF00", cursor: "nwse-resize", "shape-rendering": "crispEdges" },
-		GUIDE_UR      : { stroke: "black", fill: "#00FF00", cursor: "nesw-resize", "shape-rendering": "crispEdges" },
-		GUIDE_LL      : { stroke: "black", fill: "#00FF00", cursor: "nesw-resize", "shape-rendering": "crispEdges" },
-		GUIDE_LR      : { stroke: "black", fill: "#00FF00", cursor: "nwse-resize", "shape-rendering": "crispEdges" },
-		GUIDE_LC      : { stroke: "black", fill: "#00FF00", cursor: "ew-resize", "shape-rendering": "crispEdges" },
-		GUIDE_UC      : { stroke: "black", fill: "#00FF00", cursor: "ns-resize", "shape-rendering": "crispEdges" },
-		GUIDE_RC      : { stroke: "black", fill: "#00FF00", cursor: "ew-resize", "shape-rendering": "crispEdges" },
-		GUIDE_LWC     : { stroke: "black", fill: "#00FF00", cursor: "ns-resize", "shape-rendering": "crispEdges" },
-		GUIDE_FROM    : { stroke: "black", fill: "#00FF00", cursor: "move", "shape-rendering": "crispEdges" },
-		GUIDE_TO      : { stroke: "black", fill: "#00FF00", cursor: "move", "shape-rendering": "crispEdges" },
-		GUIDE_CTL_H   : { stroke: "black", fill: "#00FF00", cursor: "ew-resize", "shape-rendering": "crispEdges" },
-		GUIDE_CTL_V   : { stroke: "black", fill: "#00FF00", cursor: "ns-resize", "shape-rendering": "crispEdges" },
-		GUIDE_SHADOW  : { stroke: "black", fill: "none", "stroke-dasharray": "- ", "shape-rendering": "crispEdges" },
-		RUBBER_BAND   : { stroke: "#0000FF", opacity: 0.2, fill: "#0077FF" },
-		TERMINAL      : { stroke: "#808080", "stroke-width": 1, fill: "r(0.5, 0.5)#FFFFFF-#808080", "fill-opacity": 0.5, cursor: "pointer" },
-		TERMINAL_OVER : { stroke: "#0077FF", "stroke-width": 4, fill: "r(0.5, 0.5)#FFFFFF-#0077FF", "fill-opacity": 1, cursor: "pointer" },
-		TERMINAL_BBOX : { stroke: "none", fill: "white", "fill-opacity": 0 },
-		DROP_OVER_BBOX: { stroke: "#0077FF", fill: "none", opacity: 0.6, "shape-rendering": "crispEdges" },
-		LABEL         : { "font-size": 12, "font-color": "black" },
-		LABEL_EDITOR  : { position: "absolute", overflow: "visible", resize: "none", "text-align": "center", display: "block", padding: 0 },
-		COLLAPSE      : { stroke: "black", fill: "white", "fill-opacity": 0, cursor: "pointer", "shape-rendering": "crispEdges" },
-		COLLAPSE_BBOX : { stroke: "none", fill: "white", "fill-opacity": 0 }
-	},
 
 	/**
 	 * Rectangle 모양의 마우스 드래그 선택 박스 영역
@@ -6250,25 +6167,10 @@ OG.common.Constants = {
 	},
 
 	/**
-	 * Move & Resize 용 가이드 콘트롤 Rect 사이즈
-	 */
-	GUIDE_RECT_SIZE: 8,
-
-	/**
-	 * Move & Resize 용 가이드 가로, 세로 최소 사이즈
-	 */
-	GUIDE_MIN_SIZE: 18,
-
-	/**
 	 * Collapse & Expand 용 가이드 ID의 suffix 정의
 	 */
 	COLLAPSE_SUFFIX     : "_COLLAPSE",
 	COLLAPSE_BBOX_SUFFIX: "_COLLAPSE_BBOX",
-
-	/**
-	 * Collapse & Expand 용 가이드 Rect 사이즈
-	 */
-	COLLAPSE_SIZE: 10,
 
 	/**
 	 * Shape Move & Resize 시 이동 간격
@@ -6300,237 +6202,7 @@ OG.common.Constants = {
 		IN   : "IN",
 		OUT  : "OUT",
 		INOUT: "INOUT"
-	},
-
-	/**
-	 * 터미널 cross 사이즈
-	 */
-	TERMINAL_SIZE: 3,
-
-	/**
-	 * Shape 복사시 패딩 사이즈
-	 */
-	COPY_PASTE_PADDING: 20,
-
-	/**
-	 * Fit Canvas 시 패딩 사이즈
-	 */
-	FIT_CANVAS_PADDING: 20,
-
-	/**
-	 * 캔버스 영역 자동 확장 여부
-	 */
-	AUTO_EXTENSIONAL: true,
-
-	/**
-	 * 캔버스 영역 자동 확장시 증가 사이즈
-	 */
-	AUTO_EXTENSION_SIZE: 100,
-
-	/**
-	 * 클릭선택 가능여부
-	 */
-	SELECTABLE: true,
-
-	/**
-	 * 마우스드래그선택 가능여부
-	 */
-	DRAG_SELECTABLE: true,
-
-	/**
-	 * 이동 가능여부
-	 */
-	MOVABLE: true,
-
-	/**
-	 * 이동 가능여부(GEOM Shape)
-	 */
-	MOVABLE_GEOM: true,
-
-	/**
-	 * 이동 가능여부(TEXT Shape)
-	 */
-	MOVABLE_TEXT: true,
-
-	/**
-	 * 이동 가능여부(HTML Shape)
-	 */
-	MOVABLE_HTML: true,
-
-	/**
-	 * 이동 가능여부(IMAGE Shape)
-	 */
-	MOVABLE_IMAGE: true,
-
-	/**
-	 * 이동 가능여부(EDGE Shape)
-	 */
-	MOVABLE_EDGE: true,
-
-	/**
-	 * 이동 가능여부(GROUP Shape)
-	 */
-	MOVABLE_GROUP: true,
-
-	/**
-	 * 리사이즈 가능여부
-	 */
-	RESIZABLE: true,
-
-	/**
-	 * 리사이즈 가능여부(GEOM Shape)
-	 */
-	RESIZABLE_GEOM: true,
-
-	/**
-	 * 리사이즈 가능여부(TEXT Shape)
-	 */
-	RESIZABLE_TEXT: true,
-
-	/**
-	 * 리사이즈 가능여부(HTML Shape)
-	 */
-	RESIZABLE_HTML: true,
-
-	/**
-	 * 리사이즈 가능여부(IMAGE Shape)
-	 */
-	RESIZABLE_IMAGE: true,
-
-	/**
-	 * 리사이즈 가능여부(EDGE Shape)
-	 */
-	RESIZABLE_EDGE: true,
-
-	/**
-	 * 리사이즈 가능여부(GROUP Shape)
-	 */
-	RESIZABLE_GROUP: true,
-
-	/**
-	 * 연결 가능여부
-	 */
-	CONNECTABLE: true,
-
-	/**
-	 * Self 연결 가능여부
-	 */
-	SELF_CONNECTABLE: true,
-
-	/**
-	 * 드래그하여 연결시 대상 없을 경우 자동으로 Shape 복사하여 연결 처리 여부
-	 */
-	CONNECT_CLONEABLE: true,
-
-	/**
-	 * 드래그하여 연결시 연결대상 있는 경우에만 Edge 드로잉 처리 여부
-	 */
-	CONNECT_REQUIRED: true,
-
-	/**
-	 * 라벨 수정여부
-	 */
-	LABEL_EDITABLE: true,
-
-	/**
-	 * 라벨 수정여부(GEOM Shape)
-	 */
-	LABEL_EDITABLE_GEOM: true,
-
-	/**
-	 * 라벨 수정여부(TEXT Shape)
-	 */
-	LABEL_EDITABLE_TEXT: true,
-
-	/**
-	 * 라벨 수정여부(HTML Shape)
-	 */
-	LABEL_EDITABLE_HTML: true,
-
-	/**
-	 * 라벨 수정여부(IMAGE Shape)
-	 */
-	LABEL_EDITABLE_IMAGE: true,
-
-	/**
-	 * 라벨 수정여부(EDGE Shape)
-	 */
-	LABEL_EDITABLE_EDGE: true,
-
-	/**
-	 * 라벨 수정여부(GROUP Shape)
-	 */
-	LABEL_EDITABLE_GROUP: true,
-
-	/**
-	 * 그룹핑 가능여부
-	 */
-	GROUP_DROPABLE: true,
-
-	/**
-	 * 최소화 가능여부
-	 */
-	GROUP_COLLAPSIBLE: true,
-
-	/**
-	 * 이동, 리사이즈 드래그시 MOVE_SNAP_SIZE 적용 여부
-	 */
-	DRAG_GRIDABLE: true,
-
-	/**
-	 * 핫키 가능여부
-	 */
-	ENABLE_HOTKEY: true,
-
-	/**
-	 * 핫키 : DELETE 삭제 키 가능여부
-	 */
-	ENABLE_HOTKEY_DELETE: true,
-
-	/**
-	 * 핫키 : Ctrl+A 전체선택 키 가능여부
-	 */
-	ENABLE_HOTKEY_CTRL_A: true,
-
-	/**
-	 * 핫키 : Ctrl+C 복사 키 가능여부
-	 */
-	ENABLE_HOTKEY_CTRL_C: true,
-
-	/**
-	 * 핫키 : Ctrl+V 붙여넣기 키 가능여부
-	 */
-	ENABLE_HOTKEY_CTRL_V: true,
-
-	/**
-	 * 핫키 : Ctrl+D 복제하기 키 가능여부
-	 */
-	ENABLE_HOTKEY_CTRL_D: true,
-
-	/**
-	 * 핫키 : Ctrl+G 그룹 키 가능여부
-	 */
-	ENABLE_HOTKEY_CTRL_G: true,
-
-	/**
-	 * 핫키 : Ctrl+U 언그룹 키 가능여부
-	 */
-	ENABLE_HOTKEY_CTRL_U: true,
-
-	/**
-	 * 핫키 : 방향키 가능여부
-	 */
-	ENABLE_HOTKEY_ARROW: true,
-
-	/**
-	 * 핫키 : Shift + 방향키 가능여부
-	 */
-	ENABLE_HOTKEY_SHIFT_ARROW: true,
-
-	/**
-	 * 마우스 우클릭 메뉴 가능여부
-	 */
-	ENABLE_CONTEXTMENU: true
+	}
 };
 OG.Constants = OG.common.Constants;
 
@@ -10027,49 +9699,49 @@ OG.shape.IShape = function () {
 	 * 선택 가능여부
 	 * @type Boolean
 	 */
-	this.SELECTABLE = OG.Constants.SELECTABLE;
+	this.SELECTABLE = true;
 
 	/**
 	 * 이동 가능여부
 	 * @type Boolean
 	 */
-	this.MOVABLE = OG.Constants.MOVABLE;
+	this.MOVABLE = true;
 
 	/**
 	 * 리사이즈 가능여부
 	 * @type Boolean
 	 */
-	this.RESIZABLE = OG.Constants.RESIZABLE;
+	this.RESIZABLE = true;
 
 	/**
 	 * 연결 가능여부
 	 * @type Boolean
 	 */
-	this.CONNECTABLE = OG.Constants.CONNECTABLE;
+	this.CONNECTABLE = true;
 
 	/**
 	 * Self 연결 가능여부
 	 * @type Boolean
 	 */
-	this.SELF_CONNECTABLE = OG.Constants.SELF_CONNECTABLE;
+	this.SELF_CONNECTABLE = true;
 
 	/**
 	 * 드래그하여 연결시 대상 없을 경우 자동으로 Shape 복사하여 연결 처리 여부
 	 * @type Boolean
 	 */
-	this.CONNECT_CLONEABLE = OG.Constants.CONNECT_CLONEABLE;
+	this.CONNECT_CLONEABLE = true;
 
 	/**
 	 * 드래그하여 연결시 연결대상 있는 경우에만 Edge 드로잉 처리 여부
 	 * @type Boolean
 	 */
-	this.CONNECT_REQUIRED = OG.Constants.CONNECT_REQUIRED;
+	this.CONNECT_REQUIRED = true;
 
 	/**
 	 * 라벨 수정여부
 	 * @type Boolean
 	 */
-	this.LABEL_EDITABLE = OG.Constants.LABEL_EDITABLE;
+	this.LABEL_EDITABLE = true;
 };
 OG.shape.IShape.prototype = {
 	/**
@@ -10161,10 +9833,6 @@ OG.shape.GeomShape = function () {
 	OG.shape.GeomShape.superclass.call(this);
 
 	this.TYPE = OG.Constants.SHAPE_TYPE.GEOM;
-
-	this.MOVABLE = OG.Constants.MOVABLE && OG.Constants.MOVABLE_GEOM;
-	this.RESIZABLE = OG.Constants.RESIZABLE && OG.Constants.RESIZABLE_GEOM;
-	this.LABEL_EDITABLE = OG.Constants.LABEL_EDITABLE && OG.Constants.LABEL_EDITABLE_GEOM;
 };
 OG.shape.GeomShape.prototype = new OG.shape.IShape();
 OG.shape.GeomShape.superclass = OG.shape.IShape;
@@ -10210,10 +9878,6 @@ OG.shape.TextShape = function (text) {
 	 * @type Number
 	 */
 	this.angle = 0;
-
-	this.MOVABLE = OG.Constants.MOVABLE && OG.Constants.MOVABLE_TEXT;
-	this.RESIZABLE = OG.Constants.RESIZABLE && OG.Constants.RESIZABLE_TEXT;
-	this.LABEL_EDITABLE = OG.Constants.LABEL_EDITABLE && OG.Constants.LABEL_EDITABLE_TEXT;
 };
 OG.shape.TextShape.prototype = new OG.shape.IShape();
 OG.shape.TextShape.superclass = OG.shape.IShape;
@@ -10282,10 +9946,6 @@ OG.shape.ImageShape = function (image, label) {
 	 * @type Number
 	 */
 	this.angle = 0;
-
-	this.MOVABLE = OG.Constants.MOVABLE && OG.Constants.MOVABLE_IMAGE;
-	this.RESIZABLE = OG.Constants.RESIZABLE && OG.Constants.RESIZABLE_IMAGE;
-	this.LABEL_EDITABLE = OG.Constants.LABEL_EDITABLE && OG.Constants.LABEL_EDITABLE_IMAGE;
 };
 OG.shape.ImageShape.prototype = new OG.shape.IShape();
 OG.shape.ImageShape.superclass = OG.shape.IShape;
@@ -10361,10 +10021,6 @@ OG.shape.EdgeShape = function (from, to, label, fromLabel, toLabel) {
 	 * @type String
 	 */
 	this.toLabel = toLabel;
-
-	this.MOVABLE = OG.Constants.MOVABLE && OG.Constants.MOVABLE_EDGE;
-	this.RESIZABLE = OG.Constants.RESIZABLE && OG.Constants.RESIZABLE_EDGE;
-	this.LABEL_EDITABLE = OG.Constants.LABEL_EDITABLE && OG.Constants.LABEL_EDITABLE_EDGE;
 };
 OG.shape.EdgeShape.prototype = new OG.shape.IShape();
 OG.shape.EdgeShape.superclass = OG.shape.IShape;
@@ -10499,9 +10155,6 @@ OG.shape.GroupShape = function (label) {
 	this.SHAPE_ID = 'OG.shape.GroupShape';
 	this.label = label;
 
-	this.MOVABLE = OG.Constants.MOVABLE && OG.Constants.MOVABLE_GROUP;
-	this.RESIZABLE = OG.Constants.RESIZABLE && OG.Constants.RESIZABLE_GROUP;
-	this.LABEL_EDITABLE = OG.Constants.LABEL_EDITABLE && OG.Constants.LABEL_EDITABLE_GROUP;
 	this.CONNECTABLE = false;
 	this.SELF_CONNECTABLE = false;
 
@@ -10509,13 +10162,13 @@ OG.shape.GroupShape = function (label) {
 	 * 그룹핑 가능여부
 	 * @type Boolean
 	 */
-	this.GROUP_DROPABLE = OG.Constants.GROUP_DROPABLE;
+	this.GROUP_DROPABLE = true;
 
 	/**
 	 * 최소화 가능여부
 	 * @type Boolean
 	 */
-	this.GROUP_COLLAPSIBLE = OG.Constants.GROUP_COLLAPSIBLE;
+	this.GROUP_COLLAPSIBLE = true;
 };
 OG.shape.GroupShape.prototype = new OG.shape.IShape();
 OG.shape.GroupShape.superclass = OG.shape.IShape;
@@ -10621,10 +10274,6 @@ OG.shape.HtmlShape = function (html, label) {
 	 * @type Number
 	 */
 	this.angle = 0;
-
-	this.MOVABLE = OG.Constants.MOVABLE && OG.Constants.MOVABLE_HTML;
-	this.RESIZABLE = OG.Constants.RESIZABLE && OG.Constants.RESIZABLE_HTML;
-	this.LABEL_EDITABLE = OG.Constants.LABEL_EDITABLE && OG.Constants.LABEL_EDITABLE_HTML;
 };
 OG.shape.HtmlShape.prototype = new OG.shape.IShape();
 OG.shape.HtmlShape.superclass = OG.shape.IShape;
@@ -12817,16 +12466,17 @@ OG.shape.bpmn.M_Text.prototype.createShape = function () {
  * @param {Number[]} containerSize 컨테이너 Width, Height
  * @param {String} backgroundColor 캔버스 배경색
  * @param {String} backgroundImage 캔버스 배경이미지
+ * @param {Object} config Configuration
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
-OG.renderer.IRenderer = function (container, containerSize, backgroundColor, backgroundImage) {
+OG.renderer.IRenderer = function (container, containerSize, backgroundColor, backgroundImage, config) {
+	this._CONFIG = null;
 	this._PAPER = null;
 	this._ROOT_GROUP = null;
 	this._ETC_GROUP = null;
 	this._ID_PREFIX = Math.round(Math.random() * 10000);
 	this._LAST_ID = 0;
 	this._ELE_MAP = new OG.HashMap();
-	this._CANVAS_COLOR = backgroundColor || OG.Constants.CANVAS_BACKGROUND;
 };
 
 OG.renderer.IRenderer.prototype = {
@@ -13725,7 +13375,7 @@ OG.renderer.IRenderer.prototype = {
 	 * @return {Object} {position, direction}
 	 */
 	intersectionEdge: function (edgeType, element, from, to, isFrom) {
-		var terminal, position, direction, intersectPoints, i, minDistance = Number.MAX_VALUE, distance,
+		var me = this, terminal, position, direction, intersectPoints, i, minDistance = Number.MAX_VALUE, distance,
 			collapsedParents, collapsedEnvelope, collapsedUpperLeft, collapsedGeom, collapsedPosition;
 
 		// element 가 collapsed 인지 체크
@@ -13736,7 +13386,7 @@ OG.renderer.IRenderer.prototype = {
 				collapsedEnvelope = collapsedParents[collapsedParents.length - 1].shape.geom.getBoundary();
 				collapsedUpperLeft = collapsedEnvelope.getUpperLeft();
 				collapsedGeom = new OG.geometry.Rectangle(
-					collapsedUpperLeft, OG.Constants.COLLAPSE_SIZE * 3, OG.Constants.COLLAPSE_SIZE * 2);
+					collapsedUpperLeft, me._CONFIG.COLLAPSE_SIZE * 3, me._CONFIG.COLLAPSE_SIZE * 2);
 			}
 		}
 
@@ -14087,11 +13737,13 @@ OG.renderer.IRenderer.prototype.constructor = OG.renderer.IRenderer;
  * @param {Number[]} containerSize 컨테이너 Width, Height
  * @param {String} backgroundColor 캔버스 배경색
  * @param {String} backgroundImage 캔버스 배경이미지
+ * @param {Object} config Configuration
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
-OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColor, backgroundImage) {
-	OG.renderer.RaphaelRenderer.superclass.call(this, container, containerSize, backgroundColor, backgroundImage);
+OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColor, backgroundImage, config) {
+	OG.renderer.RaphaelRenderer.superclass.call(this, arguments);
 
+	this._CONFIG = config;
 	this._PAPER = new Raphael(container, containerSize ? containerSize[0] : null, containerSize ? containerSize[1] : null);
 
 	// 최상위 그룹 엘리먼트 초기화
@@ -14099,6 +13751,7 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 	this._ETC_GROUP = this._add(this._PAPER.group(), null, OG.Constants.NODE_TYPE.ETC);
 	this._PAPER.id = "OG_" + this._ID_PREFIX;
 	this._PAPER.canvas.id = "OG_" + this._ID_PREFIX;
+	this._CANVAS_COLOR = backgroundColor || this._CONFIG.CANVAS_BACKGROUND;
 
 	$(this._PAPER.canvas).css({
 		"background-color"   : this._CANVAS_COLOR,
@@ -14211,7 +13864,7 @@ OG.renderer.RaphaelRenderer.prototype._getREleById = function (id) {
  * @private
  */
 OG.renderer.RaphaelRenderer.prototype._drawGeometry = function (groupElement, geometry, style, parentStyle) {
-	var i = 0, pathStr = "", vertices, element, geomObj, _style = {},
+	var me = this, i = 0, pathStr = "", vertices, element, geomObj, _style = {},
 		getRoundedPath = function (rectangle, radius) {
 			var rectObj, rectVert, offset1, offset2, angle, array = [],
 				getRoundedOffset = function (coord, dist, deg) {
@@ -14246,10 +13899,10 @@ OG.renderer.RaphaelRenderer.prototype._drawGeometry = function (groupElement, ge
 		};
 	if (parentStyle) {
 		OG.Util.apply(_style, (style instanceof OG.geometry.Style) ? style.map : style || {},
-			OG.Util.apply({}, geometry.style.map, OG.Util.apply({}, parentStyle, OG.Constants.DEFAULT_STYLE.GEOM)));
+			OG.Util.apply({}, geometry.style.map, OG.Util.apply({}, parentStyle, me._CONFIG.DEFAULT_STYLE.GEOM)));
 	} else {
 		OG.Util.apply(_style, (style instanceof OG.geometry.Style) ? style.map : style || {},
-			OG.Util.apply({}, geometry.style.map, OG.Constants.DEFAULT_STYLE.GEOM));
+			OG.Util.apply({}, geometry.style.map, me._CONFIG.DEFAULT_STYLE.GEOM));
 	}
 
 	geometry.style.map = _style;
@@ -14394,13 +14047,13 @@ OG.renderer.RaphaelRenderer.prototype._drawGeometry = function (groupElement, ge
  * @private
  */
 OG.renderer.RaphaelRenderer.prototype._drawLabel = function (position, text, size, style, id, isEdge) {
-	var LABEL_PADDING = OG.Constants.LABEL_PADDING,
+	var me = this, LABEL_PADDING = me._CONFIG.LABEL_PADDING,
 		width = size ? size[0] - LABEL_PADDING * 2 : null,
 		height = size ? size[1] - LABEL_PADDING * 2 : null,
 		angle = size ? size[2] || 0 : 0,
 		group, element, rect, _style = {}, text_anchor, geom,
 		bBox, left, top, x, y;
-	OG.Util.apply(_style, (style instanceof OG.geometry.Style) ? style.map : style || {}, OG.Constants.DEFAULT_STYLE.TEXT);
+	OG.Util.apply(_style, (style instanceof OG.geometry.Style) ? style.map : style || {}, me._CONFIG.DEFAULT_STYLE.TEXT);
 
 	// ID 지정된 경우 존재하면 하위 노드 제거
 	if (id === 0 || id) {
@@ -14509,8 +14162,8 @@ OG.renderer.RaphaelRenderer.prototype._drawLabel = function (position, text, siz
 		x             : x,
 		y             : y,
 		stroke        : "none",
-		fill          : _style["font-color"] || OG.Constants.DEFAULT_STYLE.LABEL["font-color"],
-		"font-size"   : _style["font-size"] || OG.Constants.DEFAULT_STYLE.LABEL["font-size"],
+		fill          : _style["font-color"] || me._CONFIG.DEFAULT_STYLE.LABEL["font-color"],
+		"font-size"   : _style["font-size"] || me._CONFIG.DEFAULT_STYLE.LABEL["font-size"],
 		"fill-opacity": 1
 	});
 
@@ -14672,7 +14325,7 @@ OG.renderer.RaphaelRenderer.prototype.drawShape = function (position, shape, siz
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.drawGeom = function (geometry, style, id) {
-	var group, _style = {};
+	var me = this, group, _style = {};
 
 	OG.Util.apply(_style, (style instanceof OG.geometry.Style) ? style.map : style || {});
 
@@ -14695,7 +14348,7 @@ OG.renderer.RaphaelRenderer.prototype.drawGeom = function (geometry, style, id) 
 	// Draw geometry
 	this._drawGeometry(group.node, geometry, _style);
 	group.node.geom = geometry;
-	group.attr(OG.Constants.DEFAULT_STYLE.SHAPE);
+	group.attr(me._CONFIG.DEFAULT_STYLE.SHAPE);
 
 	if (group.node.shape) {
 		group.node.shape.geom = geometry;
@@ -14724,12 +14377,12 @@ OG.renderer.RaphaelRenderer.prototype.drawGeom = function (geometry, style, id) 
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.drawText = function (position, text, size, style, id) {
-	var width = size ? size[0] : null,
+	var me = this, width = size ? size[0] : null,
 		height = size ? size[1] : null,
 		angle = size ? size[2] || 0 : 0,
 		group, element, _style = {}, geom,
 		bBox, left, top, x, y;
-	OG.Util.apply(_style, (style instanceof OG.geometry.Style) ? style.map : style || {}, OG.Constants.DEFAULT_STYLE.TEXT);
+	OG.Util.apply(_style, (style instanceof OG.geometry.Style) ? style.map : style || {}, me._CONFIG.DEFAULT_STYLE.TEXT);
 
 	// ID 지정된 경우 존재하면 하위 노드 제거
 	if (id === 0 || id) {
@@ -14802,8 +14455,8 @@ OG.renderer.RaphaelRenderer.prototype.drawText = function (position, text, size,
 	// font-color, font-size 적용
 	element.attr({
 		stroke     : "none",
-		fill       : _style["font-color"] || OG.Constants.DEFAULT_STYLE.LABEL["font-color"],
-		"font-size": _style["font-size"] || OG.Constants.DEFAULT_STYLE.LABEL["font-size"]
+		fill       : _style["font-color"] || me._CONFIG.DEFAULT_STYLE.LABEL["font-color"],
+		"font-size": _style["font-size"] || me._CONFIG.DEFAULT_STYLE.LABEL["font-size"]
 	});
 
 	// angle 적용
@@ -14817,7 +14470,7 @@ OG.renderer.RaphaelRenderer.prototype.drawText = function (position, text, size,
 	group.node.text = text;
 	group.node.angle = angle;
 	group.node.geom = geom;
-	group.attr(OG.Constants.DEFAULT_STYLE.SHAPE);
+	group.attr(me._CONFIG.DEFAULT_STYLE.SHAPE);
 
 	if (group.node.shape) {
 		group.node.shape.text = text;
@@ -14862,11 +14515,11 @@ OG.renderer.RaphaelRenderer.prototype.drawText = function (position, text, size,
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.drawHtml = function (position, html, size, style, id) {
-	var width = size ? size[0] : null,
+	var me = this, width = size ? size[0] : null,
 		height = size ? size[1] : null,
 		angle = size ? size[2] || 0 : 0,
 		group, element, _style = {}, bBox, geom, left, top;
-	OG.Util.apply(_style, (style instanceof OG.geometry.Style) ? style.map : style || {}, OG.Constants.DEFAULT_STYLE.HTML);
+	OG.Util.apply(_style, (style instanceof OG.geometry.Style) ? style.map : style || {}, me._CONFIG.DEFAULT_STYLE.HTML);
 
 	// ID 지정된 경우 존재하면 하위 노드 제거
 	if (id === 0 || id) {
@@ -14912,7 +14565,7 @@ OG.renderer.RaphaelRenderer.prototype.drawHtml = function (position, html, size,
 	group.node.html = html;
 	group.node.angle = angle;
 	group.node.geom = geom;
-	group.attr(OG.Constants.DEFAULT_STYLE.SHAPE);
+	group.attr(me._CONFIG.DEFAULT_STYLE.SHAPE);
 
 	if (group.node.shape) {
 		group.node.shape.html = html;
@@ -14957,11 +14610,11 @@ OG.renderer.RaphaelRenderer.prototype.drawHtml = function (position, html, size,
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.drawImage = function (position, imgSrc, size, style, id) {
-	var width = size ? size[0] : null,
+	var me = this, width = size ? size[0] : null,
 		height = size ? size[1] : null,
 		angle = size ? size[2] || 0 : 0,
 		group, element, _style = {}, bBox, geom, left, top;
-	OG.Util.apply(_style, (style instanceof OG.geometry.Style) ? style.map : style || {}, OG.Constants.DEFAULT_STYLE.IMAGE);
+	OG.Util.apply(_style, (style instanceof OG.geometry.Style) ? style.map : style || {}, me._CONFIG.DEFAULT_STYLE.IMAGE);
 
 	// ID 지정된 경우 존재하면 하위 노드 제거
 	if (id === 0 || id) {
@@ -15007,7 +14660,7 @@ OG.renderer.RaphaelRenderer.prototype.drawImage = function (position, imgSrc, si
 	group.node.image = imgSrc;
 	group.node.angle = angle;
 	group.node.geom = geom;
-	group.attr(OG.Constants.DEFAULT_STYLE.SHAPE);
+	group.attr(me._CONFIG.DEFAULT_STYLE.SHAPE);
 
 	if (group.node.shape) {
 		group.node.shape.image = imgSrc;
@@ -15053,7 +14706,7 @@ OG.renderer.RaphaelRenderer.prototype.drawImage = function (position, imgSrc, si
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSelf) {
-	var group, _style = {},
+	var me = this, group, _style = {},
 		vertices = line.getVertices(),
 		from = vertices[0], to = vertices[vertices.length - 1],
 		points = [], edge, edge_direction,
@@ -15091,7 +14744,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 		};
 
 	OG.Util.apply(_style, (style instanceof OG.geometry.Style) ? style.map : style || {},
-		OG.Util.apply({}, line.style.map, OG.Constants.DEFAULT_STYLE.EDGE));
+		OG.Util.apply({}, line.style.map, me._CONFIG.DEFAULT_STYLE.EDGE));
 
 	// ID 지정된 경우 존재하면 하위 노드 제거
 	if (id === 0 || id) {
@@ -15111,10 +14764,10 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 
 	if (isSelf) {
 		points = [
-			[from.x, from.y - OG.Constants.GUIDE_RECT_SIZE / 2],
-			[from.x + OG.Constants.GUIDE_RECT_SIZE * 2, from.y - OG.Constants.GUIDE_RECT_SIZE],
-			[from.x + OG.Constants.GUIDE_RECT_SIZE * 2, from.y + OG.Constants.GUIDE_RECT_SIZE],
-			[from.x, from.y + OG.Constants.GUIDE_RECT_SIZE / 2]
+			[from.x, from.y - me._CONFIG.GUIDE_RECT_SIZE / 2],
+			[from.x + me._CONFIG.GUIDE_RECT_SIZE * 2, from.y - me._CONFIG.GUIDE_RECT_SIZE],
+			[from.x + me._CONFIG.GUIDE_RECT_SIZE * 2, from.y + me._CONFIG.GUIDE_RECT_SIZE],
+			[from.x, from.y + me._CONFIG.GUIDE_RECT_SIZE / 2]
 		];
 	} else if (line instanceof OG.geometry.Line) {
 		// edgeType
@@ -15136,7 +14789,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 					if (from.x <= to.x) {
 						points = getArrayOfOrthogonal_1(
 							[from.x, from.y],
-							[to.x + OG.Constants.EDGE_PADDING, to.y],
+							[to.x + me._CONFIG.EDGE_PADDING, to.y],
 							true
 						);
 						points.push([to.x, to.y]);
@@ -15145,7 +14798,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_1(
-							[from.x + OG.Constants.EDGE_PADDING, from.y],
+							[from.x + me._CONFIG.EDGE_PADDING, from.y],
 							[to.x, to.y],
 							false
 						));
@@ -15163,8 +14816,8 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_2(
-							[from.x + OG.Constants.EDGE_PADDING, from.y],
-							[to.x - OG.Constants.EDGE_PADDING, to.y],
+							[from.x + me._CONFIG.EDGE_PADDING, from.y],
+							[to.x - me._CONFIG.EDGE_PADDING, to.y],
 							false
 						));
 						points.push([to.x, to.y]);
@@ -15174,7 +14827,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 					if (from.x <= to.x && from.y <= to.y) {
 						points = getArrayOfOrthogonal_2(
 							[from.x, from.y],
-							[to.x, to.y + OG.Constants.EDGE_PADDING],
+							[to.x, to.y + me._CONFIG.EDGE_PADDING],
 							true
 						);
 						points.push([to.x, to.y]);
@@ -15189,8 +14842,8 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_1(
-							[from.x + OG.Constants.EDGE_PADDING, from.y],
-							[to.x, to.y + OG.Constants.EDGE_PADDING],
+							[from.x + me._CONFIG.EDGE_PADDING, from.y],
+							[to.x, to.y + me._CONFIG.EDGE_PADDING],
 							false
 						));
 						points.push([to.x, to.y]);
@@ -15199,7 +14852,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_2(
-							[from.x + OG.Constants.EDGE_PADDING, from.y],
+							[from.x + me._CONFIG.EDGE_PADDING, from.y],
 							[to.x, to.y],
 							false
 						));
@@ -15217,8 +14870,8 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_1(
-							[from.x + OG.Constants.EDGE_PADDING, from.y],
-							[to.x, to.y - OG.Constants.EDGE_PADDING],
+							[from.x + me._CONFIG.EDGE_PADDING, from.y],
+							[to.x, to.y - me._CONFIG.EDGE_PADDING],
 							false
 						));
 						points.push([to.x, to.y]);
@@ -15227,7 +14880,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_2(
-							[from.x + OG.Constants.EDGE_PADDING, from.y],
+							[from.x + me._CONFIG.EDGE_PADDING, from.y],
 							[to.x, to.y],
 							false
 						));
@@ -15236,8 +14889,8 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_1(
-							[from.x + OG.Constants.EDGE_PADDING, from.y],
-							[to.x, to.y - OG.Constants.EDGE_PADDING],
+							[from.x + me._CONFIG.EDGE_PADDING, from.y],
+							[to.x, to.y - me._CONFIG.EDGE_PADDING],
 							false
 						));
 						points.push([to.x, to.y]);
@@ -15252,8 +14905,8 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_2(
-							[from.x - OG.Constants.EDGE_PADDING, from.y],
-							[to.x + OG.Constants.EDGE_PADDING, to.y],
+							[from.x - me._CONFIG.EDGE_PADDING, from.y],
+							[to.x + me._CONFIG.EDGE_PADDING, to.y],
 							false
 						));
 						points.push([to.x, to.y]);
@@ -15271,7 +14924,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_1(
-							[from.x - OG.Constants.EDGE_PADDING, from.y],
+							[from.x - me._CONFIG.EDGE_PADDING, from.y],
 							[to.x, to.y],
 							false
 						));
@@ -15279,7 +14932,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 					} else {
 						points = getArrayOfOrthogonal_1(
 							[from.x, from.y],
-							[to.x - OG.Constants.EDGE_PADDING, to.y],
+							[to.x - me._CONFIG.EDGE_PADDING, to.y],
 							true
 						);
 						points.push([to.x, to.y]);
@@ -15291,8 +14944,8 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_1(
-							[from.x - OG.Constants.EDGE_PADDING, from.y],
-							[to.x, to.y + OG.Constants.EDGE_PADDING],
+							[from.x - me._CONFIG.EDGE_PADDING, from.y],
+							[to.x, to.y + me._CONFIG.EDGE_PADDING],
 							false
 						));
 						points.push([to.x, to.y]);
@@ -15301,14 +14954,14 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_2(
-							[from.x - OG.Constants.EDGE_PADDING, from.y],
+							[from.x - me._CONFIG.EDGE_PADDING, from.y],
 							[to.x, to.y],
 							false
 						));
 					} else if (from.x > to.x && from.y <= to.y) {
 						points = getArrayOfOrthogonal_2(
 							[from.x, from.y],
-							[to.x, to.y + OG.Constants.EDGE_PADDING],
+							[to.x, to.y + me._CONFIG.EDGE_PADDING],
 							true
 						);
 						points.push([to.x, to.y]);
@@ -15326,7 +14979,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_2(
-							[from.x - OG.Constants.EDGE_PADDING, from.y],
+							[from.x - me._CONFIG.EDGE_PADDING, from.y],
 							[to.x, to.y],
 							false
 						));
@@ -15335,8 +14988,8 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_1(
-							[from.x - OG.Constants.EDGE_PADDING, from.y],
-							[to.x, to.y - OG.Constants.EDGE_PADDING],
+							[from.x - me._CONFIG.EDGE_PADDING, from.y],
+							[to.x, to.y - me._CONFIG.EDGE_PADDING],
 							false
 						));
 						points.push([to.x, to.y]);
@@ -15349,7 +15002,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 					} else if (from.x > to.x && from.y > to.y) {
 						points = getArrayOfOrthogonal_2(
 							[from.x, from.y],
-							[to.x, to.y - OG.Constants.EDGE_PADDING],
+							[to.x, to.y - me._CONFIG.EDGE_PADDING],
 							true
 						);
 						points.push([to.x, to.y]);
@@ -15362,7 +15015,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 					if (from.x <= to.x && from.y <= to.y) {
 						points = getArrayOfOrthogonal_2(
 							[from.x, from.y],
-							[to.x + OG.Constants.EDGE_PADDING, to.y],
+							[to.x + me._CONFIG.EDGE_PADDING, to.y],
 							false
 						);
 						points.push([to.x, to.y]);
@@ -15371,8 +15024,8 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_1(
-							[from.x, from.y + OG.Constants.EDGE_PADDING],
-							[to.x + OG.Constants.EDGE_PADDING, to.y],
+							[from.x, from.y + me._CONFIG.EDGE_PADDING],
+							[to.x + me._CONFIG.EDGE_PADDING, to.y],
 							true
 						));
 						points.push([to.x, to.y]);
@@ -15387,7 +15040,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_2(
-							[from.x, from.y + OG.Constants.EDGE_PADDING],
+							[from.x, from.y + me._CONFIG.EDGE_PADDING],
 							[to.x, to.y],
 							true
 						));
@@ -15405,14 +15058,14 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_2(
-							[from.x, from.y + OG.Constants.EDGE_PADDING],
+							[from.x, from.y + me._CONFIG.EDGE_PADDING],
 							[to.x, to.y],
 							true
 						));
 					} else if (from.x > to.x && from.y <= to.y) {
 						points = getArrayOfOrthogonal_2(
 							[from.x, from.y],
-							[to.x - OG.Constants.EDGE_PADDING, to.y],
+							[to.x - me._CONFIG.EDGE_PADDING, to.y],
 							false
 						);
 						points.push([to.x, to.y]);
@@ -15421,8 +15074,8 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_1(
-							[from.x, from.y + OG.Constants.EDGE_PADDING],
-							[to.x - OG.Constants.EDGE_PADDING, to.y],
+							[from.x, from.y + me._CONFIG.EDGE_PADDING],
+							[to.x - me._CONFIG.EDGE_PADDING, to.y],
 							true
 						));
 						points.push([to.x, to.y]);
@@ -15432,7 +15085,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 					if (from.y <= to.y) {
 						points = getArrayOfOrthogonal_1(
 							[from.x, from.y],
-							[to.x, to.y + OG.Constants.EDGE_PADDING],
+							[to.x, to.y + me._CONFIG.EDGE_PADDING],
 							false
 						);
 						points.push([to.x, to.y]);
@@ -15441,7 +15094,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_1(
-							[from.x, from.y + OG.Constants.EDGE_PADDING],
+							[from.x, from.y + me._CONFIG.EDGE_PADDING],
 							[to.x, to.y],
 							true
 						));
@@ -15459,8 +15112,8 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_2(
-							[from.x, from.y + OG.Constants.EDGE_PADDING],
-							[to.x, to.y - OG.Constants.EDGE_PADDING],
+							[from.x, from.y + me._CONFIG.EDGE_PADDING],
+							[to.x, to.y - me._CONFIG.EDGE_PADDING],
 							true
 						));
 						points.push([to.x, to.y]);
@@ -15475,15 +15128,15 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_1(
-							[from.x, from.y - OG.Constants.EDGE_PADDING],
-							[to.x + OG.Constants.EDGE_PADDING, to.y],
+							[from.x, from.y - me._CONFIG.EDGE_PADDING],
+							[to.x + me._CONFIG.EDGE_PADDING, to.y],
 							true
 						));
 						points.push([to.x, to.y]);
 					} else if (from.x <= to.x && from.y > to.y) {
 						points = getArrayOfOrthogonal_2(
 							[from.x, from.y],
-							[to.x + OG.Constants.EDGE_PADDING, to.y],
+							[to.x + me._CONFIG.EDGE_PADDING, to.y],
 							false
 						);
 						points.push([to.x, to.y]);
@@ -15492,7 +15145,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_2(
-							[from.x, from.y - OG.Constants.EDGE_PADDING],
+							[from.x, from.y - me._CONFIG.EDGE_PADDING],
 							[to.x, to.y],
 							true
 						));
@@ -15510,7 +15163,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_2(
-							[from.x, from.y - OG.Constants.EDGE_PADDING],
+							[from.x, from.y - me._CONFIG.EDGE_PADDING],
 							[to.x, to.y],
 							true
 						));
@@ -15525,15 +15178,15 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_1(
-							[from.x, from.y - OG.Constants.EDGE_PADDING],
-							[to.x - OG.Constants.EDGE_PADDING, to.y],
+							[from.x, from.y - me._CONFIG.EDGE_PADDING],
+							[to.x - me._CONFIG.EDGE_PADDING, to.y],
 							true
 						));
 						points.push([to.x, to.y]);
 					} else if (from.x > to.x && from.y > to.y) {
 						points = getArrayOfOrthogonal_2(
 							[from.x, from.y],
-							[to.x - OG.Constants.EDGE_PADDING, to.y],
+							[to.x - me._CONFIG.EDGE_PADDING, to.y],
 							false
 						);
 						points.push([to.x, to.y]);
@@ -15545,8 +15198,8 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_2(
-							[from.x, from.y - OG.Constants.EDGE_PADDING],
-							[to.x, to.y + OG.Constants.EDGE_PADDING],
+							[from.x, from.y - me._CONFIG.EDGE_PADDING],
+							[to.x, to.y + me._CONFIG.EDGE_PADDING],
 							true
 						));
 						points.push([to.x, to.y]);
@@ -15564,14 +15217,14 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_1(
-							[from.x, from.y - OG.Constants.EDGE_PADDING],
+							[from.x, from.y - me._CONFIG.EDGE_PADDING],
 							[to.x, to.y],
 							true
 						));
 					} else {
 						points = getArrayOfOrthogonal_1(
 							[from.x, from.y],
-							[to.x, to.y - OG.Constants.EDGE_PADDING],
+							[to.x, to.y - me._CONFIG.EDGE_PADDING],
 							false
 						);
 						points.push([to.x, to.y]);
@@ -15615,12 +15268,12 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 	}
 
 	// draw hidden edge
-	this._drawGeometry(group.node, edge, OG.Constants.DEFAULT_STYLE.EDGE_HIDDEN);
+	this._drawGeometry(group.node, edge, me._CONFIG.DEFAULT_STYLE.EDGE_HIDDEN);
 
 	// draw Edge
 	this._drawGeometry(group.node, edge, _style);
 	group.node.geom = edge;
-	group.attr(OG.Constants.DEFAULT_STYLE.SHAPE);
+	group.attr(me._CONFIG.DEFAULT_STYLE.SHAPE);
 
 	if (group.node.shape) {
 		group.node.shape.geom = edge;
@@ -15646,7 +15299,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.drawGroup = function (geometry, style, id) {
-	var group, geomElement, _style = {}, childNodes, i, boundary, titleLine, _tempStyle = {};
+	var me = this, group, geomElement, _style = {}, childNodes, i, boundary, titleLine, _tempStyle = {};
 
 	OG.Util.apply(_style, (style instanceof OG.geometry.Style) ? style.map : style || {});
 
@@ -15674,7 +15327,7 @@ OG.renderer.RaphaelRenderer.prototype.drawGroup = function (geometry, style, id)
 	// Draw geometry
 	geomElement = this._drawGeometry(group.node, geometry, _style);
 	group.node.geom = geometry;
-	group.attr(OG.Constants.DEFAULT_STYLE.SHAPE);
+	group.attr(me._CONFIG.DEFAULT_STYLE.SHAPE);
 
 	// 타이틀 라인 Drawing
 	OG.Util.apply(_tempStyle, geometry.style.map, _style);
@@ -15846,7 +15499,7 @@ OG.renderer.RaphaelRenderer.prototype.drawLabel = function (shapeElement, text, 
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.drawEdgeLabel = function (shapeElement, text, type) {
-	var rElement = this._getREleById(OG.Util.isElement(shapeElement) ? shapeElement.id : shapeElement),
+	var me = this, rElement = this._getREleById(OG.Util.isElement(shapeElement) ? shapeElement.id : shapeElement),
 		element, vertices, labelElement, position, edgeLabel, suffix;
 
 	if (rElement && rElement.node.shape) {
@@ -15856,12 +15509,12 @@ OG.renderer.RaphaelRenderer.prototype.drawEdgeLabel = function (shapeElement, te
 		if (element.shape instanceof OG.shape.EdgeShape) {
 			vertices = element.shape.geom.getVertices();
 			if (type === 'FROM') {
-				position = [vertices[0].x, vertices[0].y + OG.Constants.FROMTO_LABEL_OFFSET_TOP];
+				position = [vertices[0].x, vertices[0].y + me._CONFIG.FROMTO_LABEL_OFFSET_TOP];
 				element.shape.fromLabel = text || element.shape.fromLabel;
 				edgeLabel = element.shape.fromLabel;
 				suffix = OG.Constants.FROM_LABEL_SUFFIX;
 			} else {
-				position = [vertices[vertices.length - 1].x, vertices[vertices.length - 1].y + OG.Constants.FROMTO_LABEL_OFFSET_TOP];
+				position = [vertices[vertices.length - 1].x, vertices[vertices.length - 1].y + me._CONFIG.FROMTO_LABEL_OFFSET_TOP];
 				element.shape.toLabel = text || element.shape.toLabel;
 				edgeLabel = element.shape.toLabel;
 				suffix = OG.Constants.TO_LABEL_SUFFIX;
@@ -15989,7 +15642,7 @@ OG.renderer.RaphaelRenderer.prototype.redrawShape = function (element, excludeEd
 				envelope = element.shape.geom.getBoundary();
 				upperLeft = envelope.getUpperLeft();
 				element = this.drawGroup(new OG.geometry.Rectangle(
-					upperLeft, OG.Constants.COLLAPSE_SIZE * 3, OG.Constants.COLLAPSE_SIZE * 2),
+					upperLeft, me._CONFIG.COLLAPSE_SIZE * 3, me._CONFIG.COLLAPSE_SIZE * 2),
 					element.shape.geom.style, element.id);
 				redrawChildConnectedEdge(element, element);
 				this.redrawConnectedEdge(element, excludeEdgeId);
@@ -16016,7 +15669,7 @@ OG.renderer.RaphaelRenderer.prototype.redrawShape = function (element, excludeEd
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.redrawEdge = function (edgeElement) {
-	var edge, fromTerminalId, toTerminalId, fromShape, toShape, fromTerminalNum, toTerminalNum,
+	var me = this, edge, fromTerminalId, toTerminalId, fromShape, toShape, fromTerminalNum, toTerminalNum,
 		fromTerminal, toTerminal, vertices, fromDrct, toDrct, fromXY, toXY,
 		orgFromXY, orgToXY, orgFromDrct, orgToDrct, intersectionInfo, isSelf,
 		collapsedParents, collapsedEnvelope, collapsedUpperLeft, collapsedGeom, collapsedPosition;
@@ -16089,7 +15742,7 @@ OG.renderer.RaphaelRenderer.prototype.redrawEdge = function (edgeElement) {
 				}
 				collapsedUpperLeft = collapsedEnvelope.getUpperLeft();
 				collapsedGeom = new OG.geometry.Rectangle(
-					collapsedUpperLeft, OG.Constants.COLLAPSE_SIZE * 3, OG.Constants.COLLAPSE_SIZE * 2);
+					collapsedUpperLeft, me._CONFIG.COLLAPSE_SIZE * 3, me._CONFIG.COLLAPSE_SIZE * 2);
 
 				switch (fromDrct.toUpperCase()) {
 				case OG.Constants.TERMINAL_TYPE.E:
@@ -16123,7 +15776,7 @@ OG.renderer.RaphaelRenderer.prototype.redrawEdge = function (edgeElement) {
 				}
 				collapsedUpperLeft = collapsedEnvelope.getUpperLeft();
 				collapsedGeom = new OG.geometry.Rectangle(
-					collapsedUpperLeft, OG.Constants.COLLAPSE_SIZE * 3, OG.Constants.COLLAPSE_SIZE * 2);
+					collapsedUpperLeft, me._CONFIG.COLLAPSE_SIZE * 3, me._CONFIG.COLLAPSE_SIZE * 2);
 
 				switch (toDrct.toUpperCase()) {
 				case OG.Constants.TERMINAL_TYPE.E:
@@ -16202,7 +15855,7 @@ OG.renderer.RaphaelRenderer.prototype.redrawConnectedEdge = function (element, e
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.connect = function (from, to, edge, style, label) {
-	var _style = {}, fromShape, toShape, intersectionInfo, fromXY, toXY,
+	var me = this, _style = {}, fromShape, toShape, intersectionInfo, fromXY, toXY,
 		orgFromXY, orgToXY, fromDrct, toDrct, orgFromDrct, orgToDrct, isSelf, beforeEvent,
 		addAttrValues = function (element, name, value) {
 			var attrValue = $(element).attr(name),
@@ -16219,7 +15872,7 @@ OG.renderer.RaphaelRenderer.prototype.connect = function (from, to, edge, style,
 			return element;
 		};
 
-	OG.Util.apply(_style, (style instanceof OG.geometry.Style) ? style.map : style || {}, OG.Constants.DEFAULT_STYLE.EDGE);
+	OG.Util.apply(_style, (style instanceof OG.geometry.Style) ? style.map : style || {}, me._CONFIG.DEFAULT_STYLE.EDGE);
 
 	// 연결 시작, 끝 Shape
 	if (OG.Util.isElement(from)) {
@@ -16405,20 +16058,19 @@ OG.renderer.RaphaelRenderer.prototype.disconnect = function (element) {
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.drawDropOverGuide = function (element) {
-	var rElement = this._getREleById(OG.Util.isElement(element) ? element.id : element),
+	var me = this, rElement = this._getREleById(OG.Util.isElement(element) ? element.id : element),
 		geometry = rElement ? rElement.node.shape.geom : null,
 		envelope, _upperLeft, _bBoxRect,
-		_size = OG.Constants.GUIDE_RECT_SIZE / 2,
+		_size = me._CONFIG.GUIDE_RECT_SIZE / 2,
 		_hSize = _size / 2;
 
-	if (rElement && geometry && $(element).attr("_shape") !== OG.Constants.SHAPE_TYPE.EDGE &&
-		!this._getREleById(rElement.id + OG.Constants.DROP_OVER_BBOX_SUFFIX)) {
+	if (rElement && geometry && $(element).attr("_shape") !== OG.Constants.SHAPE_TYPE.EDGE && !this._getREleById(rElement.id + OG.Constants.DROP_OVER_BBOX_SUFFIX)) {
 		envelope = geometry.getBoundary();
 		_upperLeft = envelope.getUpperLeft();
 
 		// guide line 랜더링
 		_bBoxRect = this._PAPER.rect(_upperLeft.x - _hSize, _upperLeft.y - _hSize, envelope.getWidth() + _size, envelope.getHeight() + _size);
-		_bBoxRect.attr(OG.Util.apply({'stroke-width': _size}, OG.Constants.DEFAULT_STYLE.DROP_OVER_BBOX));
+		_bBoxRect.attr(OG.Util.apply({'stroke-width': _size}, me._CONFIG.DEFAULT_STYLE.DROP_OVER_BBOX));
 		this._add(_bBoxRect, rElement.id + OG.Constants.DROP_OVER_BBOX_SUFFIX);
 
 		// layer 위치 조정
@@ -16434,14 +16086,14 @@ OG.renderer.RaphaelRenderer.prototype.drawDropOverGuide = function (element) {
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.drawGuide = function (element) {
-	var rElement = this._getREleById(OG.Util.isElement(element) ? element.id : element),
+	var me = this, rElement = this._getREleById(OG.Util.isElement(element) ? element.id : element),
 		geometry = rElement ? rElement.node.shape.geom : null,
 		envelope,
 		group, guide,
 		_bBoxRect,
 		_upperLeft, _upperRight, _lowerLeft, _lowerRight, _leftCenter, _upperCenter, _rightCenter, _lowerCenter,
 		_ulRect, _urRect, _llRect, _lrRect, _lcRect, _ucRect, _rcRect, _lwcRect,
-		_size = OG.Constants.GUIDE_RECT_SIZE, _hSize = OG.Util.round(_size / 2);
+		_size = me._CONFIG.GUIDE_RECT_SIZE, _hSize = OG.Util.round(_size / 2);
 
 	if (rElement && geometry) {
 		// Edge 인 경우 따로 처리
@@ -16463,7 +16115,7 @@ OG.renderer.RaphaelRenderer.prototype.drawGuide = function (element) {
 				// bBox remove -> redraw
 				this._remove(this._getREleById(rElement.id + OG.Constants.GUIDE_SUFFIX.BBOX));
 				_bBoxRect = this._PAPER.rect(_upperLeft.x, _upperLeft.y, envelope.getWidth(), envelope.getHeight());
-				_bBoxRect.attr(OG.Constants.DEFAULT_STYLE.GUIDE_BBOX);
+				_bBoxRect.attr(me._CONFIG.DEFAULT_STYLE.GUIDE_BBOX);
 				this._add(_bBoxRect, rElement.id + OG.Constants.GUIDE_SUFFIX.BBOX);
 				_bBoxRect.insertBefore(rElement);
 
@@ -16507,15 +16159,15 @@ OG.renderer.RaphaelRenderer.prototype.drawGuide = function (element) {
 			_rcRect = this._PAPER.rect(_rightCenter.x - _hSize, _rightCenter.y - _hSize, _size, _size);
 			_lwcRect = this._PAPER.rect(_lowerCenter.x - _hSize, _lowerCenter.y - _hSize, _size, _size);
 
-			_bBoxRect.attr(OG.Constants.DEFAULT_STYLE.GUIDE_BBOX);
-			_ulRect.attr(OG.Constants.DEFAULT_STYLE.GUIDE_UL);
-			_urRect.attr(OG.Constants.DEFAULT_STYLE.GUIDE_UR);
-			_llRect.attr(OG.Constants.DEFAULT_STYLE.GUIDE_LL);
-			_lrRect.attr(OG.Constants.DEFAULT_STYLE.GUIDE_LR);
-			_lcRect.attr(OG.Constants.DEFAULT_STYLE.GUIDE_LC);
-			_ucRect.attr(OG.Constants.DEFAULT_STYLE.GUIDE_UC);
-			_rcRect.attr(OG.Constants.DEFAULT_STYLE.GUIDE_RC);
-			_lwcRect.attr(OG.Constants.DEFAULT_STYLE.GUIDE_LWC);
+			_bBoxRect.attr(me._CONFIG.DEFAULT_STYLE.GUIDE_BBOX);
+			_ulRect.attr(me._CONFIG.DEFAULT_STYLE.GUIDE_UL);
+			_urRect.attr(me._CONFIG.DEFAULT_STYLE.GUIDE_UR);
+			_llRect.attr(me._CONFIG.DEFAULT_STYLE.GUIDE_LL);
+			_lrRect.attr(me._CONFIG.DEFAULT_STYLE.GUIDE_LR);
+			_lcRect.attr(me._CONFIG.DEFAULT_STYLE.GUIDE_LC);
+			_ucRect.attr(me._CONFIG.DEFAULT_STYLE.GUIDE_UC);
+			_rcRect.attr(me._CONFIG.DEFAULT_STYLE.GUIDE_RC);
+			_lwcRect.attr(me._CONFIG.DEFAULT_STYLE.GUIDE_LWC);
 
 			// add to Group
 			group.appendChild(_ulRect);
@@ -16604,16 +16256,16 @@ OG.renderer.RaphaelRenderer.prototype.removeAllGuide = function () {
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.drawEdgeGuide = function (element) {
-	var rElement = this._getREleById(OG.Util.isElement(element) ? element.id : element),
+	var me = this, rElement = this._getREleById(OG.Util.isElement(element) ? element.id : element),
 		geometry = rElement ? rElement.node.shape.geom : null,
 		vertices, isSelf,
 		group, guide, pathStr,
 		_bBoxLine, _fromRect, _toRect, _controlRect, controlNode = [],
-		_size = OG.Constants.GUIDE_RECT_SIZE, _hSize = OG.Util.round(_size / 2), _style = {},
+		_size = me._CONFIG.GUIDE_RECT_SIZE, _hSize = OG.Util.round(_size / 2), _style = {},
 		i;
 
 	if (rElement && geometry) {
-		OG.Util.apply(_style, geometry.style.map, OG.Constants.DEFAULT_STYLE.EDGE);
+		OG.Util.apply(_style, geometry.style.map, me._CONFIG.DEFAULT_STYLE.EDGE);
 
 		vertices = _style["edge-type"] === OG.Constants.EDGE_TYPE.BEZIER ? geometry.getControlPoints() : geometry.getVertices();
 
@@ -16645,7 +16297,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdgeGuide = function (element) {
 			}
 
 			_bBoxLine = this._PAPER.path(pathStr);
-			_bBoxLine.attr(OG.Constants.DEFAULT_STYLE.GUIDE_BBOX);
+			_bBoxLine.attr(me._CONFIG.DEFAULT_STYLE.GUIDE_BBOX);
 			this._add(_bBoxLine, rElement.id + OG.Constants.GUIDE_SUFFIX.BBOX);
 			_bBoxLine.insertBefore(rElement);
 
@@ -16713,17 +16365,17 @@ OG.renderer.RaphaelRenderer.prototype.drawEdgeGuide = function (element) {
 			}
 		}
 		_bBoxLine = this._PAPER.path(pathStr);
-		_bBoxLine.attr(OG.Constants.DEFAULT_STYLE.GUIDE_BBOX);
+		_bBoxLine.attr(me._CONFIG.DEFAULT_STYLE.GUIDE_BBOX);
 
 		// 시작지점 가이드
 		_fromRect = this._PAPER.rect(vertices[0].x - _hSize, vertices[0].y - _hSize, _size, _size);
-		_fromRect.attr(OG.Constants.DEFAULT_STYLE.GUIDE_FROM);
+		_fromRect.attr(me._CONFIG.DEFAULT_STYLE.GUIDE_FROM);
 		group.appendChild(_fromRect);
 		this._add(_fromRect, rElement.id + OG.Constants.GUIDE_SUFFIX.FROM);
 
 		// 종료지점 가이드
 		_toRect = this._PAPER.rect(vertices[vertices.length - 1].x - _hSize, vertices[vertices.length - 1].y - _hSize, _size, _size);
-		_toRect.attr(OG.Constants.DEFAULT_STYLE.GUIDE_TO);
+		_toRect.attr(me._CONFIG.DEFAULT_STYLE.GUIDE_TO);
 		group.appendChild(_toRect);
 		this._add(_toRect, rElement.id + OG.Constants.GUIDE_SUFFIX.TO);
 
@@ -16733,12 +16385,12 @@ OG.renderer.RaphaelRenderer.prototype.drawEdgeGuide = function (element) {
 				if (vertices[i].x === vertices[i + 1].x) {
 					_controlRect = this._PAPER.rect(vertices[i].x - _hSize,
 						OG.Util.round((vertices[i].y + vertices[i + 1].y) / 2) - _hSize, _size, _size);
-					_controlRect.attr(OG.Constants.DEFAULT_STYLE.GUIDE_CTL_H);
+					_controlRect.attr(me._CONFIG.DEFAULT_STYLE.GUIDE_CTL_H);
 					this._add(_controlRect, rElement.id + OG.Constants.GUIDE_SUFFIX.CTL_H + i);
 				} else {
 					_controlRect = this._PAPER.rect(OG.Util.round((vertices[i].x + vertices[i + 1].x) / 2) - _hSize,
 						vertices[i].y - _hSize, _size, _size);
-					_controlRect.attr(OG.Constants.DEFAULT_STYLE.GUIDE_CTL_V);
+					_controlRect.attr(me._CONFIG.DEFAULT_STYLE.GUIDE_CTL_V);
 					this._add(_controlRect, rElement.id + OG.Constants.GUIDE_SUFFIX.CTL_V + i);
 				}
 				group.appendChild(_controlRect);
@@ -16780,7 +16432,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdgeGuide = function (element) {
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.drawRubberBand = function (position, size, style) {
-	var x = position ? position[0] : 0,
+	var me = this, x = position ? position[0] : 0,
 		y = position ? position[1] : 0,
 		width = size ? size[0] : 0,
 		height = size ? size[1] : 0,
@@ -16795,7 +16447,7 @@ OG.renderer.RaphaelRenderer.prototype.drawRubberBand = function (position, size,
 		});
 		return rect;
 	}
-	OG.Util.apply(_style, (style instanceof OG.geometry.Style) ? style.map : style || {}, OG.Constants.DEFAULT_STYLE.RUBBER_BAND);
+	OG.Util.apply(_style, (style instanceof OG.geometry.Style) ? style.map : style || {}, me._CONFIG.DEFAULT_STYLE.RUBBER_BAND);
 	rect = this._PAPER.rect(x, y, width, height).attr(_style);
 	this._add(rect, OG.Constants.RUBBER_BAND_ID);
 	this._ETC_GROUP.node.appendChild(rect.node);
@@ -16827,7 +16479,7 @@ OG.renderer.RaphaelRenderer.prototype.drawTerminal = function (element, terminal
 	var me = this, rElement = this._getREleById(OG.Util.isElement(element) ? element.id : element),
 		terminals = rElement ? rElement.node.shape.createTerminal() : null,
 		envelope = rElement ? rElement.node.shape.geom.getBoundary() : null,
-		group, cross, rect, x, y, size = OG.Constants.TERMINAL_SIZE, rect_gap = size * 2;
+		group, cross, rect, x, y, size = me._CONFIG.TERMINAL_SIZE, rect_gap = size * 2;
 
 	if (rElement && terminals && terminals.length > 0) {
 		group = this._getREleById(rElement.id + OG.Constants.TERMINAL_SUFFIX.GROUP);
@@ -16845,7 +16497,7 @@ OG.renderer.RaphaelRenderer.prototype.drawTerminal = function (element, terminal
 		// hidden box
 		rect = this._PAPER.rect(envelope.getUpperLeft().x - rect_gap, envelope.getUpperLeft().y - rect_gap,
 			envelope.getWidth() + rect_gap * 2, envelope.getHeight() + rect_gap * 2);
-		rect.attr(OG.Constants.DEFAULT_STYLE.TERMINAL_BBOX);
+		rect.attr(me._CONFIG.DEFAULT_STYLE.TERMINAL_BBOX);
 		this._add(rect, rElement.id + OG.Constants.TERMINAL_SUFFIX.BOX);
 
 		// terminal
@@ -16855,7 +16507,7 @@ OG.renderer.RaphaelRenderer.prototype.drawTerminal = function (element, terminal
 				y = item.position.y;
 
 				cross = me._PAPER.circle(x, y, size);
-				cross.attr(OG.Constants.DEFAULT_STYLE.TERMINAL);
+				cross.attr(me._CONFIG.DEFAULT_STYLE.TERMINAL);
 				cross.node.terminal = item;
 
 				group.appendChild(cross);
@@ -16921,10 +16573,10 @@ OG.renderer.RaphaelRenderer.prototype.removeAllTerminal = function () {
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.drawCollapseGuide = function (element) {
-	var rElement = this._getREleById(OG.Util.isElement(element) ? element.id : element),
+	var me = this, rElement = this._getREleById(OG.Util.isElement(element) ? element.id : element),
 		geometry = rElement ? rElement.node.shape.geom : null,
 		envelope, _upperLeft, _bBoxRect, _rect,
-		_size = OG.Constants.COLLAPSE_SIZE,
+		_size = me._CONFIG.COLLAPSE_SIZE,
 		_hSize = _size / 2;
 
 	if (rElement && geometry && $(element).attr("_shape") === OG.Constants.SHAPE_TYPE.GROUP) {
@@ -16943,7 +16595,7 @@ OG.renderer.RaphaelRenderer.prototype.drawCollapseGuide = function (element) {
 		// hidden box
 		_bBoxRect = this._PAPER.rect(envelope.getUpperLeft().x - _size, envelope.getUpperLeft().y - _size,
 			envelope.getWidth() + _size * 2, envelope.getHeight() + _size * 2);
-		_bBoxRect.attr(OG.Constants.DEFAULT_STYLE.COLLAPSE_BBOX);
+		_bBoxRect.attr(me._CONFIG.DEFAULT_STYLE.COLLAPSE_BBOX);
 		this._add(_bBoxRect, rElement.id + OG.Constants.COLLAPSE_BBOX_SUFFIX);
 
 		if (rElement.node.shape.isCollapsed === true) {
@@ -16962,7 +16614,7 @@ OG.renderer.RaphaelRenderer.prototype.drawCollapseGuide = function (element) {
 				"m1 " + _hSize + "h" + (_size - 2));
 		}
 
-		_rect.attr(OG.Constants.DEFAULT_STYLE.COLLAPSE);
+		_rect.attr(me._CONFIG.DEFAULT_STYLE.COLLAPSE);
 		this._add(_rect, rElement.id + OG.Constants.COLLAPSE_SUFFIX);
 
 		// layer 위치 조정
@@ -17431,14 +17083,14 @@ OG.renderer.RaphaelRenderer.prototype.setCanvasSize = function (size) {
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.fitCanvasSize = function (minSize, fitScale) {
-	var realRootBBox = this.getRealRootBBox(), offsetX, offsetY, scale = 1,
-		width = realRootBBox.width + OG.Constants.FIT_CANVAS_PADDING * 2,
-		height = realRootBBox.height + OG.Constants.FIT_CANVAS_PADDING * 2;
+	var me = this, realRootBBox = this.getRealRootBBox(), offsetX, offsetY, scale = 1,
+		width = realRootBBox.width + me._CONFIG.FIT_CANVAS_PADDING * 2,
+		height = realRootBBox.height + me._CONFIG.FIT_CANVAS_PADDING * 2;
 	if (realRootBBox.width !== 0 && realRootBBox.height !== 0) {
-		offsetX = realRootBBox.x > OG.Constants.FIT_CANVAS_PADDING ?
-			-1 * (realRootBBox.x - OG.Constants.FIT_CANVAS_PADDING) : OG.Constants.FIT_CANVAS_PADDING - realRootBBox.x;
-		offsetY = realRootBBox.y > OG.Constants.FIT_CANVAS_PADDING ?
-			-1 * (realRootBBox.y - OG.Constants.FIT_CANVAS_PADDING) : OG.Constants.FIT_CANVAS_PADDING - realRootBBox.y;
+		offsetX = realRootBBox.x > me._CONFIG.FIT_CANVAS_PADDING ?
+			-1 * (realRootBBox.x - me._CONFIG.FIT_CANVAS_PADDING) : me._CONFIG.FIT_CANVAS_PADDING - realRootBBox.x;
+		offsetY = realRootBBox.y > me._CONFIG.FIT_CANVAS_PADDING ?
+			-1 * (realRootBBox.y - me._CONFIG.FIT_CANVAS_PADDING) : me._CONFIG.FIT_CANVAS_PADDING - realRootBBox.y;
 
 		this.move(this.getRootGroup(), [offsetX, offsetY]);
 		this.removeAllGuide();
@@ -17475,7 +17127,8 @@ OG.renderer.RaphaelRenderer.prototype.setViewBox = function (position, size, isF
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.getScale = function (scale) {
-	return OG.Constants.SCALE;
+	var me = this;
+	return me._CONFIG.SCALE;
 };
 
 /**
@@ -17485,7 +17138,8 @@ OG.renderer.RaphaelRenderer.prototype.getScale = function (scale) {
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.setScale = function (scale) {
-	if (OG.Constants.SCALE_MIN <= scale && scale <= OG.Constants.SCALE_MAX) {
+	var me = this;
+	if (me._CONFIG.SCALE_MIN <= scale && scale <= me._CONFIG.SCALE_MAX) {
 		if (this.isVML()) {
 			// TODO : VML 인 경우 처리
 			$(this._ROOT_GROUP.node).css({
@@ -17505,11 +17159,11 @@ OG.renderer.RaphaelRenderer.prototype.setScale = function (scale) {
 		}
 
 		this._PAPER.setSize(
-			OG.Util.roundGrid(this._PAPER.width / OG.Constants.SCALE * scale),
-			OG.Util.roundGrid(this._PAPER.height / OG.Constants.SCALE * scale)
+			OG.Util.roundGrid(this._PAPER.width / me._CONFIG.SCALE * scale, me._CONFIG.MOVE_SNAP_SIZE),
+			OG.Util.roundGrid(this._PAPER.height / me._CONFIG.SCALE * scale, me._CONFIG.MOVE_SNAP_SIZE)
 		);
 
-		OG.Constants.SCALE = scale;
+		me._CONFIG.SCALE = scale;
 	}
 };
 
@@ -17901,10 +17555,12 @@ OG.renderer.RaphaelRenderer.prototype.isVML = function () {
  * @requires OG.renderer.*
  *
  * @param {OG.renderer.IRenderer} renderer 렌더러
+ * @param {Object} config Configuration
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
-OG.handler.EventHandler = function (renderer) {
+OG.handler.EventHandler = function (renderer, config) {
 	this._RENDERER = renderer;
+	this._CONFIG = config;
 };
 
 OG.handler.EventHandler.prototype = {
@@ -17922,10 +17578,10 @@ OG.handler.EventHandler.prototype = {
 					envelope = element.shape.geom.getBoundary(),
 					upperLeft = envelope.getUpperLeft(),
 					bBox,
-					left = (upperLeft.x - 1) * OG.Constants.SCALE,
-					top = (upperLeft.y - 1) * OG.Constants.SCALE,
-					width = envelope.getWidth() * OG.Constants.SCALE,
-					height = envelope.getHeight() * OG.Constants.SCALE,
+					left = (upperLeft.x - 1) * me._CONFIG.SCALE,
+					top = (upperLeft.y - 1) * me._CONFIG.SCALE,
+					width = envelope.getWidth() * me._CONFIG.SCALE,
+					height = envelope.getHeight() * me._CONFIG.SCALE,
 					editorId = element.id + OG.Constants.LABEL_EDITOR_SUFFIX,
 					labelEditor,
 					textAlign = "center",
@@ -17990,7 +17646,7 @@ OG.handler.EventHandler.prototype = {
 
 					if ($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.HTML) {
 						// Html Shape
-						$(labelEditor).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR, {
+						$(labelEditor).css(OG.Util.apply(me._CONFIG.DEFAULT_STYLE.LABEL_EDITOR, {
 							left: left, top: top, width: width, height: height, "text-align": 'left', overflow: "hidden", resize: "none"
 						}));
 						$(labelEditor).focus();
@@ -18010,7 +17666,7 @@ OG.handler.EventHandler.prototype = {
 						});
 					} else if ($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.TEXT) {
 						// Text Shape
-						$(labelEditor).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR, {
+						$(labelEditor).css(OG.Util.apply(me._CONFIG.DEFAULT_STYLE.LABEL_EDITOR, {
 							left: left, top: top, width: width, height: height, "text-align": textAlign, overflow: "hidden", resize: "none"
 						}));
 						$(labelEditor).focus();
@@ -18042,10 +17698,10 @@ OG.handler.EventHandler.prototype = {
 							});
 						} else {
 							centerOfEdge = getCenterOfEdge(element);
-							left = centerOfEdge.x - OG.Constants.LABEL_EDITOR_WIDTH / 2;
-							top = centerOfEdge.y - OG.Constants.LABEL_EDITOR_HEIGHT / 2;
-							width = OG.Constants.LABEL_EDITOR_WIDTH;
-							height = OG.Constants.LABEL_EDITOR_HEIGHT;
+							left = centerOfEdge.x - me._CONFIG.LABEL_EDITOR_WIDTH / 2;
+							top = centerOfEdge.y - me._CONFIG.LABEL_EDITOR_HEIGHT / 2;
+							width = me._CONFIG.LABEL_EDITOR_WIDTH;
+							height = me._CONFIG.LABEL_EDITOR_HEIGHT;
 						}
 
 						// 시작점 라벨인 경우
@@ -18072,11 +17728,11 @@ OG.handler.EventHandler.prototype = {
 							});
 						});
 
-						$(labelEditor).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR, {
-							left    : left * OG.Constants.SCALE,
-							top     : top * OG.Constants.SCALE,
-							width   : width * OG.Constants.SCALE,
-							height  : height * OG.Constants.SCALE,
+						$(labelEditor).css(OG.Util.apply(me._CONFIG.DEFAULT_STYLE.LABEL_EDITOR, {
+							left    : left * me._CONFIG.SCALE,
+							top     : top * me._CONFIG.SCALE,
+							width   : width * me._CONFIG.SCALE,
+							height  : height * me._CONFIG.SCALE,
 							overflow: "hidden",
 							resize  : "none"
 						}));
@@ -18102,7 +17758,7 @@ OG.handler.EventHandler.prototype = {
 							}
 						});
 					} else {
-						$(labelEditor).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR, {
+						$(labelEditor).css(OG.Util.apply(me._CONFIG.DEFAULT_STYLE.LABEL_EDITOR, {
 							left: left, top: top, width: width, height: height, "text-align": textAlign, overflow: "hidden", resize: "none"
 						}));
 						$(labelEditor).focus();
@@ -18145,7 +17801,7 @@ OG.handler.EventHandler.prototype = {
 								if (item.terminal && item.terminal.direction.toLowerCase() === "c"
 									&& (($(root).data("dragged_guide") === "to" && item.terminal.inout.indexOf(OG.Constants.TERMINAL_TYPE.IN) >= 0) ||
 									($(root).data("dragged_guide") === "from" && item.terminal.inout.indexOf(OG.Constants.TERMINAL_TYPE.OUT) >= 0))
-									&& (!isSelf || element.shape.SELF_CONNECTABLE)) {
+									&& (!isSelf || me._isSelfConnectable(element.shape))) {
 									me._RENDERER.drawDropOverGuide(element);
 									$(root).data("edge_terminal", item);
 									return false;
@@ -18172,13 +17828,13 @@ OG.handler.EventHandler.prototype = {
 										if ((($(root).data("dragged_guide") === "to" && item.terminal.inout.indexOf(OG.Constants.TERMINAL_TYPE.IN) >= 0) ||
 											($(root).data("dragged_guide") === "from" && item.terminal.inout.indexOf(OG.Constants.TERMINAL_TYPE.OUT) >= 0) ||
 											(!$(root).data("dragged_guide") && item.terminal.inout.indexOf(OG.Constants.TERMINAL_TYPE.OUT) >= 0))
-											&& (!isSelf || element.shape.SELF_CONNECTABLE)) {
-											me._RENDERER.setAttr(item, OG.Constants.DEFAULT_STYLE.TERMINAL_OVER);
+											&& (!isSelf || me._isSelfConnectable(element.shape))) {
+											me._RENDERER.setAttr(item, me._CONFIG.DEFAULT_STYLE.TERMINAL_OVER);
 											$(root).data("edge_terminal", item);
 										}
 									},
 									mouseout : function () {
-										me._RENDERER.setAttr(item, OG.Constants.DEFAULT_STYLE.TERMINAL);
+										me._RENDERER.setAttr(item, me._CONFIG.DEFAULT_STYLE.TERMINAL);
 										$(root).removeData("edge_terminal");
 									}
 								});
@@ -18187,7 +17843,7 @@ OG.handler.EventHandler.prototype = {
 									start: function (event) {
 										var x = item.terminal.position.x, y = item.terminal.position.y,
 											edge = me._RENDERER.drawShape(null, new OG.EdgeShape([x, y], [x, y]), null,
-												OG.Constants.DEFAULT_STYLE.EDGE_SHADOW);
+												me._CONFIG.DEFAULT_STYLE.EDGE_SHADOW);
 
 										$(root).data("edge", edge);
 										$(root).data("from_terminal", item);
@@ -18241,7 +17897,7 @@ OG.handler.EventHandler.prototype = {
 											fromXY = toXY = element.shape.geom.getBoundary().getRightCenter();
 										}
 
-										if (!isSelf || element.shape.SELF_CONNECTABLE) {
+										if (!isSelf || me._isSelfConnectable(element.shape)) {
 											me._RENDERER.drawEdge(new OG.Line(fromXY, toXY),
 												OG.Util.apply(edge.shape.geom.style.map, {"edge-direction": fromDrct + " " + toDrct}), edge.id, isSelf);
 										}
@@ -18257,24 +17913,24 @@ OG.handler.EventHandler.prototype = {
 										$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
 
 										// 연결대상이 없으면 복사후 연결
-										if (!$(root).data("edge_terminal") && element.shape.CONNECT_CLONEABLE) {
+										if (!$(root).data("edge_terminal") && me._isConnectCloneable(element.shape)) {
 											boundary = element.shape.geom.getBoundary();
 											clonedElement = me._RENDERER.drawShape([to.x, to.y], element.shape.clone(),
 												[boundary.getWidth(), boundary.getHeight()], element.shapeStyle);
 
 											// enable event
-											me.setClickSelectable(clonedElement, clonedElement.shape.SELECTABLE);
-											me.setMovable(clonedElement, clonedElement.shape.SELECTABLE && clonedElement.shape.MOVABLE);
-											if (clonedElement.shape.GROUP_DROPABLE) {
+											me.setClickSelectable(clonedElement, me._isSelectable(clonedElement.shape));
+											me.setMovable(clonedElement, me._isMovable(clonedElement.shape));
+											if (me._CONFIG.GROUP_DROPABLE && clonedElement.shape.GROUP_DROPABLE) {
 												me.enableDragAndDropGroup(clonedElement);
 											}
-											if (clonedElement.shape.GROUP_COLLAPSIBLE) {
+											if (me._CONFIG.GROUP_COLLAPSIBLE && clonedElement.shape.GROUP_COLLAPSIBLE) {
 												me.enableCollapse(clonedElement);
 											}
-											if (clonedElement.shape.CONNECTABLE) {
+											if (me._isConnectable(clonedElement.shape)) {
 												me.enableConnect(clonedElement);
 											}
-											if (clonedElement.shape.LABEL_EDITABLE) {
+											if (me._isLabelEditable(clonedElement.shape)) {
 												me.enableEditLabel(clonedElement);
 											}
 
@@ -18292,8 +17948,8 @@ OG.handler.EventHandler.prototype = {
 
 										isSelf = element && toShape && element.id === toShape.id;
 
-										if (toTerminal && (OG.Util.isElement(toTerminal) || !element.shape.CONNECT_REQUIRED)
-											&& (!isSelf || element.shape.SELF_CONNECTABLE)) {
+										if (toTerminal && (OG.Util.isElement(toTerminal) || !me._isConnectRequired(element.shape))
+											&& (!isSelf || me._isSelfConnectable(element.shape))) {
 											// connect
 											edge = me._RENDERER.connect(fromTerminal, toTerminal, edge);
 											if (edge) {
@@ -18301,10 +17957,10 @@ OG.handler.EventHandler.prototype = {
 
 												if (edge && guide) {
 													// enable event
-													me.setClickSelectable(edge, edge.shape.SELECTABLE);
-													me.setMovable(edge, edge.shape.SELECTABLE && edge.shape.MOVABLE);
-													me.setResizable(edge, guide, edge.shape.SELECTABLE && edge.shape.RESIZABLE);
-													if (edge.shape.LABEL_EDITABLE) {
+													me.setClickSelectable(edge, me._isSelectable(edge.shape));
+													me.setMovable(edge, me._isMovable(edge.shape));
+													me.setResizable(edge, guide, me._isResizable(edge.shape));
+													if (me._isLabelEditable(edge.shape)) {
 														me.enableEditLabel(edge);
 													}
 
@@ -18430,7 +18086,6 @@ OG.handler.EventHandler.prototype = {
 		if (!element) {
 			return;
 		}
-
 		if (isMovable === true) {
 			// move handle
 			$(element).draggable({
@@ -18502,7 +18157,7 @@ OG.handler.EventHandler.prototype = {
 						});
 						guide = me._RENDERER.drawGuide(groupTarget);
 						// enable event
-						me.setResizable(groupTarget, guide, groupTarget.shape.SELECTABLE && groupTarget.shape.RESIZABLE);
+						me.setResizable(groupTarget, guide, me._isResizable(groupTarget.shape));
 						me._RENDERER.toFront(guide.group);
 
 						me._RENDERER.remove(groupTarget.id + OG.Constants.DROP_OVER_BBOX_SUFFIX);
@@ -18516,7 +18171,7 @@ OG.handler.EventHandler.prototype = {
 							me._RENDERER.removeGuide(item);
 							guide = me._RENDERER.drawGuide(item);
 							// enable event
-							me.setResizable(item, guide, item.shape.SELECTABLE && item.shape.RESIZABLE);
+							me.setResizable(item, guide, me._isResizable(item.shape));
 							me._RENDERER.toFront(guide.group);
 						});
 					}
@@ -18528,8 +18183,8 @@ OG.handler.EventHandler.prototype = {
 			OG.Util.apply(element.shape.geom.style.map, {cursor: 'move'});
 		} else {
 			$(element).draggable("destroy");
-			me._RENDERER.setAttr(element, {cursor: element.shape.SELECTABLE ? 'pointer' : OG.Constants.DEFAULT_STYLE.SHAPE.cursor});
-			OG.Util.apply(element.shape.geom.style.map, {cursor: element.shape.SELECTABLE ? 'pointer' : OG.Constants.DEFAULT_STYLE.SHAPE.cursor});
+			me._RENDERER.setAttr(element, {cursor: me._isSelectable(element.shape) ? 'pointer' : me._CONFIG.DEFAULT_STYLE.SHAPE.cursor});
+			OG.Util.apply(element.shape.geom.style.map, {cursor: me._isSelectable(element.shape) ? 'pointer' : me._CONFIG.DEFAULT_STYLE.SHAPE.cursor});
 		}
 	},
 
@@ -18555,7 +18210,7 @@ OG.handler.EventHandler.prototype = {
 						var isBezier, vertices, _style = {},
 							toTerminalId = $(element).attr("_to"), toShape, toTerminal, edge;
 
-						_style = OG.Util.apply(_style, OG.Constants.DEFAULT_STYLE.EDGE_SHADOW, element.shape.geom.style.map);
+						_style = OG.Util.apply(_style, me._CONFIG.DEFAULT_STYLE.EDGE_SHADOW, element.shape.geom.style.map);
 						isBezier = _style["edge-type"].toLowerCase() === OG.Constants.EDGE_TYPE.BEZIER;
 
 						vertices = isBezier ? element.shape.geom.getControlPoints() : element.shape.geom.getVertices();
@@ -18622,7 +18277,7 @@ OG.handler.EventHandler.prototype = {
 							fromXY = toXY = fromShape.shape.geom.getBoundary().getRightCenter();
 						}
 
-						if (!isSelf || fromShape.shape.SELF_CONNECTABLE) {
+						if (!isSelf || me._isSelfConnectable(fromShape.shape)) {
 							me._RENDERER.drawEdge(new OG.Line(fromXY, toXY),
 								OG.Util.apply(edge.geom.style.map, {"edge-direction": fromDrct + " " + toDrct}), edge.id, isSelf);
 						}
@@ -18650,7 +18305,7 @@ OG.handler.EventHandler.prototype = {
 
 						isSelf = fromShape && toShape && fromShape.id === toShape.id;
 
-						if (!isSelf || fromShape.shape.SELF_CONNECTABLE) {
+						if (!isSelf || me._isSelfConnectable(fromShape.shape)) {
 							// draw
 							element = me._RENDERER.connect(fromTerminal, toTerminal, element, element.shape.geom.style);
 							if (element) {
@@ -18669,7 +18324,7 @@ OG.handler.EventHandler.prototype = {
 						var isBezier, vertices, _style = {},
 							fromTerminalId = $(element).attr("_from"), fromShape, fromTerminal, edge;
 
-						_style = OG.Util.apply(_style, OG.Constants.DEFAULT_STYLE.EDGE_SHADOW, element.shape.geom.style.map);
+						_style = OG.Util.apply(_style, me._CONFIG.DEFAULT_STYLE.EDGE_SHADOW, element.shape.geom.style.map);
 						isBezier = _style["edge-type"].toLowerCase() === OG.Constants.EDGE_TYPE.BEZIER;
 
 						vertices = isBezier ? element.shape.geom.getControlPoints() : element.shape.geom.getVertices();
@@ -18736,7 +18391,7 @@ OG.handler.EventHandler.prototype = {
 							fromXY = toXY = toShape.shape.geom.getBoundary().getRightCenter();
 						}
 
-						if (!isSelf || toShape.shape.SELF_CONNECTABLE) {
+						if (!isSelf || me._isSelfConnectable(toShape.shape)) {
 							me._RENDERER.drawEdge(new OG.Line(fromXY, toXY),
 								OG.Util.apply(edge.geom.style.map, {"edge-direction": fromDrct + " " + toDrct}), edge.id, isSelf);
 						}
@@ -18764,7 +18419,7 @@ OG.handler.EventHandler.prototype = {
 
 						isSelf = fromShape && toShape && fromShape.id === toShape.id;
 
-						if (!isSelf || toShape.shape.SELF_CONNECTABLE) {
+						if (!isSelf || me._isSelfConnectable(toShape.shape)) {
 							// draw
 							element = me._RENDERER.connect(fromTerminal, toTerminal, element, element.shape.geom.style);
 							if (element) {
@@ -18873,7 +18528,7 @@ OG.handler.EventHandler.prototype = {
 							newX = me._grid(eventOffset.x - offset.x),
 							newWidth = me._grid(newX - me._num(me._RENDERER.getAttr(guide.lc, "x")));
 						$(this).css({"position": "", "left": "", "top": ""});
-						if (newWidth >= OG.Constants.GUIDE_MIN_SIZE) {
+						if (newWidth >= me._CONFIG.GUIDE_MIN_SIZE) {
 							me._RENDERER.setAttr(guide.rc, {x: newX});
 							me._RENDERER.setAttr(guide.ur, {x: newX});
 							me._RENDERER.setAttr(guide.lr, {x: newX});
@@ -18890,8 +18545,8 @@ OG.handler.EventHandler.prototype = {
 						$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
 						if (element && element.shape.geom) {
 							// resizing
-							if (element.shape.geom.getBoundary().getWidth() + dx < OG.Constants.GUIDE_MIN_SIZE) {
-								dx = OG.Constants.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getWidth();
+							if (element.shape.geom.getBoundary().getWidth() + dx < me._CONFIG.GUIDE_MIN_SIZE) {
+								dx = me._CONFIG.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getWidth();
 							}
 							me._RENDERER.resize(element, [0, 0, 0, me._grid(dx)]);
 							me._RENDERER.drawGuide(element);
@@ -18916,7 +18571,7 @@ OG.handler.EventHandler.prototype = {
 							newY = me._grid(eventOffset.y - offset.y),
 							newHeight = me._grid(newY - me._num(me._RENDERER.getAttr(guide.uc, "y")));
 						$(this).css({"position": "", "left": "", "top": ""});
-						if (newHeight >= OG.Constants.GUIDE_MIN_SIZE) {
+						if (newHeight >= me._CONFIG.GUIDE_MIN_SIZE) {
 							me._RENDERER.setAttr(guide.lwc, {y: newY});
 							me._RENDERER.setAttr(guide.ll, {y: newY});
 							me._RENDERER.setAttr(guide.lr, {y: newY});
@@ -18933,8 +18588,8 @@ OG.handler.EventHandler.prototype = {
 						$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
 						if (element && element.shape.geom) {
 							// resizing
-							if (element.shape.geom.getBoundary().getHeight() + dy < OG.Constants.GUIDE_MIN_SIZE) {
-								dy = OG.Constants.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getHeight();
+							if (element.shape.geom.getBoundary().getHeight() + dy < me._CONFIG.GUIDE_MIN_SIZE) {
+								dy = me._CONFIG.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getHeight();
 							}
 							me._RENDERER.resize(element, [0, me._grid(dy), 0, 0]);
 							me._RENDERER.drawGuide(element);
@@ -18961,7 +18616,7 @@ OG.handler.EventHandler.prototype = {
 							newY = me._grid(eventOffset.y - offset.y),
 							newHeight = me._grid(newY - me._num(me._RENDERER.getAttr(guide.uc, "y")));
 						$(this).css({"position": "", "left": "", "top": ""});
-						if (newWidth >= OG.Constants.GUIDE_MIN_SIZE) {
+						if (newWidth >= me._CONFIG.GUIDE_MIN_SIZE) {
 							me._RENDERER.setAttr(guide.rc, {x: newX});
 							me._RENDERER.setAttr(guide.ur, {x: newX});
 							me._RENDERER.setAttr(guide.lr, {x: newX});
@@ -18969,7 +18624,7 @@ OG.handler.EventHandler.prototype = {
 							me._RENDERER.setAttr(guide.lwc, {x: OG.Util.round((me._num(me._RENDERER.getAttr(guide.lc, "x")) + newX) / 2)});
 							me._RENDERER.setAttr(guide.bBox, {width: newWidth});
 						}
-						if (newHeight >= OG.Constants.GUIDE_MIN_SIZE) {
+						if (newHeight >= me._CONFIG.GUIDE_MIN_SIZE) {
 							me._RENDERER.setAttr(guide.lwc, {y: newY});
 							me._RENDERER.setAttr(guide.ll, {y: newY});
 							me._RENDERER.setAttr(guide.lr, {y: newY});
@@ -18987,11 +18642,11 @@ OG.handler.EventHandler.prototype = {
 						$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
 						if (element && element.shape.geom) {
 							// resizing
-							if (element.shape.geom.getBoundary().getWidth() + dx < OG.Constants.GUIDE_MIN_SIZE) {
-								dx = OG.Constants.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getWidth();
+							if (element.shape.geom.getBoundary().getWidth() + dx < me._CONFIG.GUIDE_MIN_SIZE) {
+								dx = me._CONFIG.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getWidth();
 							}
-							if (element.shape.geom.getBoundary().getHeight() + dy < OG.Constants.GUIDE_MIN_SIZE) {
-								dy = OG.Constants.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getHeight();
+							if (element.shape.geom.getBoundary().getHeight() + dy < me._CONFIG.GUIDE_MIN_SIZE) {
+								dy = me._CONFIG.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getHeight();
 							}
 							me._RENDERER.resize(element, [0, me._grid(dy), 0, me._grid(dx)]);
 							me._RENDERER.drawGuide(element);
@@ -19017,7 +18672,7 @@ OG.handler.EventHandler.prototype = {
 							newX = me._grid(eventOffset.x - offset.x),
 							newWidth = me._grid(me._num(me._RENDERER.getAttr(guide.rc, "x")) - newX);
 						$(this).css({"position": "", "left": "", "top": ""});
-						if (newWidth >= OG.Constants.GUIDE_MIN_SIZE) {
+						if (newWidth >= me._CONFIG.GUIDE_MIN_SIZE) {
 							me._RENDERER.setAttr(guide.lc, {x: newX});
 							me._RENDERER.setAttr(guide.ul, {x: newX});
 							me._RENDERER.setAttr(guide.ll, {x: newX});
@@ -19034,8 +18689,8 @@ OG.handler.EventHandler.prototype = {
 						$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
 						if (element && element.shape.geom) {
 							// resizing
-							if (element.shape.geom.getBoundary().getWidth() + dx < OG.Constants.GUIDE_MIN_SIZE) {
-								dx = OG.Constants.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getWidth();
+							if (element.shape.geom.getBoundary().getWidth() + dx < me._CONFIG.GUIDE_MIN_SIZE) {
+								dx = me._CONFIG.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getWidth();
 							}
 							me._RENDERER.resize(element, [0, 0, me._grid(dx), 0]);
 							me._RENDERER.drawGuide(element);
@@ -19063,7 +18718,7 @@ OG.handler.EventHandler.prototype = {
 							newWidth = me._grid(me._num(me._RENDERER.getAttr(guide.rc, "x")) - newX),
 							newHeight = me._grid(newY - me._num(me._RENDERER.getAttr(guide.uc, "y")));
 						$(this).css({"position": "", "left": "", "top": ""});
-						if (newWidth >= OG.Constants.GUIDE_MIN_SIZE) {
+						if (newWidth >= me._CONFIG.GUIDE_MIN_SIZE) {
 							me._RENDERER.setAttr(guide.lc, {x: newX});
 							me._RENDERER.setAttr(guide.ul, {x: newX});
 							me._RENDERER.setAttr(guide.ll, {x: newX});
@@ -19071,7 +18726,7 @@ OG.handler.EventHandler.prototype = {
 							me._RENDERER.setAttr(guide.lwc, {x: OG.Util.round((me._num(me._RENDERER.getAttr(guide.rc, "x")) + newX) / 2)});
 							me._RENDERER.setAttr(guide.bBox, {x: OG.Util.round(newX + me._num(me._RENDERER.getAttr(guide.lc, "width")) / 2), width: newWidth});
 						}
-						if (newHeight >= OG.Constants.GUIDE_MIN_SIZE) {
+						if (newHeight >= me._CONFIG.GUIDE_MIN_SIZE) {
 							me._RENDERER.setAttr(guide.lwc, {y: newY});
 							me._RENDERER.setAttr(guide.ll, {y: newY});
 							me._RENDERER.setAttr(guide.lr, {y: newY});
@@ -19089,11 +18744,11 @@ OG.handler.EventHandler.prototype = {
 						$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
 						if (element && element.shape.geom) {
 							// resizing
-							if (element.shape.geom.getBoundary().getWidth() + dx < OG.Constants.GUIDE_MIN_SIZE) {
-								dx = OG.Constants.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getWidth();
+							if (element.shape.geom.getBoundary().getWidth() + dx < me._CONFIG.GUIDE_MIN_SIZE) {
+								dx = me._CONFIG.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getWidth();
 							}
-							if (element.shape.geom.getBoundary().getHeight() + dy < OG.Constants.GUIDE_MIN_SIZE) {
-								dy = OG.Constants.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getHeight();
+							if (element.shape.geom.getBoundary().getHeight() + dy < me._CONFIG.GUIDE_MIN_SIZE) {
+								dy = me._CONFIG.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getHeight();
 							}
 							me._RENDERER.resize(element, [0, me._grid(dy), me._grid(dx), 0]);
 							me._RENDERER.drawGuide(element);
@@ -19119,7 +18774,7 @@ OG.handler.EventHandler.prototype = {
 							newY = me._grid(eventOffset.y - offset.y),
 							newHeight = me._grid(me._num(me._RENDERER.getAttr(guide.lwc, "y")) - newY);
 						$(this).css({"position": "", "left": "", "top": ""});
-						if (newHeight >= OG.Constants.GUIDE_MIN_SIZE) {
+						if (newHeight >= me._CONFIG.GUIDE_MIN_SIZE) {
 							me._RENDERER.setAttr(guide.uc, {y: newY});
 							me._RENDERER.setAttr(guide.ul, {y: newY});
 							me._RENDERER.setAttr(guide.ur, {y: newY});
@@ -19136,8 +18791,8 @@ OG.handler.EventHandler.prototype = {
 						$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
 						if (element && element.shape.geom) {
 							// resizing
-							if (element.shape.geom.getBoundary().getHeight() + dy < OG.Constants.GUIDE_MIN_SIZE) {
-								dy = OG.Constants.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getHeight();
+							if (element.shape.geom.getBoundary().getHeight() + dy < me._CONFIG.GUIDE_MIN_SIZE) {
+								dy = me._CONFIG.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getHeight();
 							}
 							me._RENDERER.resize(element, [me._grid(dy), 0, 0, 0]);
 							me._RENDERER.drawGuide(element);
@@ -19165,7 +18820,7 @@ OG.handler.EventHandler.prototype = {
 							newWidth = me._grid(me._num(me._RENDERER.getAttr(guide.rc, "x")) - newX),
 							newHeight = me._grid(me._num(me._RENDERER.getAttr(guide.lwc, "y")) - newY);
 						$(this).css({"position": "", "left": "", "top": ""});
-						if (newWidth >= OG.Constants.GUIDE_MIN_SIZE) {
+						if (newWidth >= me._CONFIG.GUIDE_MIN_SIZE) {
 							me._RENDERER.setAttr(guide.lc, {x: newX});
 							me._RENDERER.setAttr(guide.ul, {x: newX});
 							me._RENDERER.setAttr(guide.ll, {x: newX});
@@ -19173,7 +18828,7 @@ OG.handler.EventHandler.prototype = {
 							me._RENDERER.setAttr(guide.lwc, {x: OG.Util.round((me._num(me._RENDERER.getAttr(guide.rc, "x")) + newX) / 2)});
 							me._RENDERER.setAttr(guide.bBox, {x: OG.Util.round(newX + me._num(me._RENDERER.getAttr(guide.lc, "width")) / 2), width: newWidth});
 						}
-						if (newHeight >= OG.Constants.GUIDE_MIN_SIZE) {
+						if (newHeight >= me._CONFIG.GUIDE_MIN_SIZE) {
 							me._RENDERER.setAttr(guide.uc, {y: newY});
 							me._RENDERER.setAttr(guide.ul, {y: newY});
 							me._RENDERER.setAttr(guide.ur, {y: newY});
@@ -19191,11 +18846,11 @@ OG.handler.EventHandler.prototype = {
 						$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
 						if (element && element.shape.geom) {
 							// resizing
-							if (element.shape.geom.getBoundary().getWidth() + dx < OG.Constants.GUIDE_MIN_SIZE) {
-								dx = OG.Constants.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getWidth();
+							if (element.shape.geom.getBoundary().getWidth() + dx < me._CONFIG.GUIDE_MIN_SIZE) {
+								dx = me._CONFIG.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getWidth();
 							}
-							if (element.shape.geom.getBoundary().getHeight() + dy < OG.Constants.GUIDE_MIN_SIZE) {
-								dy = OG.Constants.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getHeight();
+							if (element.shape.geom.getBoundary().getHeight() + dy < me._CONFIG.GUIDE_MIN_SIZE) {
+								dy = me._CONFIG.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getHeight();
 							}
 							me._RENDERER.resize(element, [me._grid(dy), 0, me._grid(dx), 0]);
 							me._RENDERER.drawGuide(element);
@@ -19223,7 +18878,7 @@ OG.handler.EventHandler.prototype = {
 							newWidth = me._grid(newX - me._num(me._RENDERER.getAttr(guide.lc, "x"))),
 							newHeight = me._grid(me._num(me._RENDERER.getAttr(guide.lwc, "y")) - newY);
 						$(this).css({"position": "", "left": "", "top": ""});
-						if (newWidth >= OG.Constants.GUIDE_MIN_SIZE) {
+						if (newWidth >= me._CONFIG.GUIDE_MIN_SIZE) {
 							me._RENDERER.setAttr(guide.rc, {x: newX});
 							me._RENDERER.setAttr(guide.ur, {x: newX});
 							me._RENDERER.setAttr(guide.lr, {x: newX});
@@ -19231,7 +18886,7 @@ OG.handler.EventHandler.prototype = {
 							me._RENDERER.setAttr(guide.lwc, {x: OG.Util.round((me._num(me._RENDERER.getAttr(guide.lc, "x")) + newX) / 2)});
 							me._RENDERER.setAttr(guide.bBox, {width: newWidth});
 						}
-						if (newHeight >= OG.Constants.GUIDE_MIN_SIZE) {
+						if (newHeight >= me._CONFIG.GUIDE_MIN_SIZE) {
 							me._RENDERER.setAttr(guide.uc, {y: newY});
 							me._RENDERER.setAttr(guide.ul, {y: newY});
 							me._RENDERER.setAttr(guide.ur, {y: newY});
@@ -19249,11 +18904,11 @@ OG.handler.EventHandler.prototype = {
 						$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
 						if (element && element.shape.geom) {
 							// resizing
-							if (element.shape.geom.getBoundary().getWidth() + dx < OG.Constants.GUIDE_MIN_SIZE) {
-								dx = OG.Constants.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getWidth();
+							if (element.shape.geom.getBoundary().getWidth() + dx < me._CONFIG.GUIDE_MIN_SIZE) {
+								dx = me._CONFIG.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getWidth();
 							}
-							if (element.shape.geom.getBoundary().getHeight() + dy < OG.Constants.GUIDE_MIN_SIZE) {
-								dy = OG.Constants.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getHeight();
+							if (element.shape.geom.getBoundary().getHeight() + dy < me._CONFIG.GUIDE_MIN_SIZE) {
+								dy = me._CONFIG.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getHeight();
 							}
 							me._RENDERER.resize(element, [me._grid(dy), 0, 0, me._grid(dx)]);
 							me._RENDERER.drawGuide(element);
@@ -19316,7 +18971,7 @@ OG.handler.EventHandler.prototype = {
 							guide = me._RENDERER.drawGuide(element);
 							if (guide) {
 								// enable event
-								me.setResizable(element, guide, element.shape.SELECTABLE && element.shape.RESIZABLE);
+								me.setResizable(element, guide, me._isResizable(element.shape));
 								me._RENDERER.removeAllTerminal();
 								me._RENDERER.toFront(guide.group);
 							}
@@ -19328,7 +18983,7 @@ OG.handler.EventHandler.prototype = {
 			});
 
 			// 마우스 우클릭하여 선택 처리
-			if (OG.Constants.ENABLE_CONTEXTMENU) {
+			if (me._CONFIG.ENABLE_CONTEXTMENU) {
 				$(element).bind("contextmenu", function (event) {
 					var guide;
 					if (element.shape) {
@@ -19344,7 +18999,7 @@ OG.handler.EventHandler.prototype = {
 								guide = me._RENDERER.drawGuide(element);
 								if (guide) {
 									// enable event
-									me.setResizable(element, guide, element.shape.SELECTABLE && element.shape.RESIZABLE);
+									me.setResizable(element, guide, me._isResizable(element.shape));
 									me._RENDERER.removeAllTerminal();
 									me._RENDERER.toFront(guide.group);
 								}
@@ -19356,7 +19011,7 @@ OG.handler.EventHandler.prototype = {
 				});
 			}
 
-			if (isSelectable && element.shape.MOVABLE) {
+			if (isSelectable && me._isMovable(element.shape)) {
 				me._RENDERER.setAttr(element, {cursor: 'move'});
 				OG.Util.apply(element.shape.geom.style.map, {cursor: 'move'});
 			} else {
@@ -19365,8 +19020,8 @@ OG.handler.EventHandler.prototype = {
 			}
 		} else {
 			$(element).unbind('click');
-			me._RENDERER.setAttr(element, {cursor: OG.Constants.DEFAULT_STYLE.SHAPE.cursor});
-			OG.Util.apply(element.shape.geom.style.map, {cursor: OG.Constants.DEFAULT_STYLE.SHAPE.cursor});
+			me._RENDERER.setAttr(element, {cursor: me._CONFIG.DEFAULT_STYLE.SHAPE.cursor});
+			OG.Util.apply(element.shape.geom.style.map, {cursor: me._CONFIG.DEFAULT_STYLE.SHAPE.cursor});
 		}
 	},
 
@@ -19430,7 +19085,7 @@ OG.handler.EventHandler.prototype = {
 								guide = me._RENDERER.drawGuide(element);
 								if (guide) {
 									// enable event
-									me.setResizable(element, guide, element.shape.SELECTABLE && element.shape.RESIZABLE);
+									me.setResizable(element, guide, me._isResizable(element.shape));
 									me._RENDERER.removeAllTerminal();
 								}
 							}
@@ -19465,89 +19120,89 @@ OG.handler.EventHandler.prototype = {
 				// 라벨수정중엔 keydown 이벤트무시
 				if (!/^textarea$/i.test(event.srcElement.tagName) && !/^input$/i.test(event.srcElement.tagName)) {
 					// Delete : 삭제
-					if (OG.Constants.ENABLE_HOTKEY_DELETE && event.keyCode === KeyEvent.DOM_VK_DELETE) {
+					if (me._CONFIG.ENABLE_HOTKEY_DELETE && event.keyCode === KeyEvent.DOM_VK_DELETE) {
 						event.preventDefault();
 						me.deleteSelectedShape();
 					}
 
 					// Ctrl+A : 전체선택
-					if (OG.Constants.ENABLE_HOTKEY_CTRL_A && OG.Constants.SELECTABLE && (event.ctrlKey || event.metaKey) && event.keyCode === KeyEvent.DOM_VK_A) {
+					if (me._CONFIG.ENABLE_HOTKEY_CTRL_A && me._CONFIG.SELECTABLE && (event.ctrlKey || event.metaKey) && event.keyCode === KeyEvent.DOM_VK_A) {
 						event.preventDefault();
 						me.selectAll();
 					}
 
 					// Ctrl+C : 복사
-					if (OG.Constants.ENABLE_HOTKEY_CTRL_C && (event.ctrlKey || event.metaKey) && event.keyCode === KeyEvent.DOM_VK_C) {
+					if (me._CONFIG.ENABLE_HOTKEY_CTRL_C && (event.ctrlKey || event.metaKey) && event.keyCode === KeyEvent.DOM_VK_C) {
 						event.preventDefault();
 						me.copySelectedShape();
 					}
 
 					// Ctrl+X : 잘라내기
-					if (OG.Constants.ENABLE_HOTKEY_CTRL_C && (event.ctrlKey || event.metaKey) && event.keyCode === KeyEvent.DOM_VK_X) {
+					if (me._CONFIG.ENABLE_HOTKEY_CTRL_C && (event.ctrlKey || event.metaKey) && event.keyCode === KeyEvent.DOM_VK_X) {
 						event.preventDefault();
 						me.cutSelectedShape();
 					}
 
 					// Ctrl+V: 붙여넣기
-					if (OG.Constants.ENABLE_HOTKEY_CTRL_V && (event.ctrlKey || event.metaKey) && event.keyCode === KeyEvent.DOM_VK_V) {
+					if (me._CONFIG.ENABLE_HOTKEY_CTRL_V && (event.ctrlKey || event.metaKey) && event.keyCode === KeyEvent.DOM_VK_V) {
 						event.preventDefault();
 						me.pasteSelectedShape();
 					}
 
 					// Ctrl+D: 복제하기
-					if (OG.Constants.ENABLE_HOTKEY_CTRL_D && (event.ctrlKey || event.metaKey) && event.keyCode === KeyEvent.DOM_VK_D) {
+					if (me._CONFIG.ENABLE_HOTKEY_CTRL_D && (event.ctrlKey || event.metaKey) && event.keyCode === KeyEvent.DOM_VK_D) {
 						event.preventDefault();
 						me.duplicateSelectedShape();
 					}
 
 					// Ctrl+G : 그룹
-					if (OG.Constants.ENABLE_HOTKEY_CTRL_G && (event.ctrlKey || event.metaKey) && event.keyCode === KeyEvent.DOM_VK_G) {
+					if (me._CONFIG.ENABLE_HOTKEY_CTRL_G && (event.ctrlKey || event.metaKey) && event.keyCode === KeyEvent.DOM_VK_G) {
 						event.preventDefault();
 						me.groupSelectedShape();
 					}
 
 					// Ctrl+U : 언그룹
-					if (OG.Constants.ENABLE_HOTKEY_CTRL_U && (event.ctrlKey || event.metaKey) && event.keyCode === KeyEvent.DOM_VK_U) {
+					if (me._CONFIG.ENABLE_HOTKEY_CTRL_U && (event.ctrlKey || event.metaKey) && event.keyCode === KeyEvent.DOM_VK_U) {
 						event.preventDefault();
 						me.ungroupSelectedShape();
 					}
 
-					if (OG.Constants.ENABLE_HOTKEY_SHIFT_ARROW) {
+					if (me._CONFIG.ENABLE_HOTKEY_SHIFT_ARROW) {
 						// Shift+화살표 : 이동
 						if (event.shiftKey && event.keyCode === KeyEvent.DOM_VK_LEFT) {
 							event.preventDefault();
-							me._moveElements(me._getMoveTargets(), -1 * (OG.Constants.DRAG_GRIDABLE ? OG.Constants.MOVE_SNAP_SIZE : 1), 0);
+							me._moveElements(me._getMoveTargets(), -1 * (me._CONFIG.DRAG_GRIDABLE ? me._CONFIG.MOVE_SNAP_SIZE : 1), 0);
 						}
 						if (event.shiftKey && event.keyCode === KeyEvent.DOM_VK_RIGHT) {
 							event.preventDefault();
-							me._moveElements(me._getMoveTargets(), (OG.Constants.DRAG_GRIDABLE ? OG.Constants.MOVE_SNAP_SIZE : 1), 0);
+							me._moveElements(me._getMoveTargets(), (me._CONFIG.DRAG_GRIDABLE ? me._CONFIG.MOVE_SNAP_SIZE : 1), 0);
 						}
 						if (event.shiftKey && event.keyCode === KeyEvent.DOM_VK_UP) {
 							event.preventDefault();
-							me._moveElements(me._getMoveTargets(), 0, -1 * (OG.Constants.DRAG_GRIDABLE ? OG.Constants.MOVE_SNAP_SIZE : 1));
+							me._moveElements(me._getMoveTargets(), 0, -1 * (me._CONFIG.DRAG_GRIDABLE ? me._CONFIG.MOVE_SNAP_SIZE : 1));
 						}
 						if (event.shiftKey && event.keyCode === KeyEvent.DOM_VK_DOWN) {
 							event.preventDefault();
-							me._moveElements(me._getMoveTargets(), 0, (OG.Constants.DRAG_GRIDABLE ? OG.Constants.MOVE_SNAP_SIZE : 1));
+							me._moveElements(me._getMoveTargets(), 0, (me._CONFIG.DRAG_GRIDABLE ? me._CONFIG.MOVE_SNAP_SIZE : 1));
 						}
 					}
-					if (OG.Constants.ENABLE_HOTKEY_ARROW) {
+					if (me._CONFIG.ENABLE_HOTKEY_ARROW) {
 						// 화살표 : 이동
 						if (!event.shiftKey && event.keyCode === KeyEvent.DOM_VK_LEFT) {
 							event.preventDefault();
-							me._moveElements(me._getMoveTargets(), -1 * OG.Constants.MOVE_SNAP_SIZE, 0);
+							me._moveElements(me._getMoveTargets(), -1 * me._CONFIG.MOVE_SNAP_SIZE, 0);
 						}
 						if (!event.shiftKey && event.keyCode === KeyEvent.DOM_VK_RIGHT) {
 							event.preventDefault();
-							me._moveElements(me._getMoveTargets(), OG.Constants.MOVE_SNAP_SIZE, 0);
+							me._moveElements(me._getMoveTargets(), me._CONFIG.MOVE_SNAP_SIZE, 0);
 						}
 						if (!event.shiftKey && event.keyCode === KeyEvent.DOM_VK_UP) {
 							event.preventDefault();
-							me._moveElements(me._getMoveTargets(), 0, -1 * OG.Constants.MOVE_SNAP_SIZE);
+							me._moveElements(me._getMoveTargets(), 0, -1 * me._CONFIG.MOVE_SNAP_SIZE);
 						}
 						if (!event.shiftKey && event.keyCode === KeyEvent.DOM_VK_DOWN) {
 							event.preventDefault();
-							me._moveElements(me._getMoveTargets(), 0, OG.Constants.MOVE_SNAP_SIZE);
+							me._moveElements(me._getMoveTargets(), 0, me._CONFIG.MOVE_SNAP_SIZE);
 						}
 					}
 				}
@@ -20455,11 +20110,11 @@ OG.handler.EventHandler.prototype = {
 	 */
 	selectShape: function (element) {
 		var me = this, guide;
-		if ($(element.parentNode).attr("_shape") !== OG.Constants.SHAPE_TYPE.GROUP && element.shape.SELECTABLE === true) {
+		if ($(element.parentNode).attr("_shape") !== OG.Constants.SHAPE_TYPE.GROUP && me._isSelectable(element.shape)) {
 			guide = me._RENDERER.drawGuide(element);
 			if (guide) {
 				// enable event
-				me.setResizable(element, guide, element.shape.SELECTABLE && element.shape.RESIZABLE);
+				me.setResizable(element, guide, me._isResizable(element.shape));
 				me._RENDERER.removeTerminal(element);
 			}
 		}
@@ -20539,7 +20194,7 @@ OG.handler.EventHandler.prototype = {
 						newShape.geom = new OG.PolyLine(item.shape.geom.getVertices());
 					}
 					newShape.geom.style = item.shape.geom.style;
-					newShape.geom.move(OG.Constants.COPY_PASTE_PADDING, OG.Constants.COPY_PASTE_PADDING);
+					newShape.geom.move(me._CONFIG.COPY_PASTE_PADDING, me._CONFIG.COPY_PASTE_PADDING);
 					newElement = me._RENDERER.drawShape(
 						null, newShape,
 						null, item.shapeStyle
@@ -20547,7 +20202,7 @@ OG.handler.EventHandler.prototype = {
 
 				} else {
 					newElement = me._RENDERER.drawShape(
-						[ boundary.getCentroid().x + OG.Constants.COPY_PASTE_PADDING, boundary.getCentroid().y + OG.Constants.COPY_PASTE_PADDING ],
+						[ boundary.getCentroid().x + me._CONFIG.COPY_PASTE_PADDING, boundary.getCentroid().y + me._CONFIG.COPY_PASTE_PADDING ],
 						newShape, [boundary.getWidth(), boundary.getHeight()], item.shapeStyle
 					);
 				}
@@ -20557,19 +20212,19 @@ OG.handler.EventHandler.prototype = {
 
 				// enable event
 				newGuide = me._RENDERER.drawGuide(newElement);
-				me.setClickSelectable(newElement, newElement.shape.SELECTABLE);
-				me.setMovable(newElement, newElement.shape.SELECTABLE && newElement.shape.MOVABLE);
-				me.setResizable(newElement, newGuide, newElement.shape.SELECTABLE && newElement.shape.RESIZABLE);
-				if (newElement.shape.GROUP_DROPABLE) {
+				me.setClickSelectable(newElement, me._isSelectable(newElement.shape));
+				me.setMovable(newElement, me._isMovable(newElement.shape));
+				me.setResizable(newElement, newGuide, me._isResizable(newElement.shape));
+				if (me._CONFIG.GROUP_DROPABLE && newElement.shape.GROUP_DROPABLE) {
 					me.enableDragAndDropGroup(newElement);
 				}
-				if (newElement.shape.GROUP_COLLAPSIBLE) {
+				if (me._CONFIG.GROUP_COLLAPSIBLE && newElement.shape.GROUP_COLLAPSIBLE) {
 					me.enableCollapse(newElement);
 				}
-				if (newElement.shape.CONNECTABLE) {
+				if (me._isConnectable(newElement.shape)) {
 					me.enableConnect(newElement);
 				}
-				if (newElement.shape.LABEL_EDITABLE) {
+				if (me._isLabelEditable(newElement.shape)) {
 					me.enableEditLabel(newElement);
 				}
 
@@ -20606,10 +20261,10 @@ OG.handler.EventHandler.prototype = {
 			guide = me._RENDERER.drawGuide(groupElement);
 			if (guide) {
 				// enable event
-				me.setClickSelectable(groupElement, groupElement.shape.SELECTABLE);
-				me.setMovable(groupElement, groupElement.shape.SELECTABLE && groupElement.shape.MOVABLE);
-				me.setResizable(groupElement, guide, groupElement.shape.SELECTABLE && groupElement.shape.RESIZABLE);
-				if (groupElement.shape.GROUP_DROPABLE) {
+				me.setClickSelectable(groupElement, me._isSelectable(groupElement.shape));
+				me.setMovable(groupElement, me._isMovable(groupElement.shape));
+				me.setResizable(groupElement, guide, me._isResizable(groupElement.shape));
+				if (me._CONFIG.GROUP_DROPABLE && groupElement.shape.GROUP_DROPABLE) {
 					me.enableDragAndDropGroup(groupElement);
 				}
 
@@ -20651,7 +20306,7 @@ OG.handler.EventHandler.prototype = {
 
 				me._RENDERER.removeGuide(item);
 				guide = me._RENDERER.drawGuide(item);
-				me.setResizable(item, guide, item.shape.SELECTABLE && item.shape.RESIZABLE);
+				me.setResizable(item, guide, me._isResizable(item.shape));
 				me._RENDERER.toFront(guide.group);
 			}
 		});
@@ -20697,7 +20352,7 @@ OG.handler.EventHandler.prototype = {
 
 			me._RENDERER.removeGuide(edge);
 			guide = me._RENDERER.drawGuide(edge);
-			me.setResizable(edge, guide, edge.shape.SELECTABLE && edge.shape.RESIZABLE);
+			me.setResizable(edge, guide, me._isResizable(edge.shape));
 			me._RENDERER.toFront(guide.group);
 		});
 	},
@@ -20965,8 +20620,8 @@ OG.handler.EventHandler.prototype = {
 	 */
 	zoomIn: function () {
 		var me = this;
-		if (OG.Constants.SCALE + OG.Constants.SCALE * 0.1 <= OG.Constants.SCALE_MAX) {
-			me._RENDERER.setScale(OG.Constants.SCALE + OG.Constants.SCALE * 0.1);
+		if (me._CONFIG.SCALE + me._CONFIG.SCALE * 0.1 <= me._CONFIG.SCALE_MAX) {
+			me._RENDERER.setScale(me._CONFIG.SCALE + me._CONFIG.SCALE * 0.1);
 		}
 	},
 
@@ -20975,8 +20630,8 @@ OG.handler.EventHandler.prototype = {
 	 */
 	zoomOut: function () {
 		var me = this;
-		if (OG.Constants.SCALE - OG.Constants.SCALE * 0.1 >= OG.Constants.SCALE_MIN) {
-			me._RENDERER.setScale(OG.Constants.SCALE - OG.Constants.SCALE * 0.1);
+		if (me._CONFIG.SCALE - me._CONFIG.SCALE * 0.1 >= me._CONFIG.SCALE_MIN) {
+			me._RENDERER.setScale(me._CONFIG.SCALE - me._CONFIG.SCALE * 0.1);
 		}
 	},
 
@@ -21049,8 +20704,8 @@ OG.handler.EventHandler.prototype = {
 		var me = this, container = me._RENDERER.getContainer();
 
 		return {
-			x: (event.pageX - $(container).offset().left + container.scrollLeft) / OG.Constants.SCALE,
-			y: (event.pageY - $(container).offset().top + container.scrollTop) / OG.Constants.SCALE
+			x: (event.pageX - $(container).offset().left + container.scrollLeft) / me._CONFIG.SCALE,
+			y: (event.pageY - $(container).offset().top + container.scrollTop) / me._CONFIG.SCALE
 		};
 	},
 
@@ -21065,7 +20720,7 @@ OG.handler.EventHandler.prototype = {
 		$(me._RENDERER.getRootElement()).find("[id$=" + OG.Constants.GUIDE_SUFFIX.BBOX + "]").each(function (index, item) {
 			if (item.id) {
 				box = me._RENDERER.clone(item);
-				me._RENDERER.setAttr(box, OG.Constants.DEFAULT_STYLE.GUIDE_SHADOW);
+				me._RENDERER.setAttr(box, me._CONFIG.DEFAULT_STYLE.GUIDE_SHADOW);
 
 				bBoxArray.push({
 					id : item.id.replace(OG.Constants.GUIDE_SUFFIX.BBOX, ""),
@@ -21152,11 +20807,11 @@ OG.handler.EventHandler.prototype = {
 		var me = this, rootBBox = me._RENDERER.getRootBBox();
 
 		// Canvas 영역을 벗어나서 드래그되는 경우 Canvas 확장
-		if (OG.Constants.AUTO_EXTENSIONAL && rootBBox.width < currentX * OG.Constants.SCALE) {
-			me._RENDERER.setCanvasSize([ rootBBox.width + OG.Constants.AUTO_EXTENSION_SIZE, rootBBox.height]);
+		if (me._CONFIG.AUTO_EXTENSIONAL && rootBBox.width < currentX * me._CONFIG.SCALE) {
+			me._RENDERER.setCanvasSize([ rootBBox.width + me._CONFIG.AUTO_EXTENSION_SIZE, rootBBox.height]);
 		}
-		if (OG.Constants.AUTO_EXTENSIONAL && rootBBox.height < currentY * OG.Constants.SCALE) {
-			me._RENDERER.setCanvasSize([ rootBBox.width, rootBBox.height + OG.Constants.AUTO_EXTENSION_SIZE]);
+		if (me._CONFIG.AUTO_EXTENSIONAL && rootBBox.height < currentY * me._CONFIG.SCALE) {
+			me._RENDERER.setCanvasSize([ rootBBox.width, rootBBox.height + me._CONFIG.AUTO_EXTENSION_SIZE]);
 		}
 	},
 
@@ -21178,7 +20833,7 @@ OG.handler.EventHandler.prototype = {
 				if ($(item).attr("_shape") === OG.Constants.SHAPE_TYPE.EDGE) {
 					newShape.geom = new OG.PolyLine(item.shape.geom.getVertices());
 					newShape.geom.style = item.shape.geom.style;
-					newShape.geom.move(OG.Constants.COPY_PASTE_PADDING, OG.Constants.COPY_PASTE_PADDING);
+					newShape.geom.move(me._CONFIG.COPY_PASTE_PADDING, me._CONFIG.COPY_PASTE_PADDING);
 					newElement = me._RENDERER.drawShape(
 						null, newShape,
 						null, item.shapeStyle
@@ -21186,7 +20841,7 @@ OG.handler.EventHandler.prototype = {
 
 				} else {
 					newElement = me._RENDERER.drawShape(
-						[ boundary.getCentroid().x + OG.Constants.COPY_PASTE_PADDING, boundary.getCentroid().y + OG.Constants.COPY_PASTE_PADDING ],
+						[ boundary.getCentroid().x + me._CONFIG.COPY_PASTE_PADDING, boundary.getCentroid().y + me._CONFIG.COPY_PASTE_PADDING ],
 						newShape, [boundary.getWidth(), boundary.getHeight()], item.shapeStyle
 					);
 				}
@@ -21198,18 +20853,18 @@ OG.handler.EventHandler.prototype = {
 				newCopiedElement.appendChild(newElement);
 
 				// enable event
-				me.setClickSelectable(newElement, newElement.shape.SELECTABLE);
-				me.setMovable(newElement, newElement.shape.SELECTABLE && newElement.shape.MOVABLE);
-				if (newElement.shape.GROUP_DROPABLE) {
+				me.setClickSelectable(newElement, me._isSelectable(newElement.shape));
+				me.setMovable(newElement, me._isMovable(newElement.shape));
+				if (me._CONFIG.GROUP_DROPABLE && newElement.shape.GROUP_DROPABLE) {
 					me.enableDragAndDropGroup(newElement);
 				}
-				if (newElement.shape.GROUP_COLLAPSIBLE) {
+				if (me._CONFIG.GROUP_COLLAPSIBLE && newElement.shape.GROUP_COLLAPSIBLE) {
 					me.enableCollapse(newElement);
 				}
-				if (newElement.shape.CONNECTABLE) {
+				if (me._isConnectable(newElement.shape)) {
 					me.enableConnect(newElement);
 				}
-				if (newElement.shape.LABEL_EDITABLE) {
+				if (me._isLabelEditable(newElement.shape)) {
 					me.enableEditLabel(newElement);
 				}
 
@@ -21270,8 +20925,51 @@ OG.handler.EventHandler.prototype = {
 		return parseInt(str, 10);
 	},
 
-	_grid: function (value, size) {
-		return OG.Constants.DRAG_GRIDABLE ? OG.Util.roundGrid(value, size) : value;
+	_grid: function (value) {
+		var me = this;
+		return me._CONFIG.DRAG_GRIDABLE ? OG.Util.roundGrid(value, me._CONFIG.MOVE_SNAP_SIZE) : value;
+	},
+
+	_isSelectable: function (shape) {
+		var me = this;
+		return me._CONFIG.SELECTABLE && shape.SELECTABLE;
+	},
+
+	_isConnectable: function (shape) {
+		var me = this;
+		return me._CONFIG.CONNECTABLE && shape.CONNECTABLE;
+	},
+
+	_isSelfConnectable: function (shape) {
+		var me = this;
+		return me._CONFIG.SELF_CONNECTABLE && shape.SELF_CONNECTABLE;
+	},
+
+	_isConnectCloneable: function (shape) {
+		var me = this;
+		return me._CONFIG.CONNECT_CLONEABLE && shape.CONNECT_CLONEABLE;
+	},
+
+	_isConnectRequired: function (shape) {
+		var me = this;
+		return me._CONFIG.CONNECT_REQUIRED && shape.CONNECT_REQUIRED;
+	},
+
+	_isMovable: function (shape) {
+		var me = this;
+		return (me._CONFIG.SELECTABLE && shape.SELECTABLE) &&
+			(me._CONFIG.MOVABLE && me._CONFIG.MOVABLE_[shape.TYPE] && shape.MOVABLE);
+	},
+
+	_isResizable: function (shape) {
+		var me = this;
+		return (me._CONFIG.SELECTABLE && shape.SELECTABLE) &&
+			(me._CONFIG.RESIZABLE && me._CONFIG.RESIZABLE_[shape.TYPE] && shape.RESIZABLE);
+	},
+
+	_isLabelEditable: function (shape) {
+		var me = this;
+		return me._CONFIG.LABEL_EDITABLE && me._CONFIG.LABEL_EDITABLE_[shape.TYPE] && shape.LABEL_EDITABLE;
 	}
 };
 OG.handler.EventHandler.prototype.constructor = OG.handler.EventHandler;
@@ -21297,8 +20995,278 @@ OG.EventHandler = OG.handler.EventHandler;
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroundImage) {
-	this._RENDERER = container ? new OG.RaphaelRenderer(container, containerSize, backgroundColor, backgroundImage) : null;
-	this._HANDLER = new OG.EventHandler(this._RENDERER);
+
+	this._CONFIG = {
+		/**
+		 * 클릭선택 가능여부
+		 */
+		SELECTABLE: true,
+
+		/**
+		 * 마우스드래그선택 가능여부
+		 */
+		DRAG_SELECTABLE: true,
+
+		/**
+		 * 이동 가능여부
+		 */
+		MOVABLE : true,
+		MOVABLE_: {
+			GEOM : true,
+			TEXT : true,
+			HTML : true,
+			IMAGE: true,
+			EDGE : true,
+			GROUP: true
+		},
+
+		/**
+		 * 리사이즈 가능여부
+		 */
+		RESIZABLE : true,
+		RESIZABLE_: {
+			GEOM : true,
+			TEXT : true,
+			HTML : true,
+			IMAGE: true,
+			EDGE : true,
+			GROUP: true
+		},
+
+		/**
+		 * 연결 가능여부
+		 */
+		CONNECTABLE: true,
+
+		/**
+		 * Self 연결 가능여부
+		 */
+		SELF_CONNECTABLE: true,
+
+		/**
+		 * 드래그하여 연결시 대상 없을 경우 자동으로 Shape 복사하여 연결 처리 여부
+		 */
+		CONNECT_CLONEABLE: true,
+
+		/**
+		 * 드래그하여 연결시 연결대상 있는 경우에만 Edge 드로잉 처리 여부
+		 */
+		CONNECT_REQUIRED: true,
+
+		/**
+		 * 라벨 수정여부
+		 */
+		LABEL_EDITABLE : true,
+		LABEL_EDITABLE_: {
+			GEOM : true,
+			TEXT : true,
+			HTML : true,
+			IMAGE: true,
+			EDGE : true,
+			GROUP: true
+		},
+
+		/**
+		 * 그룹핑 가능여부
+		 */
+		GROUP_DROPABLE: true,
+
+		/**
+		 * 최소화 가능여부
+		 */
+		GROUP_COLLAPSIBLE: true,
+
+		/**
+		 * 이동, 리사이즈 드래그시 MOVE_SNAP_SIZE 적용 여부
+		 */
+		DRAG_GRIDABLE: true,
+
+		/**
+		 * 핫키 가능여부
+		 */
+		ENABLE_HOTKEY: true,
+
+		/**
+		 * 핫키 : DELETE 삭제 키 가능여부
+		 */
+		ENABLE_HOTKEY_DELETE: true,
+
+		/**
+		 * 핫키 : Ctrl+A 전체선택 키 가능여부
+		 */
+		ENABLE_HOTKEY_CTRL_A: true,
+
+		/**
+		 * 핫키 : Ctrl+C 복사 키 가능여부
+		 */
+		ENABLE_HOTKEY_CTRL_C: true,
+
+		/**
+		 * 핫키 : Ctrl+V 붙여넣기 키 가능여부
+		 */
+		ENABLE_HOTKEY_CTRL_V: true,
+
+		/**
+		 * 핫키 : Ctrl+D 복제하기 키 가능여부
+		 */
+		ENABLE_HOTKEY_CTRL_D: true,
+
+		/**
+		 * 핫키 : Ctrl+G 그룹 키 가능여부
+		 */
+		ENABLE_HOTKEY_CTRL_G: true,
+
+		/**
+		 * 핫키 : Ctrl+U 언그룹 키 가능여부
+		 */
+		ENABLE_HOTKEY_CTRL_U: true,
+
+		/**
+		 * 핫키 : 방향키 가능여부
+		 */
+		ENABLE_HOTKEY_ARROW: true,
+
+		/**
+		 * 핫키 : Shift + 방향키 가능여부
+		 */
+		ENABLE_HOTKEY_SHIFT_ARROW: true,
+
+		/**
+		 * 마우스 우클릭 메뉴 가능여부
+		 */
+		ENABLE_CONTEXTMENU: true,
+
+		/**
+		 * 캔버스 스케일(리얼 사이즈 : Scale = 1)
+		 */
+		SCALE: 1,
+
+		/**
+		 * 캔버스 최소 스케일
+		 */
+		SCALE_MIN: 0.1,
+
+		/**
+		 * 캔버스 최대 스케일
+		 */
+		SCALE_MAX: 10,
+
+		/**
+		 * Edge 꺽은선 패딩 사이즈
+		 */
+		EDGE_PADDING: 20,
+
+		/**
+		 * 라벨의 패딩 사이즈
+		 */
+		LABEL_PADDING: 5,
+
+		/**
+		 * 라벨 에디터(textarea)의 디폴트 width
+		 */
+		LABEL_EDITOR_WIDTH: 70,
+
+		/**
+		 * 라벨 에디터(textarea)의 디폴트 height
+		 */
+		LABEL_EDITOR_HEIGHT: 16,
+
+		/**
+		 * 시작, 끝점 라벨의 offsetTop 값
+		 */
+		FROMTO_LABEL_OFFSET_TOP: 15,
+
+		/**
+		 * Move & Resize 용 가이드 콘트롤 Rect 사이즈
+		 */
+		GUIDE_RECT_SIZE: 8,
+
+		/**
+		 * Move & Resize 용 가이드 가로, 세로 최소 사이즈
+		 */
+		GUIDE_MIN_SIZE: 18,
+
+		/**
+		 * Collapse & Expand 용 가이드 Rect 사이즈
+		 */
+		COLLAPSE_SIZE: 10,
+
+		/**
+		 * Shape Move & Resize 시 이동 간격
+		 */
+		MOVE_SNAP_SIZE: 5,
+
+		/**
+		 * 터미널 cross 사이즈
+		 */
+		TERMINAL_SIZE: 3,
+
+		/**
+		 * Shape 복사시 패딩 사이즈
+		 */
+		COPY_PASTE_PADDING: 20,
+
+		/**
+		 * Fit Canvas 시 패딩 사이즈
+		 */
+		FIT_CANVAS_PADDING: 20,
+
+		/**
+		 * 캔버스 영역 자동 확장 여부
+		 */
+		AUTO_EXTENSIONAL: true,
+
+		/**
+		 * 캔버스 영역 자동 확장시 증가 사이즈
+		 */
+		AUTO_EXTENSION_SIZE: 100,
+
+		/**
+		 * 캔버스 배경색
+		 */
+		CANVAS_BACKGROUND: "#f9f9f9",
+
+		/**
+		 * 디폴트 스타일 정의
+		 */
+		DEFAULT_STYLE: {
+			SHAPE         : { cursor: "default" },
+			GEOM          : { stroke: "black", fill: "white", "fill-opacity": 0, "label-position": "center" },
+			TEXT          : { stroke: "none", "text-anchor": "middle" },
+			HTML          : { "label-position": "bottom", "text-anchor": "middle", "vertical-align": "top" },
+			IMAGE         : { "label-position": "bottom", "text-anchor": "middle", "vertical-align": "top" },
+			EDGE          : { stroke: "black", fill: "none", "fill-opacity": 0, "stroke-width": 1, "stroke-opacity": 1, "edge-type": "plain", "edge-direction": "c c", "arrow-start": "none", "arrow-end": "classic-wide-long", "stroke-dasharray": "", "label-position": "center" },
+			EDGE_SHADOW   : { stroke: "#00FF00", fill: "none", "fill-opacity": 0, "stroke-width": 1, "stroke-opacity": 1, "arrow-start": "none", "arrow-end": "none", "stroke-dasharray": "- " },
+			EDGE_HIDDEN   : { stroke: "white", fill: "none", "fill-opacity": 0, "stroke-width": 5, "stroke-opacity": 0 },
+			GROUP         : { stroke: "none", fill: "white", "fill-opacity": 0, "label-position": "bottom", "text-anchor": "middle", "vertical-align": "top" },
+			GUIDE_BBOX    : { stroke: "#00FF00", fill: "none", "stroke-dasharray": "- ", "shape-rendering": "crispEdges" },
+			GUIDE_UL      : { stroke: "black", fill: "#00FF00", cursor: "nwse-resize", "shape-rendering": "crispEdges" },
+			GUIDE_UR      : { stroke: "black", fill: "#00FF00", cursor: "nesw-resize", "shape-rendering": "crispEdges" },
+			GUIDE_LL      : { stroke: "black", fill: "#00FF00", cursor: "nesw-resize", "shape-rendering": "crispEdges" },
+			GUIDE_LR      : { stroke: "black", fill: "#00FF00", cursor: "nwse-resize", "shape-rendering": "crispEdges" },
+			GUIDE_LC      : { stroke: "black", fill: "#00FF00", cursor: "ew-resize", "shape-rendering": "crispEdges" },
+			GUIDE_UC      : { stroke: "black", fill: "#00FF00", cursor: "ns-resize", "shape-rendering": "crispEdges" },
+			GUIDE_RC      : { stroke: "black", fill: "#00FF00", cursor: "ew-resize", "shape-rendering": "crispEdges" },
+			GUIDE_LWC     : { stroke: "black", fill: "#00FF00", cursor: "ns-resize", "shape-rendering": "crispEdges" },
+			GUIDE_FROM    : { stroke: "black", fill: "#00FF00", cursor: "move", "shape-rendering": "crispEdges" },
+			GUIDE_TO      : { stroke: "black", fill: "#00FF00", cursor: "move", "shape-rendering": "crispEdges" },
+			GUIDE_CTL_H   : { stroke: "black", fill: "#00FF00", cursor: "ew-resize", "shape-rendering": "crispEdges" },
+			GUIDE_CTL_V   : { stroke: "black", fill: "#00FF00", cursor: "ns-resize", "shape-rendering": "crispEdges" },
+			GUIDE_SHADOW  : { stroke: "black", fill: "none", "stroke-dasharray": "- ", "shape-rendering": "crispEdges" },
+			RUBBER_BAND   : { stroke: "#0000FF", opacity: 0.2, fill: "#0077FF" },
+			TERMINAL      : { stroke: "#808080", "stroke-width": 1, fill: "r(0.5, 0.5)#FFFFFF-#808080", "fill-opacity": 0.5, cursor: "pointer" },
+			TERMINAL_OVER : { stroke: "#0077FF", "stroke-width": 4, fill: "r(0.5, 0.5)#FFFFFF-#0077FF", "fill-opacity": 1, cursor: "pointer" },
+			TERMINAL_BBOX : { stroke: "none", fill: "white", "fill-opacity": 0 },
+			DROP_OVER_BBOX: { stroke: "#0077FF", fill: "none", opacity: 0.6, "shape-rendering": "crispEdges" },
+			LABEL         : { "font-size": 12, "font-color": "black" },
+			LABEL_EDITOR  : { position: "absolute", overflow: "visible", resize: "none", "text-align": "center", display: "block", padding: 0 },
+			COLLAPSE      : { stroke: "black", fill: "white", "fill-opacity": 0, cursor: "pointer", "shape-rendering": "crispEdges" },
+			COLLAPSE_BBOX : { stroke: "none", fill: "white", "fill-opacity": 0 }
+		}
+	};
+
+	this._RENDERER = container ? new OG.RaphaelRenderer(container, containerSize, backgroundColor, backgroundImage, this._CONFIG) : null;
+	this._HANDLER = new OG.EventHandler(this._RENDERER, this._CONFIG);
 	this._CONTAINER = OG.Util.isElement(container) ? container : document.getElementById(container);
 };
 
@@ -21327,24 +21295,24 @@ OG.graph.Canvas.prototype = {
 	 */
 	initConfig: function (config) {
 		if (config) {
-			OG.Constants.SELECTABLE = config.selectable === undefined ? OG.Constants.SELECTABLE : config.selectable;
-			OG.Constants.DRAG_SELECTABLE = config.dragSelectable === undefined ? OG.Constants.DRAG_SELECTABLE : config.dragSelectable;
-			OG.Constants.MOVABLE = config.movable === undefined ? OG.Constants.MOVABLE : config.movable;
-			OG.Constants.RESIZABLE = config.resizable === undefined ? OG.Constants.RESIZABLE : config.resizable;
-			OG.Constants.CONNECTABLE = config.connectable === undefined ? OG.Constants.CONNECTABLE : config.connectable;
-			OG.Constants.SELF_CONNECTABLE = config.selfConnectable === undefined ? OG.Constants.SELF_CONNECTABLE : config.selfConnectable;
-			OG.Constants.CONNECT_CLONEABLE = config.connectCloneable === undefined ? OG.Constants.CONNECT_CLONEABLE : config.connectCloneable;
-			OG.Constants.CONNECT_REQUIRED = config.connectRequired === undefined ? OG.Constants.CONNECT_REQUIRED : config.connectRequired;
-			OG.Constants.LABEL_EDITABLE = config.labelEditable === undefined ? OG.Constants.LABEL_EDITABLE : config.labelEditable;
-			OG.Constants.GROUP_DROPABLE = config.groupDropable === undefined ? OG.Constants.GROUP_DROPABLE : config.groupDropable;
-			OG.Constants.GROUP_COLLAPSIBLE = config.collapsible === undefined ? OG.Constants.GROUP_COLLAPSIBLE : config.collapsible;
-			OG.Constants.ENABLE_HOTKEY = config.enableHotKey === undefined ? OG.Constants.ENABLE_HOTKEY : config.enableHotKey;
-			OG.Constants.ENABLE_CONTEXTMENU = config.enableContextMenu === undefined ? OG.Constants.ENABLE_CONTEXTMENU : config.enableContextMenu;
+			this._CONFIG.SELECTABLE = config.selectable === undefined ? this._CONFIG.SELECTABLE : config.selectable;
+			this._CONFIG.DRAG_SELECTABLE = config.dragSelectable === undefined ? this._CONFIG.DRAG_SELECTABLE : config.dragSelectable;
+			this._CONFIG.MOVABLE = config.movable === undefined ? this._CONFIG.MOVABLE : config.movable;
+			this._CONFIG.RESIZABLE = config.resizable === undefined ? this._CONFIG.RESIZABLE : config.resizable;
+			this._CONFIG.CONNECTABLE = config.connectable === undefined ? this._CONFIG.CONNECTABLE : config.connectable;
+			this._CONFIG.SELF_CONNECTABLE = config.selfConnectable === undefined ? this._CONFIG.SELF_CONNECTABLE : config.selfConnectable;
+			this._CONFIG.CONNECT_CLONEABLE = config.connectCloneable === undefined ? this._CONFIG.CONNECT_CLONEABLE : config.connectCloneable;
+			this._CONFIG.CONNECT_REQUIRED = config.connectRequired === undefined ? this._CONFIG.CONNECT_REQUIRED : config.connectRequired;
+			this._CONFIG.LABEL_EDITABLE = config.labelEditable === undefined ? this._CONFIG.LABEL_EDITABLE : config.labelEditable;
+			this._CONFIG.GROUP_DROPABLE = config.groupDropable === undefined ? this._CONFIG.GROUP_DROPABLE : config.groupDropable;
+			this._CONFIG.GROUP_COLLAPSIBLE = config.collapsible === undefined ? this._CONFIG.GROUP_COLLAPSIBLE : config.collapsible;
+			this._CONFIG.ENABLE_HOTKEY = config.enableHotKey === undefined ? this._CONFIG.ENABLE_HOTKEY : config.enableHotKey;
+			this._CONFIG.ENABLE_CONTEXTMENU = config.enableContextMenu === undefined ? this._CONFIG.ENABLE_CONTEXTMENU : config.enableContextMenu;
 		}
 
-		this._HANDLER.setDragSelectable(OG.Constants.SELECTABLE && OG.Constants.DRAG_SELECTABLE);
-		this._HANDLER.setEnableHotKey(OG.Constants.ENABLE_HOTKEY);
-		if (OG.Constants.ENABLE_CONTEXTMENU) {
+		this._HANDLER.setDragSelectable(this._CONFIG.SELECTABLE && this._CONFIG.DRAG_SELECTABLE);
+		this._HANDLER.setEnableHotKey(this._CONFIG.ENABLE_HOTKEY);
+		if (this._CONFIG.ENABLE_CONTEXTMENU) {
 			this._HANDLER.enableRootContextMenu();
 			this._HANDLER.enableShapeContextMenu();
 		}
@@ -21395,14 +21363,14 @@ OG.graph.Canvas.prototype = {
 	 */
 	drawShape: function (position, shape, size, style, id, parentId, gridable) {
 		// MOVE_SNAP_SIZE 적용
-		if (OG.Constants.DRAG_GRIDABLE && (!OG.Util.isDefined(gridable) || gridable === true)) {
+		if (this._CONFIG.DRAG_GRIDABLE && (!OG.Util.isDefined(gridable) || gridable === true)) {
 			if (position) {
-				position[0] = OG.Util.roundGrid(position[0]);
-				position[1] = OG.Util.roundGrid(position[1]);
+				position[0] = OG.Util.roundGrid(position[0], this._CONFIG.MOVE_SNAP_SIZE);
+				position[1] = OG.Util.roundGrid(position[1], this._CONFIG.MOVE_SNAP_SIZE);
 			}
 			if (size) {
-				size[0] = OG.Util.roundGrid(size[0], OG.Constants.MOVE_SNAP_SIZE * 2);
-				size[1] = OG.Util.roundGrid(size[1], OG.Constants.MOVE_SNAP_SIZE * 2);
+				size[0] = OG.Util.roundGrid(size[0], this._CONFIG.MOVE_SNAP_SIZE * 2);
+				size[1] = OG.Util.roundGrid(size[1], this._CONFIG.MOVE_SNAP_SIZE * 2);
 			}
 		}
 
@@ -21420,22 +21388,22 @@ OG.graph.Canvas.prototype = {
 			this.initConfig();
 		}
 
-		this._HANDLER.setClickSelectable(element, element.shape.SELECTABLE);
-		this._HANDLER.setMovable(element, element.shape.SELECTABLE && element.shape.MOVABLE);
+		this._HANDLER.setClickSelectable(element, this._HANDLER._isSelectable(element.shape));
+		this._HANDLER.setMovable(element, this._HANDLER._isMovable(element.shape));
 
-		if (element.shape.CONNECTABLE) {
+		if (this._HANDLER._isConnectable(element.shape)) {
 			this._HANDLER.enableConnect(element);
 		}
 
-		if (element.shape.LABEL_EDITABLE) {
+		if (this._HANDLER._isLabelEditable(element.shape)) {
 			this._HANDLER.enableEditLabel(element);
 		}
 
-		if (element.shape.GROUP_DROPABLE) {
+		if (this._CONFIG.GROUP_DROPABLE && element.shape.GROUP_DROPABLE) {
 			this._HANDLER.enableDragAndDropGroup(element);
 		}
 
-		if (element.shape.GROUP_COLLAPSIBLE) {
+		if (this._CONFIG.GROUP_COLLAPSIBLE && element.shape.GROUP_COLLAPSIBLE) {
 			this._HANDLER.enableCollapse(element);
 		}
 

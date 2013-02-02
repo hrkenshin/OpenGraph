@@ -46,6 +46,20 @@
             var foreignShape1 = new OG.HtmlShape('<table width="100%" height="100px" border="1" cellspacing="0"><tr><td>name1</td><td>value1</td></tr><tr><td>name2</td><td>value2</td></tr></table>');
 
             canvas1 = new OG.Canvas('canvas1', [1000, 600]);
+            canvas1.initConfig({
+                selectable       : true,
+                dragSelectable   : true,
+                movable          : true,
+                resizable        : true,
+                connectable      : true,
+                connectCloneable : true,
+                connectRequired  : true,
+                labelEditable    : true,
+                groupDropable    : true,
+                collapsible      : true,
+                enableHotKey     : true,
+                enableContextMenu: true
+            });
 
             canvas1.drawShape([100, 100], circleShape, [100, 100], {stroke: 'red', 'text-anchor': 'end', 'vertical-align': 'middle'});
             canvas1.drawShape([100, 200], ellipseShape, [100, 50], {fill: '#0000ff', 'fill-opacity': 0.5});
@@ -94,6 +108,20 @@
             var foreignShape1 = new OG.HtmlShape('<table width="100%" height="100px" border="1" cellspacing="0"><tr><td>name1</td><td>value1</td></tr><tr><td>name2</td><td>value2</td></tr></table>');
 
             canvas2 = new OG.Canvas('canvas2', [1000, 600]);
+            canvas2.initConfig({
+                selectable       : true,
+                dragSelectable   : false,
+                movable          : false,
+                resizable        : false,
+                connectable      : true,
+                connectCloneable : false,
+                connectRequired  : true,
+                labelEditable    : false,
+                groupDropable    : false,
+                collapsible      : false,
+                enableHotKey     : true,
+                enableContextMenu: false
+            });
 
             canvas2.drawShape([100, 100], circleShape, [100, 100], {stroke: 'red', 'text-anchor': 'end', 'vertical-align': 'middle'});
             canvas2.drawShape([100, 200], ellipseShape, [100, 50], {fill: '#0000ff', 'fill-opacity': 0.5});

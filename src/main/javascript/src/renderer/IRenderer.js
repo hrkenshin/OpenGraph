@@ -8,16 +8,17 @@
  * @param {Number[]} containerSize 컨테이너 Width, Height
  * @param {String} backgroundColor 캔버스 배경색
  * @param {String} backgroundImage 캔버스 배경이미지
+ * @param {Object} config Configuration
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
-OG.renderer.IRenderer = function (container, containerSize, backgroundColor, backgroundImage) {
+OG.renderer.IRenderer = function (container, containerSize, backgroundColor, backgroundImage, config) {
+	this._CONFIG = null;
 	this._PAPER = null;
 	this._ROOT_GROUP = null;
 	this._ETC_GROUP = null;
 	this._ID_PREFIX = Math.round(Math.random() * 10000);
 	this._LAST_ID = 0;
 	this._ELE_MAP = new OG.HashMap();
-	this._CANVAS_COLOR = backgroundColor || OG.Constants.CANVAS_BACKGROUND;
 };
 
 OG.renderer.IRenderer.prototype = {
@@ -916,7 +917,7 @@ OG.renderer.IRenderer.prototype = {
 	 * @return {Object} {position, direction}
 	 */
 	intersectionEdge: function (edgeType, element, from, to, isFrom) {
-		var terminal, position, direction, intersectPoints, i, minDistance = Number.MAX_VALUE, distance,
+		var me = this, terminal, position, direction, intersectPoints, i, minDistance = Number.MAX_VALUE, distance,
 			collapsedParents, collapsedEnvelope, collapsedUpperLeft, collapsedGeom, collapsedPosition;
 
 		// element 가 collapsed 인지 체크
@@ -927,7 +928,7 @@ OG.renderer.IRenderer.prototype = {
 				collapsedEnvelope = collapsedParents[collapsedParents.length - 1].shape.geom.getBoundary();
 				collapsedUpperLeft = collapsedEnvelope.getUpperLeft();
 				collapsedGeom = new OG.geometry.Rectangle(
-					collapsedUpperLeft, OG.Constants.COLLAPSE_SIZE * 3, OG.Constants.COLLAPSE_SIZE * 2);
+					collapsedUpperLeft, me._CONFIG.COLLAPSE_SIZE * 3, me._CONFIG.COLLAPSE_SIZE * 2);
 			}
 		}
 

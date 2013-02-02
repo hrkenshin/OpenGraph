@@ -61,7 +61,6 @@
 
     <script type="text/javascript">
         var canvas = null, opengraphJSON, ele1;
-        OG.Constants.DEFAULT_STYLE.EDGE["edge-type"] = "bezier";
         $(document).ready(function () {
             // layout
             $('body').layout({
@@ -75,6 +74,7 @@
 
             // Canvas
             canvas = new OG.Canvas('canvas', [1000, 800], 'white', 'url(./images/grid.gif)');
+            canvas._CONFIG.DEFAULT_STYLE.EDGE["edge-type"] = "bezier";
 
             canvas.initConfig({
                 selectable       : true,

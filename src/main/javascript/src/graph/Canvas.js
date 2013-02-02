@@ -19,8 +19,278 @@
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
 OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroundImage) {
-	this._RENDERER = container ? new OG.RaphaelRenderer(container, containerSize, backgroundColor, backgroundImage) : null;
-	this._HANDLER = new OG.EventHandler(this._RENDERER);
+
+	this._CONFIG = {
+		/**
+		 * 클릭선택 가능여부
+		 */
+		SELECTABLE: true,
+
+		/**
+		 * 마우스드래그선택 가능여부
+		 */
+		DRAG_SELECTABLE: true,
+
+		/**
+		 * 이동 가능여부
+		 */
+		MOVABLE : true,
+		MOVABLE_: {
+			GEOM : true,
+			TEXT : true,
+			HTML : true,
+			IMAGE: true,
+			EDGE : true,
+			GROUP: true
+		},
+
+		/**
+		 * 리사이즈 가능여부
+		 */
+		RESIZABLE : true,
+		RESIZABLE_: {
+			GEOM : true,
+			TEXT : true,
+			HTML : true,
+			IMAGE: true,
+			EDGE : true,
+			GROUP: true
+		},
+
+		/**
+		 * 연결 가능여부
+		 */
+		CONNECTABLE: true,
+
+		/**
+		 * Self 연결 가능여부
+		 */
+		SELF_CONNECTABLE: true,
+
+		/**
+		 * 드래그하여 연결시 대상 없을 경우 자동으로 Shape 복사하여 연결 처리 여부
+		 */
+		CONNECT_CLONEABLE: true,
+
+		/**
+		 * 드래그하여 연결시 연결대상 있는 경우에만 Edge 드로잉 처리 여부
+		 */
+		CONNECT_REQUIRED: true,
+
+		/**
+		 * 라벨 수정여부
+		 */
+		LABEL_EDITABLE : true,
+		LABEL_EDITABLE_: {
+			GEOM : true,
+			TEXT : true,
+			HTML : true,
+			IMAGE: true,
+			EDGE : true,
+			GROUP: true
+		},
+
+		/**
+		 * 그룹핑 가능여부
+		 */
+		GROUP_DROPABLE: true,
+
+		/**
+		 * 최소화 가능여부
+		 */
+		GROUP_COLLAPSIBLE: true,
+
+		/**
+		 * 이동, 리사이즈 드래그시 MOVE_SNAP_SIZE 적용 여부
+		 */
+		DRAG_GRIDABLE: true,
+
+		/**
+		 * 핫키 가능여부
+		 */
+		ENABLE_HOTKEY: true,
+
+		/**
+		 * 핫키 : DELETE 삭제 키 가능여부
+		 */
+		ENABLE_HOTKEY_DELETE: true,
+
+		/**
+		 * 핫키 : Ctrl+A 전체선택 키 가능여부
+		 */
+		ENABLE_HOTKEY_CTRL_A: true,
+
+		/**
+		 * 핫키 : Ctrl+C 복사 키 가능여부
+		 */
+		ENABLE_HOTKEY_CTRL_C: true,
+
+		/**
+		 * 핫키 : Ctrl+V 붙여넣기 키 가능여부
+		 */
+		ENABLE_HOTKEY_CTRL_V: true,
+
+		/**
+		 * 핫키 : Ctrl+D 복제하기 키 가능여부
+		 */
+		ENABLE_HOTKEY_CTRL_D: true,
+
+		/**
+		 * 핫키 : Ctrl+G 그룹 키 가능여부
+		 */
+		ENABLE_HOTKEY_CTRL_G: true,
+
+		/**
+		 * 핫키 : Ctrl+U 언그룹 키 가능여부
+		 */
+		ENABLE_HOTKEY_CTRL_U: true,
+
+		/**
+		 * 핫키 : 방향키 가능여부
+		 */
+		ENABLE_HOTKEY_ARROW: true,
+
+		/**
+		 * 핫키 : Shift + 방향키 가능여부
+		 */
+		ENABLE_HOTKEY_SHIFT_ARROW: true,
+
+		/**
+		 * 마우스 우클릭 메뉴 가능여부
+		 */
+		ENABLE_CONTEXTMENU: true,
+
+		/**
+		 * 캔버스 스케일(리얼 사이즈 : Scale = 1)
+		 */
+		SCALE: 1,
+
+		/**
+		 * 캔버스 최소 스케일
+		 */
+		SCALE_MIN: 0.1,
+
+		/**
+		 * 캔버스 최대 스케일
+		 */
+		SCALE_MAX: 10,
+
+		/**
+		 * Edge 꺽은선 패딩 사이즈
+		 */
+		EDGE_PADDING: 20,
+
+		/**
+		 * 라벨의 패딩 사이즈
+		 */
+		LABEL_PADDING: 5,
+
+		/**
+		 * 라벨 에디터(textarea)의 디폴트 width
+		 */
+		LABEL_EDITOR_WIDTH: 70,
+
+		/**
+		 * 라벨 에디터(textarea)의 디폴트 height
+		 */
+		LABEL_EDITOR_HEIGHT: 16,
+
+		/**
+		 * 시작, 끝점 라벨의 offsetTop 값
+		 */
+		FROMTO_LABEL_OFFSET_TOP: 15,
+
+		/**
+		 * Move & Resize 용 가이드 콘트롤 Rect 사이즈
+		 */
+		GUIDE_RECT_SIZE: 8,
+
+		/**
+		 * Move & Resize 용 가이드 가로, 세로 최소 사이즈
+		 */
+		GUIDE_MIN_SIZE: 18,
+
+		/**
+		 * Collapse & Expand 용 가이드 Rect 사이즈
+		 */
+		COLLAPSE_SIZE: 10,
+
+		/**
+		 * Shape Move & Resize 시 이동 간격
+		 */
+		MOVE_SNAP_SIZE: 5,
+
+		/**
+		 * 터미널 cross 사이즈
+		 */
+		TERMINAL_SIZE: 3,
+
+		/**
+		 * Shape 복사시 패딩 사이즈
+		 */
+		COPY_PASTE_PADDING: 20,
+
+		/**
+		 * Fit Canvas 시 패딩 사이즈
+		 */
+		FIT_CANVAS_PADDING: 20,
+
+		/**
+		 * 캔버스 영역 자동 확장 여부
+		 */
+		AUTO_EXTENSIONAL: true,
+
+		/**
+		 * 캔버스 영역 자동 확장시 증가 사이즈
+		 */
+		AUTO_EXTENSION_SIZE: 100,
+
+		/**
+		 * 캔버스 배경색
+		 */
+		CANVAS_BACKGROUND: "#f9f9f9",
+
+		/**
+		 * 디폴트 스타일 정의
+		 */
+		DEFAULT_STYLE: {
+			SHAPE         : { cursor: "default" },
+			GEOM          : { stroke: "black", fill: "white", "fill-opacity": 0, "label-position": "center" },
+			TEXT          : { stroke: "none", "text-anchor": "middle" },
+			HTML          : { "label-position": "bottom", "text-anchor": "middle", "vertical-align": "top" },
+			IMAGE         : { "label-position": "bottom", "text-anchor": "middle", "vertical-align": "top" },
+			EDGE          : { stroke: "black", fill: "none", "fill-opacity": 0, "stroke-width": 1, "stroke-opacity": 1, "edge-type": "plain", "edge-direction": "c c", "arrow-start": "none", "arrow-end": "classic-wide-long", "stroke-dasharray": "", "label-position": "center" },
+			EDGE_SHADOW   : { stroke: "#00FF00", fill: "none", "fill-opacity": 0, "stroke-width": 1, "stroke-opacity": 1, "arrow-start": "none", "arrow-end": "none", "stroke-dasharray": "- " },
+			EDGE_HIDDEN   : { stroke: "white", fill: "none", "fill-opacity": 0, "stroke-width": 5, "stroke-opacity": 0 },
+			GROUP         : { stroke: "none", fill: "white", "fill-opacity": 0, "label-position": "bottom", "text-anchor": "middle", "vertical-align": "top" },
+			GUIDE_BBOX    : { stroke: "#00FF00", fill: "none", "stroke-dasharray": "- ", "shape-rendering": "crispEdges" },
+			GUIDE_UL      : { stroke: "black", fill: "#00FF00", cursor: "nwse-resize", "shape-rendering": "crispEdges" },
+			GUIDE_UR      : { stroke: "black", fill: "#00FF00", cursor: "nesw-resize", "shape-rendering": "crispEdges" },
+			GUIDE_LL      : { stroke: "black", fill: "#00FF00", cursor: "nesw-resize", "shape-rendering": "crispEdges" },
+			GUIDE_LR      : { stroke: "black", fill: "#00FF00", cursor: "nwse-resize", "shape-rendering": "crispEdges" },
+			GUIDE_LC      : { stroke: "black", fill: "#00FF00", cursor: "ew-resize", "shape-rendering": "crispEdges" },
+			GUIDE_UC      : { stroke: "black", fill: "#00FF00", cursor: "ns-resize", "shape-rendering": "crispEdges" },
+			GUIDE_RC      : { stroke: "black", fill: "#00FF00", cursor: "ew-resize", "shape-rendering": "crispEdges" },
+			GUIDE_LWC     : { stroke: "black", fill: "#00FF00", cursor: "ns-resize", "shape-rendering": "crispEdges" },
+			GUIDE_FROM    : { stroke: "black", fill: "#00FF00", cursor: "move", "shape-rendering": "crispEdges" },
+			GUIDE_TO      : { stroke: "black", fill: "#00FF00", cursor: "move", "shape-rendering": "crispEdges" },
+			GUIDE_CTL_H   : { stroke: "black", fill: "#00FF00", cursor: "ew-resize", "shape-rendering": "crispEdges" },
+			GUIDE_CTL_V   : { stroke: "black", fill: "#00FF00", cursor: "ns-resize", "shape-rendering": "crispEdges" },
+			GUIDE_SHADOW  : { stroke: "black", fill: "none", "stroke-dasharray": "- ", "shape-rendering": "crispEdges" },
+			RUBBER_BAND   : { stroke: "#0000FF", opacity: 0.2, fill: "#0077FF" },
+			TERMINAL      : { stroke: "#808080", "stroke-width": 1, fill: "r(0.5, 0.5)#FFFFFF-#808080", "fill-opacity": 0.5, cursor: "pointer" },
+			TERMINAL_OVER : { stroke: "#0077FF", "stroke-width": 4, fill: "r(0.5, 0.5)#FFFFFF-#0077FF", "fill-opacity": 1, cursor: "pointer" },
+			TERMINAL_BBOX : { stroke: "none", fill: "white", "fill-opacity": 0 },
+			DROP_OVER_BBOX: { stroke: "#0077FF", fill: "none", opacity: 0.6, "shape-rendering": "crispEdges" },
+			LABEL         : { "font-size": 12, "font-color": "black" },
+			LABEL_EDITOR  : { position: "absolute", overflow: "visible", resize: "none", "text-align": "center", display: "block", padding: 0 },
+			COLLAPSE      : { stroke: "black", fill: "white", "fill-opacity": 0, cursor: "pointer", "shape-rendering": "crispEdges" },
+			COLLAPSE_BBOX : { stroke: "none", fill: "white", "fill-opacity": 0 }
+		}
+	};
+
+	this._RENDERER = container ? new OG.RaphaelRenderer(container, containerSize, backgroundColor, backgroundImage, this._CONFIG) : null;
+	this._HANDLER = new OG.EventHandler(this._RENDERER, this._CONFIG);
 	this._CONTAINER = OG.Util.isElement(container) ? container : document.getElementById(container);
 };
 
@@ -49,24 +319,24 @@ OG.graph.Canvas.prototype = {
 	 */
 	initConfig: function (config) {
 		if (config) {
-			OG.Constants.SELECTABLE = config.selectable === undefined ? OG.Constants.SELECTABLE : config.selectable;
-			OG.Constants.DRAG_SELECTABLE = config.dragSelectable === undefined ? OG.Constants.DRAG_SELECTABLE : config.dragSelectable;
-			OG.Constants.MOVABLE = config.movable === undefined ? OG.Constants.MOVABLE : config.movable;
-			OG.Constants.RESIZABLE = config.resizable === undefined ? OG.Constants.RESIZABLE : config.resizable;
-			OG.Constants.CONNECTABLE = config.connectable === undefined ? OG.Constants.CONNECTABLE : config.connectable;
-			OG.Constants.SELF_CONNECTABLE = config.selfConnectable === undefined ? OG.Constants.SELF_CONNECTABLE : config.selfConnectable;
-			OG.Constants.CONNECT_CLONEABLE = config.connectCloneable === undefined ? OG.Constants.CONNECT_CLONEABLE : config.connectCloneable;
-			OG.Constants.CONNECT_REQUIRED = config.connectRequired === undefined ? OG.Constants.CONNECT_REQUIRED : config.connectRequired;
-			OG.Constants.LABEL_EDITABLE = config.labelEditable === undefined ? OG.Constants.LABEL_EDITABLE : config.labelEditable;
-			OG.Constants.GROUP_DROPABLE = config.groupDropable === undefined ? OG.Constants.GROUP_DROPABLE : config.groupDropable;
-			OG.Constants.GROUP_COLLAPSIBLE = config.collapsible === undefined ? OG.Constants.GROUP_COLLAPSIBLE : config.collapsible;
-			OG.Constants.ENABLE_HOTKEY = config.enableHotKey === undefined ? OG.Constants.ENABLE_HOTKEY : config.enableHotKey;
-			OG.Constants.ENABLE_CONTEXTMENU = config.enableContextMenu === undefined ? OG.Constants.ENABLE_CONTEXTMENU : config.enableContextMenu;
+			this._CONFIG.SELECTABLE = config.selectable === undefined ? this._CONFIG.SELECTABLE : config.selectable;
+			this._CONFIG.DRAG_SELECTABLE = config.dragSelectable === undefined ? this._CONFIG.DRAG_SELECTABLE : config.dragSelectable;
+			this._CONFIG.MOVABLE = config.movable === undefined ? this._CONFIG.MOVABLE : config.movable;
+			this._CONFIG.RESIZABLE = config.resizable === undefined ? this._CONFIG.RESIZABLE : config.resizable;
+			this._CONFIG.CONNECTABLE = config.connectable === undefined ? this._CONFIG.CONNECTABLE : config.connectable;
+			this._CONFIG.SELF_CONNECTABLE = config.selfConnectable === undefined ? this._CONFIG.SELF_CONNECTABLE : config.selfConnectable;
+			this._CONFIG.CONNECT_CLONEABLE = config.connectCloneable === undefined ? this._CONFIG.CONNECT_CLONEABLE : config.connectCloneable;
+			this._CONFIG.CONNECT_REQUIRED = config.connectRequired === undefined ? this._CONFIG.CONNECT_REQUIRED : config.connectRequired;
+			this._CONFIG.LABEL_EDITABLE = config.labelEditable === undefined ? this._CONFIG.LABEL_EDITABLE : config.labelEditable;
+			this._CONFIG.GROUP_DROPABLE = config.groupDropable === undefined ? this._CONFIG.GROUP_DROPABLE : config.groupDropable;
+			this._CONFIG.GROUP_COLLAPSIBLE = config.collapsible === undefined ? this._CONFIG.GROUP_COLLAPSIBLE : config.collapsible;
+			this._CONFIG.ENABLE_HOTKEY = config.enableHotKey === undefined ? this._CONFIG.ENABLE_HOTKEY : config.enableHotKey;
+			this._CONFIG.ENABLE_CONTEXTMENU = config.enableContextMenu === undefined ? this._CONFIG.ENABLE_CONTEXTMENU : config.enableContextMenu;
 		}
 
-		this._HANDLER.setDragSelectable(OG.Constants.SELECTABLE && OG.Constants.DRAG_SELECTABLE);
-		this._HANDLER.setEnableHotKey(OG.Constants.ENABLE_HOTKEY);
-		if (OG.Constants.ENABLE_CONTEXTMENU) {
+		this._HANDLER.setDragSelectable(this._CONFIG.SELECTABLE && this._CONFIG.DRAG_SELECTABLE);
+		this._HANDLER.setEnableHotKey(this._CONFIG.ENABLE_HOTKEY);
+		if (this._CONFIG.ENABLE_CONTEXTMENU) {
 			this._HANDLER.enableRootContextMenu();
 			this._HANDLER.enableShapeContextMenu();
 		}
@@ -117,14 +387,14 @@ OG.graph.Canvas.prototype = {
 	 */
 	drawShape: function (position, shape, size, style, id, parentId, gridable) {
 		// MOVE_SNAP_SIZE 적용
-		if (OG.Constants.DRAG_GRIDABLE && (!OG.Util.isDefined(gridable) || gridable === true)) {
+		if (this._CONFIG.DRAG_GRIDABLE && (!OG.Util.isDefined(gridable) || gridable === true)) {
 			if (position) {
-				position[0] = OG.Util.roundGrid(position[0]);
-				position[1] = OG.Util.roundGrid(position[1]);
+				position[0] = OG.Util.roundGrid(position[0], this._CONFIG.MOVE_SNAP_SIZE);
+				position[1] = OG.Util.roundGrid(position[1], this._CONFIG.MOVE_SNAP_SIZE);
 			}
 			if (size) {
-				size[0] = OG.Util.roundGrid(size[0], OG.Constants.MOVE_SNAP_SIZE * 2);
-				size[1] = OG.Util.roundGrid(size[1], OG.Constants.MOVE_SNAP_SIZE * 2);
+				size[0] = OG.Util.roundGrid(size[0], this._CONFIG.MOVE_SNAP_SIZE * 2);
+				size[1] = OG.Util.roundGrid(size[1], this._CONFIG.MOVE_SNAP_SIZE * 2);
 			}
 		}
 
@@ -142,22 +412,22 @@ OG.graph.Canvas.prototype = {
 			this.initConfig();
 		}
 
-		this._HANDLER.setClickSelectable(element, element.shape.SELECTABLE);
-		this._HANDLER.setMovable(element, element.shape.SELECTABLE && element.shape.MOVABLE);
+		this._HANDLER.setClickSelectable(element, this._HANDLER._isSelectable(element.shape));
+		this._HANDLER.setMovable(element, this._HANDLER._isMovable(element.shape));
 
-		if (element.shape.CONNECTABLE) {
+		if (this._HANDLER._isConnectable(element.shape)) {
 			this._HANDLER.enableConnect(element);
 		}
 
-		if (element.shape.LABEL_EDITABLE) {
+		if (this._HANDLER._isLabelEditable(element.shape)) {
 			this._HANDLER.enableEditLabel(element);
 		}
 
-		if (element.shape.GROUP_DROPABLE) {
+		if (this._CONFIG.GROUP_DROPABLE && element.shape.GROUP_DROPABLE) {
 			this._HANDLER.enableDragAndDropGroup(element);
 		}
 
-		if (element.shape.GROUP_COLLAPSIBLE) {
+		if (this._CONFIG.GROUP_COLLAPSIBLE && element.shape.GROUP_COLLAPSIBLE) {
 			this._HANDLER.enableCollapse(element);
 		}
 

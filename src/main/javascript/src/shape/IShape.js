@@ -42,49 +42,49 @@ OG.shape.IShape = function () {
 	 * 선택 가능여부
 	 * @type Boolean
 	 */
-	this.SELECTABLE = OG.Constants.SELECTABLE;
+	this.SELECTABLE = true;
 
 	/**
 	 * 이동 가능여부
 	 * @type Boolean
 	 */
-	this.MOVABLE = OG.Constants.MOVABLE;
+	this.MOVABLE = true;
 
 	/**
 	 * 리사이즈 가능여부
 	 * @type Boolean
 	 */
-	this.RESIZABLE = OG.Constants.RESIZABLE;
+	this.RESIZABLE = true;
 
 	/**
 	 * 연결 가능여부
 	 * @type Boolean
 	 */
-	this.CONNECTABLE = OG.Constants.CONNECTABLE;
+	this.CONNECTABLE = true;
 
 	/**
 	 * Self 연결 가능여부
 	 * @type Boolean
 	 */
-	this.SELF_CONNECTABLE = OG.Constants.SELF_CONNECTABLE;
+	this.SELF_CONNECTABLE = true;
 
 	/**
 	 * 드래그하여 연결시 대상 없을 경우 자동으로 Shape 복사하여 연결 처리 여부
 	 * @type Boolean
 	 */
-	this.CONNECT_CLONEABLE = OG.Constants.CONNECT_CLONEABLE;
+	this.CONNECT_CLONEABLE = true;
 
 	/**
 	 * 드래그하여 연결시 연결대상 있는 경우에만 Edge 드로잉 처리 여부
 	 * @type Boolean
 	 */
-	this.CONNECT_REQUIRED = OG.Constants.CONNECT_REQUIRED;
+	this.CONNECT_REQUIRED = true;
 
 	/**
 	 * 라벨 수정여부
 	 * @type Boolean
 	 */
-	this.LABEL_EDITABLE = OG.Constants.LABEL_EDITABLE;
+	this.LABEL_EDITABLE = true;
 };
 OG.shape.IShape.prototype = {
 	/**

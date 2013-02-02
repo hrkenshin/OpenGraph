@@ -25,10 +25,6 @@ OG.shape.TextShape = function (text) {
 	 * @type Number
 	 */
 	this.angle = 0;
-
-	this.MOVABLE = OG.Constants.MOVABLE && OG.Constants.MOVABLE_TEXT;
-	this.RESIZABLE = OG.Constants.RESIZABLE && OG.Constants.RESIZABLE_TEXT;
-	this.LABEL_EDITABLE = OG.Constants.LABEL_EDITABLE && OG.Constants.LABEL_EDITABLE_TEXT;
 };
 OG.shape.TextShape.prototype = new OG.shape.IShape();
 OG.shape.TextShape.superclass = OG.shape.IShape;

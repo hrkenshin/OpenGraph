@@ -43,10 +43,6 @@ OG.shape.EdgeShape = function (from, to, label, fromLabel, toLabel) {
 	 * @type String
 	 */
 	this.toLabel = toLabel;
-
-	this.MOVABLE = OG.Constants.MOVABLE && OG.Constants.MOVABLE_EDGE;
-	this.RESIZABLE = OG.Constants.RESIZABLE && OG.Constants.RESIZABLE_EDGE;
-	this.LABEL_EDITABLE = OG.Constants.LABEL_EDITABLE && OG.Constants.LABEL_EDITABLE_EDGE;
 };
 OG.shape.EdgeShape.prototype = new OG.shape.IShape();
 OG.shape.EdgeShape.superclass = OG.shape.IShape;

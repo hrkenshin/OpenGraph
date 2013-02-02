@@ -11,11 +11,13 @@
  * @param {Number[]} containerSize 컨테이너 Width, Height
  * @param {String} backgroundColor 캔버스 배경색
  * @param {String} backgroundImage 캔버스 배경이미지
+ * @param {Object} config Configuration
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
-OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColor, backgroundImage) {
-	OG.renderer.RaphaelRenderer.superclass.call(this, container, containerSize, backgroundColor, backgroundImage);
+OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColor, backgroundImage, config) {
+	OG.renderer.RaphaelRenderer.superclass.call(this, arguments);
 
+	this._CONFIG = config;
 	this._PAPER = new Raphael(container, containerSize ? containerSize[0] : null, containerSize ? containerSize[1] : null);
 
 	// 최상위 그룹 엘리먼트 초기화
@@ -23,6 +25,7 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 	this._ETC_GROUP = this._add(this._PAPER.group(), null, OG.Constants.NODE_TYPE.ETC);
 	this._PAPER.id = "OG_" + this._ID_PREFIX;
 	this._PAPER.canvas.id = "OG_" + this._ID_PREFIX;
+	this._CANVAS_COLOR = backgroundColor || this._CONFIG.CANVAS_BACKGROUND;
 
 	$(this._PAPER.canvas).css({
 		"background-color"   : this._CANVAS_COLOR,
@@ -135,7 +138,7 @@ OG.renderer.RaphaelRenderer.prototype._getREleById = function (id) {
  * @private
  */
 OG.renderer.RaphaelRenderer.prototype._drawGeometry = function (groupElement, geometry, style, parentStyle) {
-	var i = 0, pathStr = "", vertices, element, geomObj, _style = {},
+	var me = this, i = 0, pathStr = "", vertices, element, geomObj, _style = {},
 		getRoundedPath = function (rectangle, radius) {
 			var rectObj, rectVert, offset1, offset2, angle, array = [],
 				getRoundedOffset = function (coord, dist, deg) {
@@ -170,10 +173,10 @@ OG.renderer.RaphaelRenderer.prototype._drawGeometry = function (groupElement, ge
 		};
 	if (parentStyle) {
 		OG.Util.apply(_style, (style instanceof OG.geometry.Style) ? style.map : style || {},
-			OG.Util.apply({}, geometry.style.map, OG.Util.apply({}, parentStyle, OG.Constants.DEFAULT_STYLE.GEOM)));
+			OG.Util.apply({}, geometry.style.map, OG.Util.apply({}, parentStyle, me._CONFIG.DEFAULT_STYLE.GEOM)));
 	} else {
 		OG.Util.apply(_style, (style instanceof OG.geometry.Style) ? style.map : style || {},
-			OG.Util.apply({}, geometry.style.map, OG.Constants.DEFAULT_STYLE.GEOM));
+			OG.Util.apply({}, geometry.style.map, me._CONFIG.DEFAULT_STYLE.GEOM));
 	}
 
 	geometry.style.map = _style;
@@ -318,13 +321,13 @@ OG.renderer.RaphaelRenderer.prototype._drawGeometry = function (groupElement, ge
  * @private
  */
 OG.renderer.RaphaelRenderer.prototype._drawLabel = function (position, text, size, style, id, isEdge) {
-	var LABEL_PADDING = OG.Constants.LABEL_PADDING,
+	var me = this, LABEL_PADDING = me._CONFIG.LABEL_PADDING,
 		width = size ? size[0] - LABEL_PADDING * 2 : null,
 		height = size ? size[1] - LABEL_PADDING * 2 : null,
 		angle = size ? size[2] || 0 : 0,
 		group, element, rect, _style = {}, text_anchor, geom,
 		bBox, left, top, x, y;
-	OG.Util.apply(_style, (style instanceof OG.geometry.Style) ? style.map : style || {}, OG.Constants.DEFAULT_STYLE.TEXT);
+	OG.Util.apply(_style, (style instanceof OG.geometry.Style) ? style.map : style || {}, me._CONFIG.DEFAULT_STYLE.TEXT);
 
 	// ID 지정된 경우 존재하면 하위 노드 제거
 	if (id === 0 || id) {
@@ -433,8 +436,8 @@ OG.renderer.RaphaelRenderer.prototype._drawLabel = function (position, text, siz
 		x             : x,
 		y             : y,
 		stroke        : "none",
-		fill          : _style["font-color"] || OG.Constants.DEFAULT_STYLE.LABEL["font-color"],
-		"font-size"   : _style["font-size"] || OG.Constants.DEFAULT_STYLE.LABEL["font-size"],
+		fill          : _style["font-color"] || me._CONFIG.DEFAULT_STYLE.LABEL["font-color"],
+		"font-size"   : _style["font-size"] || me._CONFIG.DEFAULT_STYLE.LABEL["font-size"],
 		"fill-opacity": 1
 	});
 
@@ -596,7 +599,7 @@ OG.renderer.RaphaelRenderer.prototype.drawShape = function (position, shape, siz
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.drawGeom = function (geometry, style, id) {
-	var group, _style = {};
+	var me = this, group, _style = {};
 
 	OG.Util.apply(_style, (style instanceof OG.geometry.Style) ? style.map : style || {});
 
@@ -619,7 +622,7 @@ OG.renderer.RaphaelRenderer.prototype.drawGeom = function (geometry, style, id) 
 	// Draw geometry
 	this._drawGeometry(group.node, geometry, _style);
 	group.node.geom = geometry;
-	group.attr(OG.Constants.DEFAULT_STYLE.SHAPE);
+	group.attr(me._CONFIG.DEFAULT_STYLE.SHAPE);
 
 	if (group.node.shape) {
 		group.node.shape.geom = geometry;
@@ -648,12 +651,12 @@ OG.renderer.RaphaelRenderer.prototype.drawGeom = function (geometry, style, id) 
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.drawText = function (position, text, size, style, id) {
-	var width = size ? size[0] : null,
+	var me = this, width = size ? size[0] : null,
 		height = size ? size[1] : null,
 		angle = size ? size[2] || 0 : 0,
 		group, element, _style = {}, geom,
 		bBox, left, top, x, y;
-	OG.Util.apply(_style, (style instanceof OG.geometry.Style) ? style.map : style || {}, OG.Constants.DEFAULT_STYLE.TEXT);
+	OG.Util.apply(_style, (style instanceof OG.geometry.Style) ? style.map : style || {}, me._CONFIG.DEFAULT_STYLE.TEXT);
 
 	// ID 지정된 경우 존재하면 하위 노드 제거
 	if (id === 0 || id) {
@@ -726,8 +729,8 @@ OG.renderer.RaphaelRenderer.prototype.drawText = function (position, text, size,
 	// font-color, font-size 적용
 	element.attr({
 		stroke     : "none",
-		fill       : _style["font-color"] || OG.Constants.DEFAULT_STYLE.LABEL["font-color"],
-		"font-size": _style["font-size"] || OG.Constants.DEFAULT_STYLE.LABEL["font-size"]
+		fill       : _style["font-color"] || me._CONFIG.DEFAULT_STYLE.LABEL["font-color"],
+		"font-size": _style["font-size"] || me._CONFIG.DEFAULT_STYLE.LABEL["font-size"]
 	});
 
 	// angle 적용
@@ -741,7 +744,7 @@ OG.renderer.RaphaelRenderer.prototype.drawText = function (position, text, size,
 	group.node.text = text;
 	group.node.angle = angle;
 	group.node.geom = geom;
-	group.attr(OG.Constants.DEFAULT_STYLE.SHAPE);
+	group.attr(me._CONFIG.DEFAULT_STYLE.SHAPE);
 
 	if (group.node.shape) {
 		group.node.shape.text = text;
@@ -786,11 +789,11 @@ OG.renderer.RaphaelRenderer.prototype.drawText = function (position, text, size,
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.drawHtml = function (position, html, size, style, id) {
-	var width = size ? size[0] : null,
+	var me = this, width = size ? size[0] : null,
 		height = size ? size[1] : null,
 		angle = size ? size[2] || 0 : 0,
 		group, element, _style = {}, bBox, geom, left, top;
-	OG.Util.apply(_style, (style instanceof OG.geometry.Style) ? style.map : style || {}, OG.Constants.DEFAULT_STYLE.HTML);
+	OG.Util.apply(_style, (style instanceof OG.geometry.Style) ? style.map : style || {}, me._CONFIG.DEFAULT_STYLE.HTML);
 
 	// ID 지정된 경우 존재하면 하위 노드 제거
 	if (id === 0 || id) {
@@ -836,7 +839,7 @@ OG.renderer.RaphaelRenderer.prototype.drawHtml = function (position, html, size,
 	group.node.html = html;
 	group.node.angle = angle;
 	group.node.geom = geom;
-	group.attr(OG.Constants.DEFAULT_STYLE.SHAPE);
+	group.attr(me._CONFIG.DEFAULT_STYLE.SHAPE);
 
 	if (group.node.shape) {
 		group.node.shape.html = html;
@@ -881,11 +884,11 @@ OG.renderer.RaphaelRenderer.prototype.drawHtml = function (position, html, size,
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.drawImage = function (position, imgSrc, size, style, id) {
-	var width = size ? size[0] : null,
+	var me = this, width = size ? size[0] : null,
 		height = size ? size[1] : null,
 		angle = size ? size[2] || 0 : 0,
 		group, element, _style = {}, bBox, geom, left, top;
-	OG.Util.apply(_style, (style instanceof OG.geometry.Style) ? style.map : style || {}, OG.Constants.DEFAULT_STYLE.IMAGE);
+	OG.Util.apply(_style, (style instanceof OG.geometry.Style) ? style.map : style || {}, me._CONFIG.DEFAULT_STYLE.IMAGE);
 
 	// ID 지정된 경우 존재하면 하위 노드 제거
 	if (id === 0 || id) {
@@ -931,7 +934,7 @@ OG.renderer.RaphaelRenderer.prototype.drawImage = function (position, imgSrc, si
 	group.node.image = imgSrc;
 	group.node.angle = angle;
 	group.node.geom = geom;
-	group.attr(OG.Constants.DEFAULT_STYLE.SHAPE);
+	group.attr(me._CONFIG.DEFAULT_STYLE.SHAPE);
 
 	if (group.node.shape) {
 		group.node.shape.image = imgSrc;
@@ -977,7 +980,7 @@ OG.renderer.RaphaelRenderer.prototype.drawImage = function (position, imgSrc, si
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSelf) {
-	var group, _style = {},
+	var me = this, group, _style = {},
 		vertices = line.getVertices(),
 		from = vertices[0], to = vertices[vertices.length - 1],
 		points = [], edge, edge_direction,
@@ -1015,7 +1018,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 		};
 
 	OG.Util.apply(_style, (style instanceof OG.geometry.Style) ? style.map : style || {},
-		OG.Util.apply({}, line.style.map, OG.Constants.DEFAULT_STYLE.EDGE));
+		OG.Util.apply({}, line.style.map, me._CONFIG.DEFAULT_STYLE.EDGE));
 
 	// ID 지정된 경우 존재하면 하위 노드 제거
 	if (id === 0 || id) {
@@ -1035,10 +1038,10 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 
 	if (isSelf) {
 		points = [
-			[from.x, from.y - OG.Constants.GUIDE_RECT_SIZE / 2],
-			[from.x + OG.Constants.GUIDE_RECT_SIZE * 2, from.y - OG.Constants.GUIDE_RECT_SIZE],
-			[from.x + OG.Constants.GUIDE_RECT_SIZE * 2, from.y + OG.Constants.GUIDE_RECT_SIZE],
-			[from.x, from.y + OG.Constants.GUIDE_RECT_SIZE / 2]
+			[from.x, from.y - me._CONFIG.GUIDE_RECT_SIZE / 2],
+			[from.x + me._CONFIG.GUIDE_RECT_SIZE * 2, from.y - me._CONFIG.GUIDE_RECT_SIZE],
+			[from.x + me._CONFIG.GUIDE_RECT_SIZE * 2, from.y + me._CONFIG.GUIDE_RECT_SIZE],
+			[from.x, from.y + me._CONFIG.GUIDE_RECT_SIZE / 2]
 		];
 	} else if (line instanceof OG.geometry.Line) {
 		// edgeType
@@ -1060,7 +1063,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 					if (from.x <= to.x) {
 						points = getArrayOfOrthogonal_1(
 							[from.x, from.y],
-							[to.x + OG.Constants.EDGE_PADDING, to.y],
+							[to.x + me._CONFIG.EDGE_PADDING, to.y],
 							true
 						);
 						points.push([to.x, to.y]);
@@ -1069,7 +1072,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_1(
-							[from.x + OG.Constants.EDGE_PADDING, from.y],
+							[from.x + me._CONFIG.EDGE_PADDING, from.y],
 							[to.x, to.y],
 							false
 						));
@@ -1087,8 +1090,8 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_2(
-							[from.x + OG.Constants.EDGE_PADDING, from.y],
-							[to.x - OG.Constants.EDGE_PADDING, to.y],
+							[from.x + me._CONFIG.EDGE_PADDING, from.y],
+							[to.x - me._CONFIG.EDGE_PADDING, to.y],
 							false
 						));
 						points.push([to.x, to.y]);
@@ -1098,7 +1101,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 					if (from.x <= to.x && from.y <= to.y) {
 						points = getArrayOfOrthogonal_2(
 							[from.x, from.y],
-							[to.x, to.y + OG.Constants.EDGE_PADDING],
+							[to.x, to.y + me._CONFIG.EDGE_PADDING],
 							true
 						);
 						points.push([to.x, to.y]);
@@ -1113,8 +1116,8 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_1(
-							[from.x + OG.Constants.EDGE_PADDING, from.y],
-							[to.x, to.y + OG.Constants.EDGE_PADDING],
+							[from.x + me._CONFIG.EDGE_PADDING, from.y],
+							[to.x, to.y + me._CONFIG.EDGE_PADDING],
 							false
 						));
 						points.push([to.x, to.y]);
@@ -1123,7 +1126,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_2(
-							[from.x + OG.Constants.EDGE_PADDING, from.y],
+							[from.x + me._CONFIG.EDGE_PADDING, from.y],
 							[to.x, to.y],
 							false
 						));
@@ -1141,8 +1144,8 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_1(
-							[from.x + OG.Constants.EDGE_PADDING, from.y],
-							[to.x, to.y - OG.Constants.EDGE_PADDING],
+							[from.x + me._CONFIG.EDGE_PADDING, from.y],
+							[to.x, to.y - me._CONFIG.EDGE_PADDING],
 							false
 						));
 						points.push([to.x, to.y]);
@@ -1151,7 +1154,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_2(
-							[from.x + OG.Constants.EDGE_PADDING, from.y],
+							[from.x + me._CONFIG.EDGE_PADDING, from.y],
 							[to.x, to.y],
 							false
 						));
@@ -1160,8 +1163,8 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_1(
-							[from.x + OG.Constants.EDGE_PADDING, from.y],
-							[to.x, to.y - OG.Constants.EDGE_PADDING],
+							[from.x + me._CONFIG.EDGE_PADDING, from.y],
+							[to.x, to.y - me._CONFIG.EDGE_PADDING],
 							false
 						));
 						points.push([to.x, to.y]);
@@ -1176,8 +1179,8 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_2(
-							[from.x - OG.Constants.EDGE_PADDING, from.y],
-							[to.x + OG.Constants.EDGE_PADDING, to.y],
+							[from.x - me._CONFIG.EDGE_PADDING, from.y],
+							[to.x + me._CONFIG.EDGE_PADDING, to.y],
 							false
 						));
 						points.push([to.x, to.y]);
@@ -1195,7 +1198,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_1(
-							[from.x - OG.Constants.EDGE_PADDING, from.y],
+							[from.x - me._CONFIG.EDGE_PADDING, from.y],
 							[to.x, to.y],
 							false
 						));
@@ -1203,7 +1206,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 					} else {
 						points = getArrayOfOrthogonal_1(
 							[from.x, from.y],
-							[to.x - OG.Constants.EDGE_PADDING, to.y],
+							[to.x - me._CONFIG.EDGE_PADDING, to.y],
 							true
 						);
 						points.push([to.x, to.y]);
@@ -1215,8 +1218,8 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_1(
-							[from.x - OG.Constants.EDGE_PADDING, from.y],
-							[to.x, to.y + OG.Constants.EDGE_PADDING],
+							[from.x - me._CONFIG.EDGE_PADDING, from.y],
+							[to.x, to.y + me._CONFIG.EDGE_PADDING],
 							false
 						));
 						points.push([to.x, to.y]);
@@ -1225,14 +1228,14 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_2(
-							[from.x - OG.Constants.EDGE_PADDING, from.y],
+							[from.x - me._CONFIG.EDGE_PADDING, from.y],
 							[to.x, to.y],
 							false
 						));
 					} else if (from.x > to.x && from.y <= to.y) {
 						points = getArrayOfOrthogonal_2(
 							[from.x, from.y],
-							[to.x, to.y + OG.Constants.EDGE_PADDING],
+							[to.x, to.y + me._CONFIG.EDGE_PADDING],
 							true
 						);
 						points.push([to.x, to.y]);
@@ -1250,7 +1253,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_2(
-							[from.x - OG.Constants.EDGE_PADDING, from.y],
+							[from.x - me._CONFIG.EDGE_PADDING, from.y],
 							[to.x, to.y],
 							false
 						));
@@ -1259,8 +1262,8 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_1(
-							[from.x - OG.Constants.EDGE_PADDING, from.y],
-							[to.x, to.y - OG.Constants.EDGE_PADDING],
+							[from.x - me._CONFIG.EDGE_PADDING, from.y],
+							[to.x, to.y - me._CONFIG.EDGE_PADDING],
 							false
 						));
 						points.push([to.x, to.y]);
@@ -1273,7 +1276,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 					} else if (from.x > to.x && from.y > to.y) {
 						points = getArrayOfOrthogonal_2(
 							[from.x, from.y],
-							[to.x, to.y - OG.Constants.EDGE_PADDING],
+							[to.x, to.y - me._CONFIG.EDGE_PADDING],
 							true
 						);
 						points.push([to.x, to.y]);
@@ -1286,7 +1289,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 					if (from.x <= to.x && from.y <= to.y) {
 						points = getArrayOfOrthogonal_2(
 							[from.x, from.y],
-							[to.x + OG.Constants.EDGE_PADDING, to.y],
+							[to.x + me._CONFIG.EDGE_PADDING, to.y],
 							false
 						);
 						points.push([to.x, to.y]);
@@ -1295,8 +1298,8 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_1(
-							[from.x, from.y + OG.Constants.EDGE_PADDING],
-							[to.x + OG.Constants.EDGE_PADDING, to.y],
+							[from.x, from.y + me._CONFIG.EDGE_PADDING],
+							[to.x + me._CONFIG.EDGE_PADDING, to.y],
 							true
 						));
 						points.push([to.x, to.y]);
@@ -1311,7 +1314,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_2(
-							[from.x, from.y + OG.Constants.EDGE_PADDING],
+							[from.x, from.y + me._CONFIG.EDGE_PADDING],
 							[to.x, to.y],
 							true
 						));
@@ -1329,14 +1332,14 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_2(
-							[from.x, from.y + OG.Constants.EDGE_PADDING],
+							[from.x, from.y + me._CONFIG.EDGE_PADDING],
 							[to.x, to.y],
 							true
 						));
 					} else if (from.x > to.x && from.y <= to.y) {
 						points = getArrayOfOrthogonal_2(
 							[from.x, from.y],
-							[to.x - OG.Constants.EDGE_PADDING, to.y],
+							[to.x - me._CONFIG.EDGE_PADDING, to.y],
 							false
 						);
 						points.push([to.x, to.y]);
@@ -1345,8 +1348,8 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_1(
-							[from.x, from.y + OG.Constants.EDGE_PADDING],
-							[to.x - OG.Constants.EDGE_PADDING, to.y],
+							[from.x, from.y + me._CONFIG.EDGE_PADDING],
+							[to.x - me._CONFIG.EDGE_PADDING, to.y],
 							true
 						));
 						points.push([to.x, to.y]);
@@ -1356,7 +1359,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 					if (from.y <= to.y) {
 						points = getArrayOfOrthogonal_1(
 							[from.x, from.y],
-							[to.x, to.y + OG.Constants.EDGE_PADDING],
+							[to.x, to.y + me._CONFIG.EDGE_PADDING],
 							false
 						);
 						points.push([to.x, to.y]);
@@ -1365,7 +1368,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_1(
-							[from.x, from.y + OG.Constants.EDGE_PADDING],
+							[from.x, from.y + me._CONFIG.EDGE_PADDING],
 							[to.x, to.y],
 							true
 						));
@@ -1383,8 +1386,8 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_2(
-							[from.x, from.y + OG.Constants.EDGE_PADDING],
-							[to.x, to.y - OG.Constants.EDGE_PADDING],
+							[from.x, from.y + me._CONFIG.EDGE_PADDING],
+							[to.x, to.y - me._CONFIG.EDGE_PADDING],
 							true
 						));
 						points.push([to.x, to.y]);
@@ -1399,15 +1402,15 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_1(
-							[from.x, from.y - OG.Constants.EDGE_PADDING],
-							[to.x + OG.Constants.EDGE_PADDING, to.y],
+							[from.x, from.y - me._CONFIG.EDGE_PADDING],
+							[to.x + me._CONFIG.EDGE_PADDING, to.y],
 							true
 						));
 						points.push([to.x, to.y]);
 					} else if (from.x <= to.x && from.y > to.y) {
 						points = getArrayOfOrthogonal_2(
 							[from.x, from.y],
-							[to.x + OG.Constants.EDGE_PADDING, to.y],
+							[to.x + me._CONFIG.EDGE_PADDING, to.y],
 							false
 						);
 						points.push([to.x, to.y]);
@@ -1416,7 +1419,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_2(
-							[from.x, from.y - OG.Constants.EDGE_PADDING],
+							[from.x, from.y - me._CONFIG.EDGE_PADDING],
 							[to.x, to.y],
 							true
 						));
@@ -1434,7 +1437,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_2(
-							[from.x, from.y - OG.Constants.EDGE_PADDING],
+							[from.x, from.y - me._CONFIG.EDGE_PADDING],
 							[to.x, to.y],
 							true
 						));
@@ -1449,15 +1452,15 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_1(
-							[from.x, from.y - OG.Constants.EDGE_PADDING],
-							[to.x - OG.Constants.EDGE_PADDING, to.y],
+							[from.x, from.y - me._CONFIG.EDGE_PADDING],
+							[to.x - me._CONFIG.EDGE_PADDING, to.y],
 							true
 						));
 						points.push([to.x, to.y]);
 					} else if (from.x > to.x && from.y > to.y) {
 						points = getArrayOfOrthogonal_2(
 							[from.x, from.y],
-							[to.x - OG.Constants.EDGE_PADDING, to.y],
+							[to.x - me._CONFIG.EDGE_PADDING, to.y],
 							false
 						);
 						points.push([to.x, to.y]);
@@ -1469,8 +1472,8 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_2(
-							[from.x, from.y - OG.Constants.EDGE_PADDING],
-							[to.x, to.y + OG.Constants.EDGE_PADDING],
+							[from.x, from.y - me._CONFIG.EDGE_PADDING],
+							[to.x, to.y + me._CONFIG.EDGE_PADDING],
 							true
 						));
 						points.push([to.x, to.y]);
@@ -1488,14 +1491,14 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 							[from.x, from.y]
 						];
 						points = points.concat(getArrayOfOrthogonal_1(
-							[from.x, from.y - OG.Constants.EDGE_PADDING],
+							[from.x, from.y - me._CONFIG.EDGE_PADDING],
 							[to.x, to.y],
 							true
 						));
 					} else {
 						points = getArrayOfOrthogonal_1(
 							[from.x, from.y],
-							[to.x, to.y - OG.Constants.EDGE_PADDING],
+							[to.x, to.y - me._CONFIG.EDGE_PADDING],
 							false
 						);
 						points.push([to.x, to.y]);
@@ -1539,12 +1542,12 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 	}
 
 	// draw hidden edge
-	this._drawGeometry(group.node, edge, OG.Constants.DEFAULT_STYLE.EDGE_HIDDEN);
+	this._drawGeometry(group.node, edge, me._CONFIG.DEFAULT_STYLE.EDGE_HIDDEN);
 
 	// draw Edge
 	this._drawGeometry(group.node, edge, _style);
 	group.node.geom = edge;
-	group.attr(OG.Constants.DEFAULT_STYLE.SHAPE);
+	group.attr(me._CONFIG.DEFAULT_STYLE.SHAPE);
 
 	if (group.node.shape) {
 		group.node.shape.geom = edge;
@@ -1570,7 +1573,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.drawGroup = function (geometry, style, id) {
-	var group, geomElement, _style = {}, childNodes, i, boundary, titleLine, _tempStyle = {};
+	var me = this, group, geomElement, _style = {}, childNodes, i, boundary, titleLine, _tempStyle = {};
 
 	OG.Util.apply(_style, (style instanceof OG.geometry.Style) ? style.map : style || {});
 
@@ -1598,7 +1601,7 @@ OG.renderer.RaphaelRenderer.prototype.drawGroup = function (geometry, style, id)
 	// Draw geometry
 	geomElement = this._drawGeometry(group.node, geometry, _style);
 	group.node.geom = geometry;
-	group.attr(OG.Constants.DEFAULT_STYLE.SHAPE);
+	group.attr(me._CONFIG.DEFAULT_STYLE.SHAPE);
 
 	// 타이틀 라인 Drawing
 	OG.Util.apply(_tempStyle, geometry.style.map, _style);
@@ -1770,7 +1773,7 @@ OG.renderer.RaphaelRenderer.prototype.drawLabel = function (shapeElement, text, 
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.drawEdgeLabel = function (shapeElement, text, type) {
-	var rElement = this._getREleById(OG.Util.isElement(shapeElement) ? shapeElement.id : shapeElement),
+	var me = this, rElement = this._getREleById(OG.Util.isElement(shapeElement) ? shapeElement.id : shapeElement),
 		element, vertices, labelElement, position, edgeLabel, suffix;
 
 	if (rElement && rElement.node.shape) {
@@ -1780,12 +1783,12 @@ OG.renderer.RaphaelRenderer.prototype.drawEdgeLabel = function (shapeElement, te
 		if (element.shape instanceof OG.shape.EdgeShape) {
 			vertices = element.shape.geom.getVertices();
 			if (type === 'FROM') {
-				position = [vertices[0].x, vertices[0].y + OG.Constants.FROMTO_LABEL_OFFSET_TOP];
+				position = [vertices[0].x, vertices[0].y + me._CONFIG.FROMTO_LABEL_OFFSET_TOP];
 				element.shape.fromLabel = text || element.shape.fromLabel;
 				edgeLabel = element.shape.fromLabel;
 				suffix = OG.Constants.FROM_LABEL_SUFFIX;
 			} else {
-				position = [vertices[vertices.length - 1].x, vertices[vertices.length - 1].y + OG.Constants.FROMTO_LABEL_OFFSET_TOP];
+				position = [vertices[vertices.length - 1].x, vertices[vertices.length - 1].y + me._CONFIG.FROMTO_LABEL_OFFSET_TOP];
 				element.shape.toLabel = text || element.shape.toLabel;
 				edgeLabel = element.shape.toLabel;
 				suffix = OG.Constants.TO_LABEL_SUFFIX;
@@ -1913,7 +1916,7 @@ OG.renderer.RaphaelRenderer.prototype.redrawShape = function (element, excludeEd
 				envelope = element.shape.geom.getBoundary();
 				upperLeft = envelope.getUpperLeft();
 				element = this.drawGroup(new OG.geometry.Rectangle(
-					upperLeft, OG.Constants.COLLAPSE_SIZE * 3, OG.Constants.COLLAPSE_SIZE * 2),
+					upperLeft, me._CONFIG.COLLAPSE_SIZE * 3, me._CONFIG.COLLAPSE_SIZE * 2),
 					element.shape.geom.style, element.id);
 				redrawChildConnectedEdge(element, element);
 				this.redrawConnectedEdge(element, excludeEdgeId);
@@ -1940,7 +1943,7 @@ OG.renderer.RaphaelRenderer.prototype.redrawShape = function (element, excludeEd
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.redrawEdge = function (edgeElement) {
-	var edge, fromTerminalId, toTerminalId, fromShape, toShape, fromTerminalNum, toTerminalNum,
+	var me = this, edge, fromTerminalId, toTerminalId, fromShape, toShape, fromTerminalNum, toTerminalNum,
 		fromTerminal, toTerminal, vertices, fromDrct, toDrct, fromXY, toXY,
 		orgFromXY, orgToXY, orgFromDrct, orgToDrct, intersectionInfo, isSelf,
 		collapsedParents, collapsedEnvelope, collapsedUpperLeft, collapsedGeom, collapsedPosition;
@@ -2013,7 +2016,7 @@ OG.renderer.RaphaelRenderer.prototype.redrawEdge = function (edgeElement) {
 				}
 				collapsedUpperLeft = collapsedEnvelope.getUpperLeft();
 				collapsedGeom = new OG.geometry.Rectangle(
-					collapsedUpperLeft, OG.Constants.COLLAPSE_SIZE * 3, OG.Constants.COLLAPSE_SIZE * 2);
+					collapsedUpperLeft, me._CONFIG.COLLAPSE_SIZE * 3, me._CONFIG.COLLAPSE_SIZE * 2);
 
 				switch (fromDrct.toUpperCase()) {
 				case OG.Constants.TERMINAL_TYPE.E:
@@ -2047,7 +2050,7 @@ OG.renderer.RaphaelRenderer.prototype.redrawEdge = function (edgeElement) {
 				}
 				collapsedUpperLeft = collapsedEnvelope.getUpperLeft();
 				collapsedGeom = new OG.geometry.Rectangle(
-					collapsedUpperLeft, OG.Constants.COLLAPSE_SIZE * 3, OG.Constants.COLLAPSE_SIZE * 2);
+					collapsedUpperLeft, me._CONFIG.COLLAPSE_SIZE * 3, me._CONFIG.COLLAPSE_SIZE * 2);
 
 				switch (toDrct.toUpperCase()) {
 				case OG.Constants.TERMINAL_TYPE.E:
@@ -2126,7 +2129,7 @@ OG.renderer.RaphaelRenderer.prototype.redrawConnectedEdge = function (element, e
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.connect = function (from, to, edge, style, label) {
-	var _style = {}, fromShape, toShape, intersectionInfo, fromXY, toXY,
+	var me = this, _style = {}, fromShape, toShape, intersectionInfo, fromXY, toXY,
 		orgFromXY, orgToXY, fromDrct, toDrct, orgFromDrct, orgToDrct, isSelf, beforeEvent,
 		addAttrValues = function (element, name, value) {
 			var attrValue = $(element).attr(name),
@@ -2143,7 +2146,7 @@ OG.renderer.RaphaelRenderer.prototype.connect = function (from, to, edge, style,
 			return element;
 		};
 
-	OG.Util.apply(_style, (style instanceof OG.geometry.Style) ? style.map : style || {}, OG.Constants.DEFAULT_STYLE.EDGE);
+	OG.Util.apply(_style, (style instanceof OG.geometry.Style) ? style.map : style || {}, me._CONFIG.DEFAULT_STYLE.EDGE);
 
 	// 연결 시작, 끝 Shape
 	if (OG.Util.isElement(from)) {
@@ -2329,20 +2332,19 @@ OG.renderer.RaphaelRenderer.prototype.disconnect = function (element) {
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.drawDropOverGuide = function (element) {
-	var rElement = this._getREleById(OG.Util.isElement(element) ? element.id : element),
+	var me = this, rElement = this._getREleById(OG.Util.isElement(element) ? element.id : element),
 		geometry = rElement ? rElement.node.shape.geom : null,
 		envelope, _upperLeft, _bBoxRect,
-		_size = OG.Constants.GUIDE_RECT_SIZE / 2,
+		_size = me._CONFIG.GUIDE_RECT_SIZE / 2,
 		_hSize = _size / 2;
 
-	if (rElement && geometry && $(element).attr("_shape") !== OG.Constants.SHAPE_TYPE.EDGE &&
-		!this._getREleById(rElement.id + OG.Constants.DROP_OVER_BBOX_SUFFIX)) {
+	if (rElement && geometry && $(element).attr("_shape") !== OG.Constants.SHAPE_TYPE.EDGE && !this._getREleById(rElement.id + OG.Constants.DROP_OVER_BBOX_SUFFIX)) {
 		envelope = geometry.getBoundary();
 		_upperLeft = envelope.getUpperLeft();
 
 		// guide line 랜더링
 		_bBoxRect = this._PAPER.rect(_upperLeft.x - _hSize, _upperLeft.y - _hSize, envelope.getWidth() + _size, envelope.getHeight() + _size);
-		_bBoxRect.attr(OG.Util.apply({'stroke-width': _size}, OG.Constants.DEFAULT_STYLE.DROP_OVER_BBOX));
+		_bBoxRect.attr(OG.Util.apply({'stroke-width': _size}, me._CONFIG.DEFAULT_STYLE.DROP_OVER_BBOX));
 		this._add(_bBoxRect, rElement.id + OG.Constants.DROP_OVER_BBOX_SUFFIX);
 
 		// layer 위치 조정
@@ -2358,14 +2360,14 @@ OG.renderer.RaphaelRenderer.prototype.drawDropOverGuide = function (element) {
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.drawGuide = function (element) {
-	var rElement = this._getREleById(OG.Util.isElement(element) ? element.id : element),
+	var me = this, rElement = this._getREleById(OG.Util.isElement(element) ? element.id : element),
 		geometry = rElement ? rElement.node.shape.geom : null,
 		envelope,
 		group, guide,
 		_bBoxRect,
 		_upperLeft, _upperRight, _lowerLeft, _lowerRight, _leftCenter, _upperCenter, _rightCenter, _lowerCenter,
 		_ulRect, _urRect, _llRect, _lrRect, _lcRect, _ucRect, _rcRect, _lwcRect,
-		_size = OG.Constants.GUIDE_RECT_SIZE, _hSize = OG.Util.round(_size / 2);
+		_size = me._CONFIG.GUIDE_RECT_SIZE, _hSize = OG.Util.round(_size / 2);
 
 	if (rElement && geometry) {
 		// Edge 인 경우 따로 처리
@@ -2387,7 +2389,7 @@ OG.renderer.RaphaelRenderer.prototype.drawGuide = function (element) {
 				// bBox remove -> redraw
 				this._remove(this._getREleById(rElement.id + OG.Constants.GUIDE_SUFFIX.BBOX));
 				_bBoxRect = this._PAPER.rect(_upperLeft.x, _upperLeft.y, envelope.getWidth(), envelope.getHeight());
-				_bBoxRect.attr(OG.Constants.DEFAULT_STYLE.GUIDE_BBOX);
+				_bBoxRect.attr(me._CONFIG.DEFAULT_STYLE.GUIDE_BBOX);
 				this._add(_bBoxRect, rElement.id + OG.Constants.GUIDE_SUFFIX.BBOX);
 				_bBoxRect.insertBefore(rElement);
 
@@ -2431,15 +2433,15 @@ OG.renderer.RaphaelRenderer.prototype.drawGuide = function (element) {
 			_rcRect = this._PAPER.rect(_rightCenter.x - _hSize, _rightCenter.y - _hSize, _size, _size);
 			_lwcRect = this._PAPER.rect(_lowerCenter.x - _hSize, _lowerCenter.y - _hSize, _size, _size);
 
-			_bBoxRect.attr(OG.Constants.DEFAULT_STYLE.GUIDE_BBOX);
-			_ulRect.attr(OG.Constants.DEFAULT_STYLE.GUIDE_UL);
-			_urRect.attr(OG.Constants.DEFAULT_STYLE.GUIDE_UR);
-			_llRect.attr(OG.Constants.DEFAULT_STYLE.GUIDE_LL);
-			_lrRect.attr(OG.Constants.DEFAULT_STYLE.GUIDE_LR);
-			_lcRect.attr(OG.Constants.DEFAULT_STYLE.GUIDE_LC);
-			_ucRect.attr(OG.Constants.DEFAULT_STYLE.GUIDE_UC);
-			_rcRect.attr(OG.Constants.DEFAULT_STYLE.GUIDE_RC);
-			_lwcRect.attr(OG.Constants.DEFAULT_STYLE.GUIDE_LWC);
+			_bBoxRect.attr(me._CONFIG.DEFAULT_STYLE.GUIDE_BBOX);
+			_ulRect.attr(me._CONFIG.DEFAULT_STYLE.GUIDE_UL);
+			_urRect.attr(me._CONFIG.DEFAULT_STYLE.GUIDE_UR);
+			_llRect.attr(me._CONFIG.DEFAULT_STYLE.GUIDE_LL);
+			_lrRect.attr(me._CONFIG.DEFAULT_STYLE.GUIDE_LR);
+			_lcRect.attr(me._CONFIG.DEFAULT_STYLE.GUIDE_LC);
+			_ucRect.attr(me._CONFIG.DEFAULT_STYLE.GUIDE_UC);
+			_rcRect.attr(me._CONFIG.DEFAULT_STYLE.GUIDE_RC);
+			_lwcRect.attr(me._CONFIG.DEFAULT_STYLE.GUIDE_LWC);
 
 			// add to Group
 			group.appendChild(_ulRect);
@@ -2528,16 +2530,16 @@ OG.renderer.RaphaelRenderer.prototype.removeAllGuide = function () {
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.drawEdgeGuide = function (element) {
-	var rElement = this._getREleById(OG.Util.isElement(element) ? element.id : element),
+	var me = this, rElement = this._getREleById(OG.Util.isElement(element) ? element.id : element),
 		geometry = rElement ? rElement.node.shape.geom : null,
 		vertices, isSelf,
 		group, guide, pathStr,
 		_bBoxLine, _fromRect, _toRect, _controlRect, controlNode = [],
-		_size = OG.Constants.GUIDE_RECT_SIZE, _hSize = OG.Util.round(_size / 2), _style = {},
+		_size = me._CONFIG.GUIDE_RECT_SIZE, _hSize = OG.Util.round(_size / 2), _style = {},
 		i;
 
 	if (rElement && geometry) {
-		OG.Util.apply(_style, geometry.style.map, OG.Constants.DEFAULT_STYLE.EDGE);
+		OG.Util.apply(_style, geometry.style.map, me._CONFIG.DEFAULT_STYLE.EDGE);
 
 		vertices = _style["edge-type"] === OG.Constants.EDGE_TYPE.BEZIER ? geometry.getControlPoints() : geometry.getVertices();
 
@@ -2569,7 +2571,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdgeGuide = function (element) {
 			}
 
 			_bBoxLine = this._PAPER.path(pathStr);
-			_bBoxLine.attr(OG.Constants.DEFAULT_STYLE.GUIDE_BBOX);
+			_bBoxLine.attr(me._CONFIG.DEFAULT_STYLE.GUIDE_BBOX);
 			this._add(_bBoxLine, rElement.id + OG.Constants.GUIDE_SUFFIX.BBOX);
 			_bBoxLine.insertBefore(rElement);
 
@@ -2637,17 +2639,17 @@ OG.renderer.RaphaelRenderer.prototype.drawEdgeGuide = function (element) {
 			}
 		}
 		_bBoxLine = this._PAPER.path(pathStr);
-		_bBoxLine.attr(OG.Constants.DEFAULT_STYLE.GUIDE_BBOX);
+		_bBoxLine.attr(me._CONFIG.DEFAULT_STYLE.GUIDE_BBOX);
 
 		// 시작지점 가이드
 		_fromRect = this._PAPER.rect(vertices[0].x - _hSize, vertices[0].y - _hSize, _size, _size);
-		_fromRect.attr(OG.Constants.DEFAULT_STYLE.GUIDE_FROM);
+		_fromRect.attr(me._CONFIG.DEFAULT_STYLE.GUIDE_FROM);
 		group.appendChild(_fromRect);
 		this._add(_fromRect, rElement.id + OG.Constants.GUIDE_SUFFIX.FROM);
 
 		// 종료지점 가이드
 		_toRect = this._PAPER.rect(vertices[vertices.length - 1].x - _hSize, vertices[vertices.length - 1].y - _hSize, _size, _size);
-		_toRect.attr(OG.Constants.DEFAULT_STYLE.GUIDE_TO);
+		_toRect.attr(me._CONFIG.DEFAULT_STYLE.GUIDE_TO);
 		group.appendChild(_toRect);
 		this._add(_toRect, rElement.id + OG.Constants.GUIDE_SUFFIX.TO);
 
@@ -2657,12 +2659,12 @@ OG.renderer.RaphaelRenderer.prototype.drawEdgeGuide = function (element) {
 				if (vertices[i].x === vertices[i + 1].x) {
 					_controlRect = this._PAPER.rect(vertices[i].x - _hSize,
 						OG.Util.round((vertices[i].y + vertices[i + 1].y) / 2) - _hSize, _size, _size);
-					_controlRect.attr(OG.Constants.DEFAULT_STYLE.GUIDE_CTL_H);
+					_controlRect.attr(me._CONFIG.DEFAULT_STYLE.GUIDE_CTL_H);
 					this._add(_controlRect, rElement.id + OG.Constants.GUIDE_SUFFIX.CTL_H + i);
 				} else {
 					_controlRect = this._PAPER.rect(OG.Util.round((vertices[i].x + vertices[i + 1].x) / 2) - _hSize,
 						vertices[i].y - _hSize, _size, _size);
-					_controlRect.attr(OG.Constants.DEFAULT_STYLE.GUIDE_CTL_V);
+					_controlRect.attr(me._CONFIG.DEFAULT_STYLE.GUIDE_CTL_V);
 					this._add(_controlRect, rElement.id + OG.Constants.GUIDE_SUFFIX.CTL_V + i);
 				}
 				group.appendChild(_controlRect);
@@ -2704,7 +2706,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdgeGuide = function (element) {
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.drawRubberBand = function (position, size, style) {
-	var x = position ? position[0] : 0,
+	var me = this, x = position ? position[0] : 0,
 		y = position ? position[1] : 0,
 		width = size ? size[0] : 0,
 		height = size ? size[1] : 0,
@@ -2719,7 +2721,7 @@ OG.renderer.RaphaelRenderer.prototype.drawRubberBand = function (position, size,
 		});
 		return rect;
 	}
-	OG.Util.apply(_style, (style instanceof OG.geometry.Style) ? style.map : style || {}, OG.Constants.DEFAULT_STYLE.RUBBER_BAND);
+	OG.Util.apply(_style, (style instanceof OG.geometry.Style) ? style.map : style || {}, me._CONFIG.DEFAULT_STYLE.RUBBER_BAND);
 	rect = this._PAPER.rect(x, y, width, height).attr(_style);
 	this._add(rect, OG.Constants.RUBBER_BAND_ID);
 	this._ETC_GROUP.node.appendChild(rect.node);
@@ -2751,7 +2753,7 @@ OG.renderer.RaphaelRenderer.prototype.drawTerminal = function (element, terminal
 	var me = this, rElement = this._getREleById(OG.Util.isElement(element) ? element.id : element),
 		terminals = rElement ? rElement.node.shape.createTerminal() : null,
 		envelope = rElement ? rElement.node.shape.geom.getBoundary() : null,
-		group, cross, rect, x, y, size = OG.Constants.TERMINAL_SIZE, rect_gap = size * 2;
+		group, cross, rect, x, y, size = me._CONFIG.TERMINAL_SIZE, rect_gap = size * 2;
 
 	if (rElement && terminals && terminals.length > 0) {
 		group = this._getREleById(rElement.id + OG.Constants.TERMINAL_SUFFIX.GROUP);
@@ -2769,7 +2771,7 @@ OG.renderer.RaphaelRenderer.prototype.drawTerminal = function (element, terminal
 		// hidden box
 		rect = this._PAPER.rect(envelope.getUpperLeft().x - rect_gap, envelope.getUpperLeft().y - rect_gap,
 			envelope.getWidth() + rect_gap * 2, envelope.getHeight() + rect_gap * 2);
-		rect.attr(OG.Constants.DEFAULT_STYLE.TERMINAL_BBOX);
+		rect.attr(me._CONFIG.DEFAULT_STYLE.TERMINAL_BBOX);
 		this._add(rect, rElement.id + OG.Constants.TERMINAL_SUFFIX.BOX);
 
 		// terminal
@@ -2779,7 +2781,7 @@ OG.renderer.RaphaelRenderer.prototype.drawTerminal = function (element, terminal
 				y = item.position.y;
 
 				cross = me._PAPER.circle(x, y, size);
-				cross.attr(OG.Constants.DEFAULT_STYLE.TERMINAL);
+				cross.attr(me._CONFIG.DEFAULT_STYLE.TERMINAL);
 				cross.node.terminal = item;
 
 				group.appendChild(cross);
@@ -2845,10 +2847,10 @@ OG.renderer.RaphaelRenderer.prototype.removeAllTerminal = function () {
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.drawCollapseGuide = function (element) {
-	var rElement = this._getREleById(OG.Util.isElement(element) ? element.id : element),
+	var me = this, rElement = this._getREleById(OG.Util.isElement(element) ? element.id : element),
 		geometry = rElement ? rElement.node.shape.geom : null,
 		envelope, _upperLeft, _bBoxRect, _rect,
-		_size = OG.Constants.COLLAPSE_SIZE,
+		_size = me._CONFIG.COLLAPSE_SIZE,
 		_hSize = _size / 2;
 
 	if (rElement && geometry && $(element).attr("_shape") === OG.Constants.SHAPE_TYPE.GROUP) {
@@ -2867,7 +2869,7 @@ OG.renderer.RaphaelRenderer.prototype.drawCollapseGuide = function (element) {
 		// hidden box
 		_bBoxRect = this._PAPER.rect(envelope.getUpperLeft().x - _size, envelope.getUpperLeft().y - _size,
 			envelope.getWidth() + _size * 2, envelope.getHeight() + _size * 2);
-		_bBoxRect.attr(OG.Constants.DEFAULT_STYLE.COLLAPSE_BBOX);
+		_bBoxRect.attr(me._CONFIG.DEFAULT_STYLE.COLLAPSE_BBOX);
 		this._add(_bBoxRect, rElement.id + OG.Constants.COLLAPSE_BBOX_SUFFIX);
 
 		if (rElement.node.shape.isCollapsed === true) {
@@ -2886,7 +2888,7 @@ OG.renderer.RaphaelRenderer.prototype.drawCollapseGuide = function (element) {
 				"m1 " + _hSize + "h" + (_size - 2));
 		}
 
-		_rect.attr(OG.Constants.DEFAULT_STYLE.COLLAPSE);
+		_rect.attr(me._CONFIG.DEFAULT_STYLE.COLLAPSE);
 		this._add(_rect, rElement.id + OG.Constants.COLLAPSE_SUFFIX);
 
 		// layer 위치 조정
@@ -3355,14 +3357,14 @@ OG.renderer.RaphaelRenderer.prototype.setCanvasSize = function (size) {
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.fitCanvasSize = function (minSize, fitScale) {
-	var realRootBBox = this.getRealRootBBox(), offsetX, offsetY, scale = 1,
-		width = realRootBBox.width + OG.Constants.FIT_CANVAS_PADDING * 2,
-		height = realRootBBox.height + OG.Constants.FIT_CANVAS_PADDING * 2;
+	var me = this, realRootBBox = this.getRealRootBBox(), offsetX, offsetY, scale = 1,
+		width = realRootBBox.width + me._CONFIG.FIT_CANVAS_PADDING * 2,
+		height = realRootBBox.height + me._CONFIG.FIT_CANVAS_PADDING * 2;
 	if (realRootBBox.width !== 0 && realRootBBox.height !== 0) {
-		offsetX = realRootBBox.x > OG.Constants.FIT_CANVAS_PADDING ?
-			-1 * (realRootBBox.x - OG.Constants.FIT_CANVAS_PADDING) : OG.Constants.FIT_CANVAS_PADDING - realRootBBox.x;
-		offsetY = realRootBBox.y > OG.Constants.FIT_CANVAS_PADDING ?
-			-1 * (realRootBBox.y - OG.Constants.FIT_CANVAS_PADDING) : OG.Constants.FIT_CANVAS_PADDING - realRootBBox.y;
+		offsetX = realRootBBox.x > me._CONFIG.FIT_CANVAS_PADDING ?
+			-1 * (realRootBBox.x - me._CONFIG.FIT_CANVAS_PADDING) : me._CONFIG.FIT_CANVAS_PADDING - realRootBBox.x;
+		offsetY = realRootBBox.y > me._CONFIG.FIT_CANVAS_PADDING ?
+			-1 * (realRootBBox.y - me._CONFIG.FIT_CANVAS_PADDING) : me._CONFIG.FIT_CANVAS_PADDING - realRootBBox.y;
 
 		this.move(this.getRootGroup(), [offsetX, offsetY]);
 		this.removeAllGuide();
@@ -3399,7 +3401,8 @@ OG.renderer.RaphaelRenderer.prototype.setViewBox = function (position, size, isF
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.getScale = function (scale) {
-	return OG.Constants.SCALE;
+	var me = this;
+	return me._CONFIG.SCALE;
 };
 
 /**
@@ -3409,7 +3412,8 @@ OG.renderer.RaphaelRenderer.prototype.getScale = function (scale) {
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.setScale = function (scale) {
-	if (OG.Constants.SCALE_MIN <= scale && scale <= OG.Constants.SCALE_MAX) {
+	var me = this;
+	if (me._CONFIG.SCALE_MIN <= scale && scale <= me._CONFIG.SCALE_MAX) {
 		if (this.isVML()) {
 			// TODO : VML 인 경우 처리
 			$(this._ROOT_GROUP.node).css({
@@ -3429,11 +3433,11 @@ OG.renderer.RaphaelRenderer.prototype.setScale = function (scale) {
 		}
 
 		this._PAPER.setSize(
-			OG.Util.roundGrid(this._PAPER.width / OG.Constants.SCALE * scale),
-			OG.Util.roundGrid(this._PAPER.height / OG.Constants.SCALE * scale)
+			OG.Util.roundGrid(this._PAPER.width / me._CONFIG.SCALE * scale, me._CONFIG.MOVE_SNAP_SIZE),
+			OG.Util.roundGrid(this._PAPER.height / me._CONFIG.SCALE * scale, me._CONFIG.MOVE_SNAP_SIZE)
 		);
 
-		OG.Constants.SCALE = scale;
+		me._CONFIG.SCALE = scale;
 	}
 };
 

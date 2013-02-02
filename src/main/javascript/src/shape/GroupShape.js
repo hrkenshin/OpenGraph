@@ -15,9 +15,6 @@ OG.shape.GroupShape = function (label) {
 	this.SHAPE_ID = 'OG.shape.GroupShape';
 	this.label = label;
 
-	this.MOVABLE = OG.Constants.MOVABLE && OG.Constants.MOVABLE_GROUP;
-	this.RESIZABLE = OG.Constants.RESIZABLE && OG.Constants.RESIZABLE_GROUP;
-	this.LABEL_EDITABLE = OG.Constants.LABEL_EDITABLE && OG.Constants.LABEL_EDITABLE_GROUP;
 	this.CONNECTABLE = false;
 	this.SELF_CONNECTABLE = false;
 
@@ -25,13 +22,13 @@ OG.shape.GroupShape = function (label) {
 	 * 그룹핑 가능여부
 	 * @type Boolean
 	 */
-	this.GROUP_DROPABLE = OG.Constants.GROUP_DROPABLE;
+	this.GROUP_DROPABLE = true;
 
 	/**
 	 * 최소화 가능여부
 	 * @type Boolean
 	 */
-	this.GROUP_COLLAPSIBLE = OG.Constants.GROUP_COLLAPSIBLE;
+	this.GROUP_COLLAPSIBLE = true;
 };
 OG.shape.GroupShape.prototype = new OG.shape.IShape();
 OG.shape.GroupShape.superclass = OG.shape.IShape;

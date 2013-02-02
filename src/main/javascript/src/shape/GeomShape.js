@@ -11,10 +11,6 @@ OG.shape.GeomShape = function () {
 	OG.shape.GeomShape.superclass.call(this);
 
 	this.TYPE = OG.Constants.SHAPE_TYPE.GEOM;
-
-	this.MOVABLE = OG.Constants.MOVABLE && OG.Constants.MOVABLE_GEOM;
-	this.RESIZABLE = OG.Constants.RESIZABLE && OG.Constants.RESIZABLE_GEOM;
-	this.LABEL_EDITABLE = OG.Constants.LABEL_EDITABLE && OG.Constants.LABEL_EDITABLE_GEOM;
 };
 OG.shape.GeomShape.prototype = new OG.shape.IShape();
 OG.shape.GeomShape.superclass = OG.shape.IShape;

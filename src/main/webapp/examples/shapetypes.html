@@ -17,9 +17,8 @@
     <script type="text/javascript">
         var canvas = null;
         window.onload = function () {
-            OG.Constants.DEFAULT_STYLE.EDGE["edge-type"] = "bezier";
-
             canvas = new OG.Canvas('canvas', [1000, 600]);
+            canvas._CONFIG.DEFAULT_STYLE.EDGE["edge-type"] = "bezier";
 
             var circleShape = new OG.CircleShape();
             var ellipseShape = new OG.EllipseShape('label');

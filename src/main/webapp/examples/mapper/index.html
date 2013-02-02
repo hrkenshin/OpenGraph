@@ -96,13 +96,12 @@
     OG.Transformer = OG.shape.Transformer;
 </script>
 <script type="text/javascript">
-OG.Constants.DEFAULT_STYLE.EDGE["edge-type"] = "straight";
-
 var canvas, opengraphJSON;
 
 $(document).ready(function () {
     // OpenGraph Canvas
     canvas = new OG.Canvas('canvas', null, '#f6f6f6');
+    canvas._CONFIG.DEFAULT_STYLE.EDGE["edge-type"] = "straight";
     canvas.initConfig({
         selectable       : true,
         dragSelectable   : false,
