@@ -927,11 +927,12 @@ OG.graph.Canvas.prototype = {
 	 * @return {Object}
 	 */
 	getRelatedElementsFromEdge: function (edgeElement) {
-		var edge = OG.Util.isElement(edgeElement) ? edgeElement : this.getElementById(edgeElement),
+		var me = this,
+            edge = OG.Util.isElement(edgeElement) ? edgeElement : this.getElementById(edgeElement),
 			getShapeFromTerminal = function (terminal) {
 				var terminalId = OG.Util.isElement(terminal) ? terminal.id : terminal;
 				if (terminalId) {
-					return this._RENDERER.getElementById(terminalId.substring(0, terminalId.indexOf(OG.Constants.TERMINAL_SUFFIX.GROUP)));
+					return me._RENDERER.getElementById(terminalId.substring(0, terminalId.indexOf(OG.Constants.TERMINAL_SUFFIX.GROUP)));
 				} else {
 					return null;
 				}
